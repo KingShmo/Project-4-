@@ -77,8 +77,8 @@ Zuhair:
 **Creating the quizzes and the randomization selection
 
 Anushka:
-**Creating and editing and deleting quizzes for the Teacher class and the functions related to the Student class
-
+**Creating course interfaces and implementing it in each course made by the teacher.
 Anish:
+**Editing and deleting quizzes for the Teacher class and the functions related to the Student class
 **Making sure Teacher objects can view quiz submissions for each student and assign point values to each answer. Also make sure student objects can view their graded quizzes, with the points for each individual question and their total score listed, and alse the correct answer!
 
