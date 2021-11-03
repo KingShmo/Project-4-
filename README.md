@@ -1,6 +1,6 @@
 # Project-4-
 Repository for Project 4
-Option 2
+**Option 2
 The second option is to implement a learning management system quiz tool. Online quizzes allow teachers to present information in a variety of formats to evaluate student progress. 
 
 Looking for an example? Navigate to the Brightspace quizzes!
