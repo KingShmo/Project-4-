@@ -68,7 +68,10 @@ Optional Features:
 ROLES:
 
 Troy:
-**Create the quiz texts files, creating read and write methods for the teachers and students
+**Write inputs to a file to save information (especially, when the program crashes)
+**Two text files: Student and Teacher
+**Student text file: First and last name, Login, Password, Course Name, Quiz name and grade and answers for that quiz
+**Teacher text file: First and last name Login, Password, Courses they teach, Quizzes for each course
 
 Artemii:
 **Interfaces and the login and regestration functions for the teachers and students
