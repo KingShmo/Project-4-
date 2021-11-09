@@ -1,4 +1,5 @@
-import java.text.SimpleDateFormat;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuizGrading {
@@ -6,6 +7,7 @@ public class QuizGrading {
     boolean isTeacher = false;
 
     public static void main(String[] args) {
+
 
     }
 
@@ -24,11 +26,11 @@ public class QuizGrading {
         int loop = 0;
         do {
             loop = 0;
-            System.out.println("Which quiz do you want to edit");
+            System.out.println("Which quiz do you want to view");
             int deleteDigit = scanner.nextInt();
             quizzes.remove(deleteDigit);
             System.out.println("Quiz Removed!");
-            System.out.println("Do you want to edit another quiz?");
+            System.out.println("Do you want to view another quiz?");
             System.out.println("1. Yes\n" +
                     "2. No\n");
             option = scanner.nextInt();
@@ -44,14 +46,15 @@ public class QuizGrading {
         } while (loop == 1);
     }
 
-    public void deleteQuiz() {
+    public void deleteQuiz(QuizArchive q) {
         Scanner scanner = new Scanner(System.in);
+        ArrayList<Quiz> allQuizzes = q.getQuizzes();
         int loop = 0;
         do {
             loop = 0;
             System.out.println("Which quiz do you want to delete?");
             int deleteDigit = scanner.nextInt();
-            quizzes.remove(deleteDigit);
+            allQuizzes.remove(deleteDigit);
             System.out.println("Quiz Removed!");
             System.out.println("Do you want to remove another quiz?");
             System.out.println("1. Yes\n" +
