@@ -1,0 +1,101 @@
+import java.io.*;
+import java.util.ArrayList;
+
+public class Teacher {
+
+    //readme... if course has semi colon in name, re ask for name
+
+    public static void createAccount(String firstName, String lastName, String username, String password,
+                                   ArrayList <Integer> courseArrayList) throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", true);
+        StringBuilder courses = new StringBuilder();
+        PrintWriter pw = new PrintWriter(fos);
+        pw.println("Name: " + firstName + " " + lastName);
+        pw.println("Username: " + username);
+        pw.println("Password: " + password);
+        for (int i = 0; i < courseArrayList.size(); i++) {
+            courses.append(courseArrayList.get(i) + ";");
+        }
+        courses.deleteCharAt(courses.length()-1);
+        pw.println("Courses taught: " + courses.toString());
+        pw.println();
+        pw.flush();
+    }
+
+    public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
+        ArrayList<String> allQuizInfo = new ArrayList<>();
+        ArrayList<String> specificQuiz = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                allQuizInfo.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (allQuizInfo.size() == 0) {
+            specificQuiz.add("No student has taken a quiz yet");
+            return specificQuiz;
+        } else {
+            for (int i = 0; i < allQuizInfo.size(); i++) {
+                if (allQuizInfo.get(i).equals("Name: " + firstName + " " + lastName)) {
+                    specificQuiz.add(allQuizInfo.get(i));
+                    specificQuiz.add(allQuizInfo.get(i + 1));
+                    specificQuiz.add(allQuizInfo.get(i + 2));
+                    specificQuiz.add(allQuizInfo.get(i + 3));
+                    specificQuiz.add(" ");
+                }
+            }
+            if (specificQuiz.size() == 0) {
+                specificQuiz.add("This student has not taken a quiz yet");
+            }
+        }
+        return specificQuiz;
+    }
+
+    public static ArrayList<String> readQuizByQuizName(String quizName) throws FileNotFoundException {
+        ArrayList<String> allQuizInfo = new ArrayList<>();
+        ArrayList<String> specificQuiz = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                allQuizInfo.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (allQuizInfo.size() == 0) {
+            specificQuiz.add("No student has taken a quiz yet");
+            return specificQuiz;
+        } else {
+            for (int i = 0; i < allQuizInfo.size(); i++) {
+                if (allQuizInfo.get(i).equals(quizName)) {
+                    specificQuiz.add(allQuizInfo.get(i));
+                    specificQuiz.add(allQuizInfo.get(i + 1));
+                    specificQuiz.add(allQuizInfo.get(i + 2));
+                    specificQuiz.add(allQuizInfo.get(i + 3));
+                    specificQuiz.add(" ");
+                }
+            }
+            if (specificQuiz.size() == 0) {
+                specificQuiz.add("No students have taken this particular quiz.");
+            }
+        }
+        return specificQuiz;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        ArrayList<Integer> courses = new ArrayList<Integer>();
+        ArrayList<String> reading= new ArrayList<String>();
+        for (int i = 0; i < 10; i++) {
+            courses.add(i*3);
+        }
+        createAccount("Whats up", "Yall", "hey", "cool", courses);
+        reading = readQuizByStudentName("Troy", "Tamura");
+        for (int i = 0; i < reading.size(); i++) {
+            System.out.println(reading.get(i));
+        }
+    }
+}
