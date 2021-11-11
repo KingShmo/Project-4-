@@ -16,8 +16,25 @@ public class QuizArchive {
 
     }
 
+
+
     public void addQuizes(Quiz quiz) {
         quizzes.add(quiz);
     }
 
+    public ArrayList<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void deleteAQuiz(String titleOfTheQuiz) {
+
+        for (int i=0; i<quizzes.size(); i++) {
+
+            if (quizzes.get(i).getName().equals(titleOfTheQuiz)) {
+                quizzes.remove(i);
+                break;
+            }
+
+        }
+    }
 }
