@@ -85,7 +85,6 @@ public class Application {
             System.out.println(enterUsername);
             scanner.nextLine();
             String username = scanner.nextLine();
-            System.out.println(username);
 
             for (Student item: students) {
 
@@ -140,7 +139,6 @@ public class Application {
                 System.out.println(enterPassword);
                 String password = scanner.nextLine();
                 teachers.add(new Teacher(firstName, lastName, username, password));
-                System.out.println(teachers);
                 signIn(scanner);
             }
         } 
@@ -149,13 +147,10 @@ public class Application {
             System.out.println(enterFirstName);
             scanner.nextLine();
             String firstName = scanner.nextLine();
-            System.out.println(firstName);
             System.out.println(enterLastName);
             String lastName = scanner.nextLine();
-            System.out.println(lastName);
             System.out.println(enterUsername);
             String username = scanner.nextLine();
-            System.out.println(username);
 
             for (Student item: students) {
 
@@ -170,10 +165,8 @@ public class Application {
             if (usernameStatus == 1) {
                 System.out.println(enterPassword);
                 String password = scanner.nextLine();
-                System.out.println(password);
 
                 students.add(new Student(firstName, lastName, username, password));
-                System.out.println(students.get(0).getUsername());
                 signIn(scanner);
             }
         }
