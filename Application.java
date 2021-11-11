@@ -1,5 +1,7 @@
 /*
 This class starts the program and asks a user to sign in or register
+*
+In order to save all the registration information, I need Troy's file technology implemented
 */
 import java.util.*; 
 
@@ -23,6 +25,7 @@ public class Application {
     static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
     static ArrayList<Student> students = new ArrayList<Student>();
     static int usernameStatus = 1; // Checks if there is already a user with that username
+    
 
 
 
@@ -36,11 +39,11 @@ public class Application {
 
         if (choiceSignInOrRegister == 1) 
         {
-            signIn();
+            signIn(scanner);
         }
         else if (choiceSignInOrRegister == 2) 
         {
-            register();
+            register(scanner);
         }
         else
         {
@@ -49,9 +52,8 @@ public class Application {
 
     }
 
-    public static void signIn() { // Sign in method either for teachers or students
-        Scanner scanner = new Scanner(System.in);
-
+    public static void signIn(Scanner scanner) { // Sign in method either for teachers or students
+        
         System.out.println("Sign In\n");
         System.out.println(teacherOrStudentSignIn);
         int choiceTeacherOrStudent = scanner.nextInt();
@@ -59,12 +61,12 @@ public class Application {
         if (choiceTeacherOrStudent == 1) 
         {
             System.out.println(enterUsername);
+            scanner.nextLine();
             String username = scanner.nextLine();
-            scanner.next();
 
             for (Teacher item: teachers) {
 
-                if (item.getUsername() == username) 
+                if (username.equals(item.getUsername())) 
                 {
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
@@ -81,11 +83,13 @@ public class Application {
         else if (choiceTeacherOrStudent == 2)
         {
             System.out.println(enterUsername);
+            scanner.nextLine();
             String username = scanner.nextLine();
+            System.out.println(username);
 
             for (Student item: students) {
 
-                if (item.getUsername() == username) 
+                if (username.equals(item.getUsername())) 
                 {
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
@@ -105,17 +109,17 @@ public class Application {
         }
     }
 
-    public static void register() { // Allows user to register and then Sign In
-        Scanner scanner = new Scanner(System.in);
+    public static void register(Scanner scanner) { // Allows user to register and then Sign In
 
         System.out.println("Register\n");
         System.out.println(teacherOrStudentRegister);
         int choiceTeacherOrStudent = scanner.nextInt();
+        
 
         if (choiceTeacherOrStudent == 1) 
         {
             System.out.println(enterFirstName);
-            scanner.next();
+            scanner.nextLine();
             String firstName = scanner.nextLine();
             System.out.println(enterLastName);
             String lastName = scanner.nextLine();
@@ -135,23 +139,27 @@ public class Application {
             if (usernameStatus == 1) {
                 System.out.println(enterPassword);
                 String password = scanner.nextLine();
-
                 teachers.add(new Teacher(firstName, lastName, username, password));
-                signIn();
+                System.out.println(teachers);
+                signIn(scanner);
             }
         } 
         else if (choiceTeacherOrStudent == 2)
         {
             System.out.println(enterFirstName);
+            scanner.nextLine();
             String firstName = scanner.nextLine();
+            System.out.println(firstName);
             System.out.println(enterLastName);
             String lastName = scanner.nextLine();
+            System.out.println(lastName);
             System.out.println(enterUsername);
             String username = scanner.nextLine();
+            System.out.println(username);
 
             for (Student item: students) {
 
-                if (item.getUsername() == username) 
+                if (username.equals(item.getUsername())) 
                 {
                     System.out.println(takenUsername);
                     usernameStatus = 0;
@@ -162,8 +170,11 @@ public class Application {
             if (usernameStatus == 1) {
                 System.out.println(enterPassword);
                 String password = scanner.nextLine();
+                System.out.println(password);
 
                 students.add(new Student(firstName, lastName, username, password));
+                System.out.println(students.get(0).getUsername());
+                signIn(scanner);
             }
         }
         else 
