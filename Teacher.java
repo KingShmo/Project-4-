@@ -22,6 +22,107 @@ public class Teacher {
         pw.flush();
     }
 
+    public static ArrayList<String> getAllUsernames(){
+        ArrayList<String> fileContents = new ArrayList<>();
+        ArrayList<String> allUsernames = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContents.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (fileContents.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < fileContents.size() / 4; i++) {
+                String user = fileContents.get(1 + 4 * i);
+                allUsernames.add(user.substring(10));
+            }
+        }
+        return allUsernames;
+    }
+
+    public static String changeUsername(String oldUsername, String newUsername) throws FileNotFoundException {
+        int usernameExist = 0;
+        StringBuffer buffer = new StringBuffer();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                buffer.append(line + " \n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = buffer.toString();
+        if (buffer.isEmpty()) {
+            return "No teacher accounts have been created.";
+        } else {
+            for (int i = 0; i < fileContents.length(); i++) {
+                if (fileContents.contains(oldUsername)) {
+                    fileContents = fileContents.replace(oldUsername, newUsername);
+                    usernameExist = 1;
+                }
+            }
+            if (usernameExist != 1) {
+                return "Your current username does not exist.";
+            }
+            String [] splitContents = fileContents.split("\n");
+            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < splitContents.length; i++) {
+                pw.println(splitContents[i]);
+            }
+            pw.flush();
+        }
+        return "Your username has been changed!";
+    }
+
+    public static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
+        int usernameExist = 0;
+        int oldPasswordExist = 0;
+        StringBuffer buffer = new StringBuffer();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                buffer.append(line + " \n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = buffer.toString();
+        if (buffer.isEmpty()) {
+            return "No teacher accounts have been created.";
+        } else {
+            for (int i = 0; i < fileContents.length(); i++) {
+                if (fileContents.contains(username)) {
+                    usernameExist = 1;
+                    if (fileContents.contains(oldPassword)) {
+                        fileContents = fileContents.replace(oldPassword, newPassword);
+                        oldPasswordExist = 1;
+                    }
+                }
+            }
+            if (oldPasswordExist != 1) {
+                return "This is not your current password. Please enter your current password correctly.";
+            }
+            if (usernameExist != 1) {
+                return "Your current username does not exist.";
+            }
+            String [] splitContents = fileContents.split("\n");
+            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < splitContents.length; i++) {
+                System.out.println(splitContents[i]);
+                pw.println(splitContents[i]);
+            }
+            pw.flush();
+        }
+        return "Your password has been changed!";
+    }
+
     public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
