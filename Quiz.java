@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Scanner;
 /**
  * Quiz class
@@ -65,7 +66,10 @@ public class Quiz {
      * size of the quiz
      */
     private int sizeOfQuiz;
-
+    /**
+     * quiz questions counter
+     */
+    private int questionNum;
     /**
      * Allocates a new quiz object with its title.
      * Used in-case the teacher doesn't have questions to put, or
@@ -83,6 +87,7 @@ public class Quiz {
         correctAnswers = new ArrayList<>();
         quizIsReady = false;
         sizeOfQuiz = 0;
+        questionNum = 1;
 
     }
 
@@ -134,7 +139,7 @@ public class Quiz {
         if (question.indexOf("^_^") != -1 || check)
             throw new InvalidQuizException("A quiz cannot have this \"^_^\" expression in it.");
 
-        String completedQuestion = "" + (++sizeOfQuiz) + ". ";
+        String completedQuestion = "" + (questionNum++) + ". ";
 
         completedQuestion += question;
         completedQuestion += "^_^";
@@ -149,8 +154,6 @@ public class Quiz {
         correctAnswers.add(correctAnswer);
         sizeOfQuiz = questions.size();
 
-        if (sizeOfQuiz > 0)
-            quizIsReady = true;
     }
 
     /**
@@ -205,10 +208,11 @@ public class Quiz {
             if (temp == questionNumber) {
 
                 String oldQuestion = questions.get(i);
-                oldQuestion = oldQuestion.substring(0, oldQuestion.indexOf("^_^") + 1);
+                oldQuestion = oldQuestion.substring(0, oldQuestion.indexOf("^_^"));
+                oldQuestion += "^_^";
                 String completedQuestion = "";
                 for (int j = 0; j < newOptions.length; j++) {
-                    completedQuestion += newOptions[i];
+                    completedQuestion += newOptions[j];
                     if (j + 1 != newOptions.length)
                         completedQuestion += "^_^";
                 }
@@ -216,6 +220,7 @@ public class Quiz {
                 String newQestion = oldQuestion + completedQuestion;
                 questions.set(i, newQestion);
                 correctAnswers.set(i, correctAnswer);
+
                 return "Options modified!";
             }
 
@@ -227,18 +232,37 @@ public class Quiz {
 
     public String randomizeQuestions(Quiz quiz) {
 
-        var newQuestions = quiz.getQuestions();
+        Random random = new Random();
 
+        var oldQuestions = quiz.getQuestions();
 
+        int[] questionsNumbers = new int[quiz.getQuestions().size() + 1];
 
-        for (int i=0 ; i<newQuestions.size(); i++) {
+        for (int i=1 ; i<questionsNumbers.length; i++) {
 
+            while (true) {
 
+                int temp = random.nextInt(questionsNumbers.length);
+                if (questionsNumbers[temp] == 0 && temp != 0) {
+                    questionsNumbers[i] = temp;
+                    break;
+                }
 
+            }
 
         }
 
-        return "";
+        ArrayList<String> newQuestions = new ArrayList<>();
+
+        for (int i=1; i<questionsNumbers.length; i++) {
+
+            newQuestions.add(oldQuestions.get(questionsNumbers[i]));
+
+        }
+
+        quiz.setQuestions(newQuestions);
+
+        return "Questions randomized!";
 
     }
 
@@ -266,6 +290,8 @@ public class Quiz {
         return questions;
     }
 
+
+
     public ArrayList<Integer> getCorrectAnswers() {
         return correctAnswers;
     }
@@ -284,6 +310,10 @@ public class Quiz {
 
     public void setQuestions(ArrayList<String> questions) {
         this.questions = questions;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
     }
 
 }

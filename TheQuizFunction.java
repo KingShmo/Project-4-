@@ -28,7 +28,7 @@ public class TheQuizFunction {
             System.out.println("5. Randomize a quiz");
             System.out.println("6. Exit");
             String temp = "Select the action you want:\n1. Create a quiz\n2. Start a quiz\n3. Exit";
-            String[] options = {"1", "2", "3", "4"};
+            String[] options = {"1", "2", "3", "4", "5", "6"};
             answer = inputChecker(scanner, options, temp, "Invalid input.");
 
             if (answer.equals("1"))
@@ -36,9 +36,8 @@ public class TheQuizFunction {
             else if (answer.equals("2")) {
                 System.out.println("What's the quizz's title?");
                 answer = scanner.nextLine();
-                if (startAQuiz(scanner, answer, quizArchive) == null) {
-                    System.out.println("Couldn't start the quiz.");
-                }
+                startAQuiz(scanner, answer, quizArchive);
+
             } else if (answer.equals("3")) {
                 System.out.println("What's the quizz's title?");
                 answer = scanner.nextLine();
@@ -104,11 +103,24 @@ public class TheQuizFunction {
         if (check)
             return false;
 
+        System.out.println("Do you want to change the quiz title?");
+        answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
+        if (answer.equals("Yes") || answer.equals("yes")) {
 
+            System.out.println("Type the new title:");
+            answer = scanner.nextLine();
+            quiz.setName(answer);
+            System.out.println("Quiz name modified!");
+            return true;
+        }
+
+        int size = quiz.getSizeOfQuiz();
+        if (size == 0)
+            return false;
 
         System.out.println("Question number you want to modify?");
 
-        int size = quiz.getSizeOfQuiz();
+
         String[] options = new String[size];
         for (int i=1; i<=size; i++) {
 
@@ -161,7 +173,7 @@ public class TheQuizFunction {
      * @param title = the title of the quiz you would like to run.
      * @param quizArchive = search for a particular quiz in the quizArchive.
      * @return a string arrayList containing the answers of a particular student, or
-     * returns null if the quiz's title is not found in the quizArchive or the quiz is not ready to be launched.
+     * returns a message containing a description of the error.
      */
     public static ArrayList<String> startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
 
@@ -175,8 +187,10 @@ public class TheQuizFunction {
 
             if (quizzes.get(i).getName().equals(title)) {
 
-                if (!quizzes.get(i).isQuizIsReady())
+                if (!quizzes.get(i).isQuizIsReady()) {
+                    System.out.println("Don't forget to launch the quiz");
                     return null;
+                }
 
                 check = true;
 
@@ -187,7 +201,7 @@ public class TheQuizFunction {
 
                 for (int j=0; j<questions.size(); j++) {
 
-                    String wholeQuestion = questions.get(i);
+                    String wholeQuestion = questions.get(j);
 
                     String quesiton = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
                     wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
@@ -223,6 +237,7 @@ public class TheQuizFunction {
         }
 
         if (!check) {
+            System.out.println("Couldn't start the quiz.");
             return null;
         }
         return studentAnswers;
@@ -260,7 +275,7 @@ public class TheQuizFunction {
                     quizArchive.addQuizes(q1);
 
                     System.out.println("Do you want to add questions?");
-
+                    answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to add questions?", "Invalid input.");
                     if (answer.equals("No") || answer.equals("no")) {
                         System.out.println("An empty quiz was created.");
                         break;
