@@ -85,7 +85,7 @@ public class Application {
 
                 if (username.equals(item.getUsername())) 
                 {
-                    check2++;
+                    check2 = 1;
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
                     if (password.equals(item.getPassword())) {
@@ -115,7 +115,7 @@ public class Application {
 
                 if (username.equals(item.getUsername())) 
                 {
-                    check1++;
+                    check1 = 1;
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
                     if (password.equals(item.getPassword())) {
@@ -249,6 +249,9 @@ public class Application {
                     {
                         teachers.remove(item);
                         System.out.println("Account deleteded!\n");
+                        System.out.println(signInOrRegister);
+
+                        //if ()
                         register(scanner);
                     }
                     else if (confirmation == 2) 
