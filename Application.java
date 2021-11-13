@@ -250,9 +250,21 @@ public class Application {
                         teachers.remove(item);
                         System.out.println("Account deleteded!\n");
                         System.out.println(signInOrRegister);
+                        int choice = scanner.nextInt();
 
-                        //if ()
-                        register(scanner);
+                        if (choice == 1)
+                        {
+                            signIn(scanner);
+                        }
+                        else if (choice == 2) 
+                        {
+                            register(scanner);
+                        }
+                        else 
+                        {
+                            System.out.println(incorrectAnswer);
+                        }
+                        
                     }
                     else if (confirmation == 2) 
                     {
