@@ -14,6 +14,7 @@ import java.util.Scanner;
  *
  */
 public class Quiz {
+    int option;
 
     /**
      * Title of the quiz
@@ -315,5 +316,34 @@ public class Quiz {
     public void setName(String newName) {
         this.name = newName;
     }
-
+    
+    public void deleteQuiz(QuizArchive q, String nameOfQuiz) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Quiz> allQuizzes = q.getQuizzes();
+        int loop = 0;
+        do {
+            loop = 0;
+            System.out.println("Which quiz do you want to delete?");
+            int deleteDigit = scanner.nextInt();
+            if (allQuizzes.get(deleteDigit).getName().equals(nameOfQuiz)) {
+                allQuizzes.remove(deleteDigit);
+                System.out.println("Quiz Removed!");
+            } else {
+                System.out.println("Quiz does not exist!");
+            }
+            System.out.println("Do you want to remove another quiz?");
+            System.out.println("1. Yes\n" +
+                    "2. No\n");
+            option = scanner.nextInt();
+            do {
+                if (option == 1) {
+                    loop = 1;
+                } else if (option == 2) {
+                    break;
+                } else {
+                    System.out.println("Invalid Input!");
+                }
+            } while (option != 1 && option != 2);
+        } while (loop == 1);
+    }
 }
