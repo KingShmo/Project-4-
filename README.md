@@ -80,7 +80,8 @@ Zuhair:
 **Creating the quizzes and the randomization selection
 
 Anushka:
-**Creating course interfaces and implementing it in each course made by the teacher.
+**Creating course interfaces and implementing quizzes in each course made by the teacher.
+**Access course method for student?
 
 Anish:
 **Editing and deleting quizzes for the Teacher class and the functions related to the Student class
