@@ -4,32 +4,24 @@ import java.util.Scanner;
 
 public class QuizGrading {
     int option;
-    boolean isTeacher = false;
-
-    public static void main(String[] args) {
 
 
-    }
-
-    public boolean equals(Object object) {
-        if (object instanceof Teacher) {
-            isTeacher = true;
-        }
-        return false;
-    }
-
-    public void editQuiz() {
-    }
-
-    public void viewQuiz() {
+    public void viewQuiz(String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
         Scanner scanner = new Scanner(System.in);
+        ArrayList<Quiz> Quizzes = q.getQuizzes();
         int loop = 0;
         do {
             loop = 0;
             System.out.println("Which quiz do you want to view");
-            int deleteDigit = scanner.nextInt();
-            quizzes.remove(deleteDigit);
-            System.out.println("Quiz Removed!");
+            int viewDigit = scanner.nextInt();
+            Quizzes.get(viewDigit);
+            System.out.println("Name: " + firstName + " " + lastName);
+            System.out.println("Answers for " + course + " quiz: " + quizName);
+            for (int i = 0; i < answersQuiz.size() - 1; i++) {
+                System.out.println(answersQuiz.get(i) + ";");
+            }
+            System.out.println(answersQuiz.get(answersQuiz.size() - 1));
+            System.out.println("Score: " + grade + "/100");
             System.out.println("Do you want to view another quiz?");
             System.out.println("1. Yes\n" +
                     "2. No\n");
@@ -46,7 +38,7 @@ public class QuizGrading {
         } while (loop == 1);
     }
 
-    public void deleteQuiz(QuizArchive q) {
+    public void deleteQuiz(QuizArchive q, String nameOfQuiz) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Quiz> allQuizzes = q.getQuizzes();
         int loop = 0;
@@ -54,8 +46,12 @@ public class QuizGrading {
             loop = 0;
             System.out.println("Which quiz do you want to delete?");
             int deleteDigit = scanner.nextInt();
-            allQuizzes.remove(deleteDigit);
-            System.out.println("Quiz Removed!");
+                if (allQuizzes.get(deleteDigit).getName().equals(nameOfQuiz)) {
+                    allQuizzes.remove(deleteDigit);
+                    System.out.println("Quiz Removed!");
+                } else {
+                    System.out.println("Quiz does not exist!");
+                }
             System.out.println("Do you want to remove another quiz?");
             System.out.println("1. Yes\n" +
                     "2. No\n");
