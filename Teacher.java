@@ -36,6 +36,10 @@ public class Teacher {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public ArrayList<Course> getCourses() { //Returns the list of Course objects that this teacher has
         return courses;
     }
