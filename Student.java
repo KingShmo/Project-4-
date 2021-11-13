@@ -1,8 +1,42 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/*
+This class contains all variables and methods that each student has
+*/
 public class Student {
+
+    private static String firstName;
+    private static String lastName;
+    private static String username;
+    private static String password;
+
+    public Student(String firstName, String lastName, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getFirstName() { //Returns the first name of a student
+        return firstName;
+    }
+
+    public String getLastName() { //Returns the last name of a student
+        return lastName;
+    }
+
+    public String getUsername() { //Returns the username of a student (use it to find out if username already exists)
+        return username;
+    }
+
+    public String getPassword() { //Returns the password of a student
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public static void createAccount(String firstName, String lastName, String username, String password)
             throws FileNotFoundException {
@@ -16,7 +50,7 @@ public class Student {
         pw.flush();
     }
 
-    public static String deleteAccount(String password) throws FileNotFoundException {
+    public static String deleteAccount(String username) throws FileNotFoundException {
         int deleteAcc = 0;
         StringBuffer buffer = new StringBuffer();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
@@ -32,8 +66,8 @@ public class Student {
             return "No student accounts have been created.";
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
-                if (fileContents.contains(password)) {
-                    fileContents = fileContents.replace(password, "deleteAccount");
+                if (fileContents.contains(username)) {
+                    fileContents = fileContents.replace("Username: username", "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -46,11 +80,11 @@ public class Student {
                 stringArrayList.add(splitContents[i]);
             }
             for (int i = 0; i < stringArrayList.size(); i++) {
-                if (stringArrayList.get(i).contains("Password: deleteAccount")) {
+                if (stringArrayList.get(i).contains("Username: deleteAccount")) {
+                    stringArrayList.remove(i+2);
                     stringArrayList.remove(i+1);
                     stringArrayList.remove(i);
                     stringArrayList.remove(i-1);
-                    stringArrayList.remove(i-2);
                 }
             }
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
@@ -123,7 +157,7 @@ public class Student {
         }
         String fileContents = buffer.toString();
         if (buffer.isEmpty()) {
-             return "No student accounts have been created.";
+            return "No student accounts have been created.";
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(oldUsername)) {
@@ -224,42 +258,4 @@ public class Student {
         pw.flush();
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<Integer> courses = new ArrayList<>();
-        ArrayList<Character> unfinishedAnswers = new ArrayList<>();
-        ArrayList<Character> finishedAnswers = new ArrayList<>();
-        String courseName = "CS180";
-        for (int i = 0; i < 10; i++) {
-            courses.add(i * 3);
-        }
-        char a = 67;
-        for (int i = 0; i < 9; i++) {
-            unfinishedAnswers.add(a);
-            a += 2;
-        }
-        char b = 92;
-        for (int i = 0; i < 9; i++) {
-            finishedAnswers.add(b);
-            b += 2;
-        }
-        /**
-        createAccount("First", "Last", "hey", "cool");
-        writeUnfinishedQuizAnswersToFile("Troy", "Tamura", courseName, "Strings", unfinishedAnswers);
-        writeFinishedQuizAnswersToFile("Troy", "Tamura", courseName, "test", unfinishedAnswers, 90);
-        writeUnfinishedQuizAnswersToFile("Hello", "World", courseName, "Hello", unfinishedAnswers);
-        //createAccount("Whats up", "Yall", "hey", "cool");
-        */
-        //createAccount("Artemii", "IS-Cool", "hey", "nice");
-        //System.out.println(changeUsername("i'm", "bruh"));
-        //System.out.println(changePassword("bruh", "dope", "cool"));
-        //ArrayList<String> users = getAllUsernames();
-        System.out.println(getSpecificPassword("CS lab"));
-        //for (int i = 0; i < users.size(); i++) {
-       //     System.out.println(users.get(i));
-        //}
-    }
 }
-
-//student answers are in an arraylist
-
-//need to get list of usernames to make sure that they aren't the same
