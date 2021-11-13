@@ -36,4 +36,14 @@ public class QuizArchive {
 
         }
     }
-}
+
+    public String toString() {
+
+        String toBeSaved = "Save this information:\n" + "Saved the quizzes ArrayList.\n" +
+                           "Use the arraylist to get all the quizzes. In each quiz object, run the following get methods:\n" +
+                           "getName()\ngetQuestions()\ngetCorrectAnswers()\ngetStudentAnswers()";
+
+        return toBeSaved;
+        
+    }
+ }
