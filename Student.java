@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Student {
-    
+
     int option;
     private static String firstName;
     private static String lastName;
@@ -12,6 +12,7 @@ public class Student {
     private static String password;
     private final ArrayList studentCourses;
     private final ArrayList studentQuizzes;
+
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
@@ -56,8 +57,7 @@ public class Student {
     public String getPassword() { //Returns the password of a student
         return password;
     }
-    public void viewQuiz(String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
-        Scanner scanner = new Scanner(System.in);
+    public void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
         ArrayList<Quiz> Quizzes = q.getQuizzes();
         int loop = 0;
         do {
@@ -87,7 +87,7 @@ public class Student {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
-    
+
     public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
 
         var quizzes = quizArchive.getQuizzes();
