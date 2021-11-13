@@ -40,14 +40,15 @@ public class Application {
     private static String chooseOne = "Pick a corresponding number to choose an option";
     static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
     static ArrayList<Student> students = new ArrayList<Student>();
-    static int usernameStatus = 1; // Checks if there is already a user with that username
+    static int usernameStatus = 1;
+    static int check1 = 0; // Checks if there is already a user with that username
+    static int check2 = 0;
     
 
 
 
     public static void main(String[] args) throws Exception{
         Scanner scanner = new Scanner(System.in);
-        System.out.println(teachers);
 
         System.out.println(welcomeMessage);
         System.out.println(signInOrRegister);
@@ -84,6 +85,7 @@ public class Application {
 
                 if (username.equals(item.getUsername())) 
                 {
+                    check2++;
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
                     if (password.equals(item.getPassword())) {
@@ -97,10 +99,10 @@ public class Application {
                         System.out.println(passwordDoesntMatch);
                     }
                 } 
-                else
-                {
-                    System.out.println(usernameDoesntExist);
-                }
+            }
+            if (check2 == 0)
+            {
+                System.out.println(usernameDoesntExist);
             }
         } 
         else if (choiceTeacherOrStudent == 2)
@@ -113,6 +115,7 @@ public class Application {
 
                 if (username.equals(item.getUsername())) 
                 {
+                    check1++;
                     System.out.println(enterPassword);
                     String password = scanner.nextLine();
                     if (password.equals(item.getPassword())) {
@@ -126,10 +129,10 @@ public class Application {
                         System.out.println(passwordDoesntMatch);
                     }
                 } 
-                else
-                {
-                    System.out.println(usernameDoesntExist);
-                }
+            }
+            if (check1 == 0)
+            {
+                System.out.println(usernameDoesntExist);
             }
         }
         else 
