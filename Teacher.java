@@ -1,53 +1,102 @@
+/*
+This class contains all variables and methods that each teacher has
+*
+I implemented some profile variables that you can see below; we can have more or less of those
+*/
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Teacher {
 
-    //readme... if course has semi colon in name, re ask for name
+    private static String firstName;
+    private static String lastName;
+    private static String username;
+    private static String password;
+    ArrayList<Course> courses = new ArrayList<Course>();
 
-    public static void createAccount(String firstName, String lastName, String username, String password,
-                                   ArrayList <Integer> courseArrayList) throws FileNotFoundException {
+    public Teacher(String firstName, String lastName, String username, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getFirstName() { //Returns the first name of a teacher
+        return firstName;
+    }
+
+    public String getLastName() { //Returns the last name of a teacher
+        return lastName;
+    }
+
+    public String getUsername() { //Returns the username of a teacher (use it to find out if username already exists)
+        return username;
+    }
+
+    public String getPassword() { //Returns the password of a teacher
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ArrayList<Course> getCourses() { //Returns the list of Course objects that this teacher has
+        return courses;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
+    }
+
+    /*
+    Adds a course to the ArrayList of courses
+    *
+    We also need to have an ArrayList of all courses (from different teachers)
+    because students can access any course (should be created in the Course.java file)
+    */
+
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
+
+    public static void createAccount(String firstName, String lastName, String username, String password) throws FileNotFoundException {
         FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", true);
         StringBuilder courses = new StringBuilder();
         PrintWriter pw = new PrintWriter(fos);
         pw.println("Name: " + firstName + " " + lastName);
         pw.println("Username: " + username);
         pw.println("Password: " + password);
-        for (int i = 0; i < courseArrayList.size(); i++) {
-            courses.append(courseArrayList.get(i) + ";");
-        }
-        courses.deleteCharAt(courses.length()-1);
-        pw.println("Courses taught: " + courses.toString());
         pw.println();
         pw.flush();
     }
 
     /**
-    public static ArrayList<String> getAllUsernames(){
-        ArrayList<String> fileContents = new ArrayList<>();
-        ArrayList<String> allUsernames = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                fileContents.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        if (fileContents.size() == 0) {
-            return null;
-        } else {
-            for (int i = 0; i < fileContents.size() / 4; i++) {
-                String user = fileContents.get(1 + 4 * i);
-                allUsernames.add(user.substring(10));
-            }
-        }
-        return allUsernames;
-    }
+     public static ArrayList<String> getAllUsernames(){
+     ArrayList<String> fileContents = new ArrayList<>();
+     ArrayList<String> allUsernames = new ArrayList<>();
+     try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+     String line;
+     while ((line = bufferedReader.readLine()) != null) {
+     fileContents.add(line);
+     }
+     } catch (IOException e) {
+     e.printStackTrace();
+     return null;
+     }
+     if (fileContents.size() == 0) {
+     return null;
+     } else {
+     for (int i = 0; i < fileContents.size() / 4; i++) {
+     String user = fileContents.get(1 + 4 * i);
+     allUsernames.add(user.substring(10));
+     }
+     }
+     return allUsernames;
+     }
      */
 
-    public static String deleteAccount(String password) throws FileNotFoundException {
+    public static String deleteAccount(String username) throws FileNotFoundException {
         int deleteAcc = 0;
         StringBuffer buffer = new StringBuffer();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
@@ -63,8 +112,8 @@ public class Teacher {
             return "No teacher accounts have been created.";
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
-                if (fileContents.contains(password)) {
-                    fileContents = fileContents.replace(password, "deleteAccount");
+                if (fileContents.contains(username)) {
+                    fileContents = fileContents.replace("Username: " + username, "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -77,12 +126,11 @@ public class Teacher {
                 stringArrayList.add(splitContents[i]);
             }
             for (int i = 0; i < stringArrayList.size(); i++) {
-                if (stringArrayList.get(i).contains("Password: deleteAccount")) {
+                if (stringArrayList.get(i).contains("Username: deleteAccount")) {
                     stringArrayList.remove(i+2);
                     stringArrayList.remove(i+1);
                     stringArrayList.remove(i);
                     stringArrayList.remove(i-1);
-                    stringArrayList.remove(i-2);
                 }
             }
             FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
@@ -286,19 +334,6 @@ public class Teacher {
         return specificQuiz;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        /**
-        ArrayList<Integer> courses = new ArrayList<Integer>();
-        ArrayList<String> reading= new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            courses.add(i*3);
-        }
-        createAccount("Whats up", "Yall", "hey", "cool", courses);
-        reading = readQuizByStudentName("Troy", "Tamura");
-        for (int i = 0; i < reading.size(); i++) {
-            System.out.println(reading.get(i));
-        }
-         */
-        System.out.println(deleteAccount("cool"));
-    }
+
+
 }
