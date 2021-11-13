@@ -22,6 +22,7 @@ public class Teacher {
         pw.flush();
     }
 
+    /**
     public static ArrayList<String> getAllUsernames(){
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
@@ -43,6 +44,104 @@ public class Teacher {
             }
         }
         return allUsernames;
+    }
+     */
+
+    public static String deleteAccount(String password) throws FileNotFoundException {
+        int deleteAcc = 0;
+        StringBuffer buffer = new StringBuffer();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                buffer.append(line + " \n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = buffer.toString();
+        if (buffer.isEmpty()) {
+            return "No teacher accounts have been created.";
+        } else {
+            for (int i = 0; i < fileContents.length(); i++) {
+                if (fileContents.contains(password)) {
+                    fileContents = fileContents.replace(password, "deleteAccount");
+                    deleteAcc = 1;
+                }
+            }
+            if (deleteAcc != 1) {
+                return "Please input correct password";
+            }
+            String [] splitContents = fileContents.split("\n");
+            ArrayList<String> stringArrayList = new ArrayList<>();
+            for (int i = 0; i < splitContents.length; i++) {
+                stringArrayList.add(splitContents[i]);
+            }
+            for (int i = 0; i < stringArrayList.size(); i++) {
+                if (stringArrayList.get(i).contains("Password: deleteAccount")) {
+                    stringArrayList.remove(i+2);
+                    stringArrayList.remove(i+1);
+                    stringArrayList.remove(i);
+                    stringArrayList.remove(i-1);
+                    stringArrayList.remove(i-2);
+                }
+            }
+            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < stringArrayList.size(); i++) {
+                pw.println(stringArrayList.get(i));
+            }
+            pw.flush();
+        }
+        return "Your account has been deleted!";
+    }
+
+    public static ArrayList<String> getAllUsernamesAndPasswords(){
+        ArrayList<String> fileContents = new ArrayList<>();
+        ArrayList<String> allInfo = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContents.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (fileContents.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < fileContents.size() / 4; i++) {
+                String user = fileContents.get(1 + 4 * i);
+                allInfo.add(user.substring(10));
+                String pass = fileContents.get(2 + 4 * i);
+                allInfo.add(pass.substring(10));
+            }
+        }
+        return allInfo;
+    }
+
+    public static String getSpecificPassword(String inputUsername) {
+        ArrayList<String> fileContents = new ArrayList<>();
+        ArrayList<String> allUsernames = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContents.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (fileContents.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < fileContents.size(); i++) {
+                if (fileContents.get(i).equals("Username: " + inputUsername)) {
+                    return fileContents.get(i + 1).substring(10);
+                }
+            }
+        }
+        return null;
     }
 
     public static String changeUsername(String oldUsername, String newUsername) throws FileNotFoundException {
@@ -188,6 +287,7 @@ public class Teacher {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
+        /**
         ArrayList<Integer> courses = new ArrayList<Integer>();
         ArrayList<String> reading= new ArrayList<String>();
         for (int i = 0; i < 10; i++) {
@@ -198,5 +298,7 @@ public class Teacher {
         for (int i = 0; i < reading.size(); i++) {
             System.out.println(reading.get(i));
         }
+         */
+        System.out.println(deleteAccount("cool"));
     }
 }
