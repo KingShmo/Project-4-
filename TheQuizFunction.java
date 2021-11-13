@@ -11,9 +11,11 @@ import java.util.Scanner;
  * @version November 8, 2021
  *
  */
+
+
 public class TheQuizFunction {
 
-    public static void main(String[] args) throws InvalidQuizException {
+    public static void main() throws InvalidQuizException {
 
         Scanner scanner = new Scanner(System.in);
         String answer;
@@ -22,36 +24,33 @@ public class TheQuizFunction {
         do {
             System.out.println("Select the action you want:");
             System.out.println("1. Create a quiz");
-            System.out.println("2. Start a quiz");
-            System.out.println("3. Modify a quiz");
-            System.out.println("4. Launch a quiz");
-            System.out.println("5. Randomize a quiz");
-            System.out.println("6. Exit");
-            String temp = "Select the action you want:\n1. Create a quiz\n2. Start a quiz\n3. Exit";
-            String[] options = {"1", "2", "3", "4", "5", "6"};
+            System.out.println("2. Modify a quiz");
+            System.out.println("3. Launch a quiz");
+            System.out.println("4. Randomize a quiz");
+            System.out.println("5. Exit");
+            String temp = "Select the action you want:\n1. Create a quiz\n2. Modify a quiz\n3. Launch a quiz\n" +
+                    "4. Randomize a quiz\n5. Exit";
+            String[] options = {"1", "2", "3", "4", "5"};
             answer = inputChecker(scanner, options, temp, "Invalid input.");
 
             if (answer.equals("1"))
                 creatingAQuiz(scanner, quizArchive);
             else if (answer.equals("2")) {
-                System.out.println("What's the quizz's title?");
-                answer = scanner.nextLine();
-                startAQuiz(scanner, answer, quizArchive);
-
-            } else if (answer.equals("3")) {
-                System.out.println("What's the quizz's title?");
+                System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 modifyAQuiz(scanner, answer, quizArchive);
             }
-            else if (answer.equals("4")) {
-                System.out.println("What's the quizz's title?");
+            else if (answer.equals("3")) {
+                System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 launchAQuiz(answer, quizArchive);
-            } else if (answer.equals("5")) {
+            } else if (answer.equals("4")) {
 
-                System.out.println("Randomization in maintenance...");
+                System.out.println("What's the quiz title?");
+                answer = scanner.nextLine();
+                randomizeQuestions(answer, quizArchive);
 
-            } else if (answer.equals("6"))
+            } else if (answer.equals("5"))
                 break;
 
         } while (true);
@@ -59,6 +58,28 @@ public class TheQuizFunction {
         System.out.println("Thank you for using our quiz portal!");
 
     }
+
+    public static void randomizeQuestions(String title, QuizArchive quizArchive) {
+
+        var quizzes = quizArchive.getQuizzes();
+
+        Quiz quiz = null;
+
+        for (int i = 0; i < quizzes.size(); i++) {
+
+            if (quizzes.get(i).getName().equals(title)) {
+                quiz = quizzes.get(i);
+                break;
+            }
+
+        }
+        if (quiz != null)
+            System.out.println(quiz.randomizeQuestions(quiz));
+        else
+            System.out.println("No questions found.");
+
+    }
+
 
     public static void launchAQuiz(String title, QuizArchive quizArchive) {
 
@@ -103,7 +124,7 @@ public class TheQuizFunction {
         if (check)
             return false;
 
-        System.out.println("Do you want to change the quiz title?");
+        System.out.println("Do you want to change the quizz's title? (yes/no)");
         answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
         if (answer.equals("Yes") || answer.equals("yes")) {
 
@@ -175,12 +196,12 @@ public class TheQuizFunction {
      * @return a string arrayList containing the answers of a particular student, or
      * returns a message containing a description of the error.
      */
-    public static ArrayList<String> startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
+    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
 
         var quizzes = quizArchive.getQuizzes();
         boolean check = false;
-        ArrayList<String> studentAnswers = new ArrayList<>();
-
+        ArrayList<Integer> studentAnswers = new ArrayList<>();
+        Quiz quiz = null;
         String answer;
 
         for (int i=0; i<quizzes.size(); i++) {
@@ -189,15 +210,18 @@ public class TheQuizFunction {
 
                 if (!quizzes.get(i).isQuizIsReady()) {
                     System.out.println("Don't forget to launch the quiz");
-                    return null;
+
                 }
 
                 check = true;
 
-                Quiz quiz = quizzes.get(i);
+                quiz = quizzes.get(i);
 
                 var questions = quiz.getQuestions();
                 var correctAnswer = quiz.getCorrectAnswers();
+
+
+                int questionNum = 1;
 
                 for (int j=0; j<questions.size(); j++) {
 
@@ -217,14 +241,14 @@ public class TheQuizFunction {
 
                     String option4 = wholeQuestion;
 
-                    System.out.println(quesiton);
+                    System.out.println((questionNum++) + quesiton.substring(1) + ":");
                     System.out.print(option1 + option2 + option3 + option4);
 
                     System.out.print("Your answer: ");
                     String[] options = {"1", "2", "3", "4"};
                     answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
 
-                    studentAnswers.add(answer);
+                    studentAnswers.add(Integer.valueOf(answer));
 
 
                 }
@@ -238,9 +262,10 @@ public class TheQuizFunction {
 
         if (!check) {
             System.out.println("Couldn't start the quiz.");
-            return null;
+
         }
-        return studentAnswers;
+
+        quiz.setStudentAnswers(studentAnswers);
 
     }
 
@@ -251,7 +276,7 @@ public class TheQuizFunction {
 
         do {
 
-            System.out.println("Do you want to add a quiz?");
+            System.out.println("Do you want to add a quiz? (yes/no)");
             String[] standardChoices = {"Yes", "yes", "No", "no"};
             answer = inputChecker(scanner, standardChoices, "Do you want to add a quiz?", "Invalid input.");
 
@@ -269,12 +294,17 @@ public class TheQuizFunction {
 
                 if (Integer.valueOf(answer) == 0) {
 
-                    System.out.println("What's the quiz's title?");
-                    answer = scanner.nextLine();
+                    do {
+
+                        System.out.println("What's the quiz's title?");
+                        answer = scanner.nextLine();
+
+                    } while (answer.isEmpty() || answer.isBlank());
+
                     Quiz q1 = new Quiz(answer);
                     quizArchive.addQuizes(q1);
 
-                    System.out.println("Do you want to add questions?");
+                    System.out.println("Do you want to add questions? (yes/no)");
                     answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to add questions?", "Invalid input.");
                     if (answer.equals("No") || answer.equals("no")) {
                         System.out.println("An empty quiz was created.");
@@ -289,7 +319,16 @@ public class TheQuizFunction {
                         while (true) {
 
                             System.out.println("Question " + (++numOfQuestions) + ":");
-                            answer = scanner.nextLine();
+
+                            do {
+                                answer = scanner.nextLine();
+                                if (answer.isBlank() || answer.isEmpty()) {
+                                    System.out.println("Type the question again:");
+                                } else {
+                                    break;
+                                }
+                            } while (true);
+
 
                             if (answer.equals("STOP") || answer.equals("Stop") || answer.equals("stop"))
                                 break;
@@ -300,7 +339,15 @@ public class TheQuizFunction {
                             for (int i = 0; i < options.length; i++) {
 
                                 System.out.println("Option " + (i+1) + ":");
-                                options[i] = (i+1) + ". " + scanner.nextLine() + "\n";
+                                String oneOption = "";
+                                do {
+                                    oneOption = scanner.nextLine();
+                                    if (!oneOption.isBlank() && !oneOption.isEmpty())
+                                        break;
+                                    System.out.println("The option is empty.");
+                                } while (true);
+
+                                options[i] = (i+1) + ". " + oneOption + "\n";
                             }
 
                             String[] correctAnswerOptions = {"1", "2", "3", "4"};
@@ -318,8 +365,13 @@ public class TheQuizFunction {
 
                     int numOfQuestions = Integer.valueOf(answer);
 
-                    System.out.println("What's the quiz's title?");
-                    answer = scanner.nextLine();
+                    do {
+
+                        System.out.println("What's the quiz's title?");
+                        answer = scanner.nextLine();
+
+                    } while (answer.isEmpty() || answer.isBlank());
+
 
                     Quiz q1 = new Quiz(answer, numOfQuestions);
                     quizArchive.addQuizes(q1);
@@ -330,12 +382,30 @@ public class TheQuizFunction {
                         String[] options = new String[4];
 
                         System.out.println("Question " + (i+1) + ":");
-                        String question = scanner.nextLine();
+
+                        String question = "";
+                        do {
+                            question = scanner.nextLine();
+                            if (question.isBlank() || question.isEmpty()) {
+                                System.out.println("Type the question again:");
+                            } else {
+                                break;
+                            }
+                        } while (true);
 
                         for (int j = 0; j < options.length; j++) {
 
                             System.out.println("Option " + (j+1) + ":");
-                            options[j] = (j+1) + ". " + scanner.nextLine() + "\n";
+
+                            String oneOption = "";
+                            do {
+                                oneOption = scanner.nextLine();
+                                if (!oneOption.isBlank() && !oneOption.isEmpty())
+                                    break;
+                                System.out.println("The option is empty.");
+                            } while (true);
+
+                            options[j] = (j+1) + ". " + oneOption + "\n";
 
                         }
 

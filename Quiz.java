@@ -5,16 +5,15 @@ import java.util.Scanner;
 /**
  * Quiz class
  *
- * A representation for one quiz that a certian number of students
+ * A representation for one quiz that a certain number of students
  * can take.
  *
  * @author Zuhair Almansouri, lab sec L16
  *
- * @version November 7, 2021
+ * @version November 12, 2021
  *
  */
 public class Quiz {
-    int option;
 
     /**
      * Title of the quiz
@@ -36,7 +35,7 @@ public class Quiz {
     /**
      * Students answers
      */
-    private ArrayList<Integer[]> studentAnswers;
+    private ArrayList<Integer> studentAnswers;
     /**
      * Quiz questions
      *
@@ -151,6 +150,8 @@ public class Quiz {
                 completedQuestion += "^_^";
         }
 
+        //question1:^_^option1^_^option2^_^option3^_^option4
+
         questions.add(completedQuestion);
         correctAnswers.add(correctAnswer);
         sizeOfQuiz = questions.size();
@@ -231,6 +232,70 @@ public class Quiz {
 
     }
 
+    public String randomizeOptions(String question) {
+
+        Random random = new Random();
+
+        int[] num = new int[4];
+        int counter = 0;
+
+
+        while (true) {
+
+            if (counter == num.length)
+                break;
+            boolean check = true;
+
+            int temp = random.nextInt(5);
+
+            if (temp != 0) {
+
+                for (int i = 0; i < num.length; i++) {
+
+                    if (num[i] == temp)
+                        check = false;
+                }
+
+                if (check) {
+                    num[counter++] = temp;
+                }
+            }
+
+        }
+
+
+        String collectQuestionParts = question.substring(0, question.indexOf("^_^") + 3); //question
+
+        question = question.substring(question.indexOf("^_^") + 3);
+
+        String[] options = new String[4];
+
+        for (int i = 0; i < options.length; i++) {
+
+            if (questions.indexOf("^_^") == -1)
+                options[i] = question;
+            else {
+                options[i] = question.substring(0, question.indexOf("^_^") + 3);
+                question = question.substring(question.indexOf("^_^") + 3);
+            }
+
+        }
+
+
+        for (int i = 0; i < options.length; i++) {
+
+            collectQuestionParts += options[num[i] - 1];
+
+        }
+
+
+        return collectQuestionParts;
+
+
+    }
+
+
+
     public String randomizeQuestions(Quiz quiz) {
 
         Random random = new Random();
@@ -239,17 +304,36 @@ public class Quiz {
 
         int[] questionsNumbers = new int[quiz.getQuestions().size() + 1];
 
+        ArrayList<Integer> checkRepetitive = new ArrayList<>();
+        boolean exit = true;
         for (int i=1 ; i<questionsNumbers.length; i++) {
 
-            while (true) {
+            while (exit) {
 
                 int temp = random.nextInt(questionsNumbers.length);
-                if (questionsNumbers[temp] == 0 && temp != 0) {
-                    questionsNumbers[i] = temp;
-                    break;
+
+                boolean check = true;
+
+                for (int k = 0; k < checkRepetitive.size(); k++) {
+
+                        if (checkRepetitive.get(k) == temp) {
+                            check = false;
+                        }
                 }
 
+                if (check) {
+                    checkRepetitive.add(temp);
+                    if (temp != 0) {
+                        questionsNumbers[i] = temp;
+
+                        exit = false;
+                    }
+                }
+
+
+
             }
+            exit = true;
 
         }
 
@@ -257,9 +341,12 @@ public class Quiz {
 
         for (int i=1; i<questionsNumbers.length; i++) {
 
-            newQuestions.add(oldQuestions.get(questionsNumbers[i]));
+            String oneQuestion = oldQuestions.get(questionsNumbers[i] - 1);
+            //String modifiedOptions = randomizeOptions(oneQuestion);
+            newQuestions.add(oneQuestion);
 
         }
+
 
         quiz.setQuestions(newQuestions);
 
@@ -292,6 +379,25 @@ public class Quiz {
     }
 
 
+    public void setStudentAnswers(ArrayList<Integer> a) {
+        studentAnswers = a;
+    }
+
+
+    public String getScore() {
+
+        int count = 0;
+
+        for (int i = 0; i < studentAnswers.size(); i++) {
+
+            if (studentAnswers.get(i) == correctAnswers.get(i))
+                count++;
+        }
+
+        return "" + count + "/" + studentAnswers.size();
+
+    }
+    
 
     public ArrayList<Integer> getCorrectAnswers() {
         return correctAnswers;
@@ -316,34 +422,5 @@ public class Quiz {
     public void setName(String newName) {
         this.name = newName;
     }
-    
-    public void deleteQuiz(QuizArchive q, String nameOfQuiz) {
-        Scanner scanner = new Scanner(System.in);
-        ArrayList<Quiz> allQuizzes = q.getQuizzes();
-        int loop = 0;
-        do {
-            loop = 0;
-            System.out.println("Which quiz do you want to delete?");
-            int deleteDigit = scanner.nextInt();
-            if (allQuizzes.get(deleteDigit).getName().equals(nameOfQuiz)) {
-                allQuizzes.remove(deleteDigit);
-                System.out.println("Quiz Removed!");
-            } else {
-                System.out.println("Quiz does not exist!");
-            }
-            System.out.println("Do you want to remove another quiz?");
-            System.out.println("1. Yes\n" +
-                    "2. No\n");
-            option = scanner.nextInt();
-            do {
-                if (option == 1) {
-                    loop = 1;
-                } else if (option == 2) {
-                    break;
-                } else {
-                    System.out.println("Invalid Input!");
-                }
-            } while (option != 1 && option != 2);
-        } while (loop == 1);
-    }
+
 }

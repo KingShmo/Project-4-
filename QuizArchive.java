@@ -17,7 +17,6 @@ public class QuizArchive {
     }
 
 
-
     public void addQuizes(Quiz quiz) {
         quizzes.add(quiz);
     }
