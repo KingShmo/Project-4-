@@ -1,3 +1,5 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -246,12 +248,18 @@ public class TheQuizFunction {
 
                     System.out.print("Your answer: ");
                     String[] options = {"1", "2", "3", "4"};
-                    answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
+                    answer = inputChecker(scanner, options, "Your answer: ",
+                            "Answer should be from 1 to 4.");
 
                     studentAnswers.add(Integer.valueOf(answer));
 
 
                 }
+                SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds = new SimpleDateFormat
+                        ("yyyy-MM-dd HH:mm:ss");
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                System.out.println(yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
+
 
             }
 
