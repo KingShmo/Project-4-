@@ -16,7 +16,54 @@ public class Student {
         pw.flush();
     }
 
-    public static ArrayList<String> getAllUsernames(){
+    public static String deleteAccount(String password) throws FileNotFoundException {
+        int deleteAcc = 0;
+        StringBuffer buffer = new StringBuffer();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                buffer.append(line + " \n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = buffer.toString();
+        if (buffer.isEmpty()) {
+            return "No student accounts have been created.";
+        } else {
+            for (int i = 0; i < fileContents.length(); i++) {
+                if (fileContents.contains(password)) {
+                    fileContents = fileContents.replace(password, "deleteAccount");
+                    deleteAcc = 1;
+                }
+            }
+            if (deleteAcc != 1) {
+                return "Please input correct password";
+            }
+            String [] splitContents = fileContents.split("\n");
+            ArrayList<String> stringArrayList = new ArrayList<>();
+            for (int i = 0; i < splitContents.length; i++) {
+                stringArrayList.add(splitContents[i]);
+            }
+            for (int i = 0; i < stringArrayList.size(); i++) {
+                if (stringArrayList.get(i).contains("Password: deleteAccount")) {
+                    stringArrayList.remove(i+1);
+                    stringArrayList.remove(i);
+                    stringArrayList.remove(i-1);
+                    stringArrayList.remove(i-2);
+                }
+            }
+            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < stringArrayList.size(); i++) {
+                pw.println(stringArrayList.get(i));
+            }
+            pw.flush();
+        }
+        return "Your account has been deleted!";
+    }
+
+    public static ArrayList<String> getAllUsernamesAndPasswords(){
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
@@ -37,6 +84,30 @@ public class Student {
             }
         }
         return allUsernames;
+    }
+
+    public static String getSpecificPassword(String inputUsername) {
+        ArrayList<String> fileContents = new ArrayList<>();
+        ArrayList<String> allUsernames = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContents.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (fileContents.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < fileContents.size(); i++) {
+                if (fileContents.get(i).equals("Username: " + inputUsername)) {
+                    return fileContents.get(i + 1).substring(10);
+                }
+            }
+        }
+        return null;
     }
 
     public static String changeUsername(String oldUsername, String newUsername) throws FileNotFoundException {
@@ -178,13 +249,14 @@ public class Student {
         writeUnfinishedQuizAnswersToFile("Hello", "World", courseName, "Hello", unfinishedAnswers);
         //createAccount("Whats up", "Yall", "hey", "cool");
         */
-        createAccount("Artemii", "IS-Cool", "hey", "nice");
+        //createAccount("Artemii", "IS-Cool", "hey", "nice");
         //System.out.println(changeUsername("i'm", "bruh"));
         //System.out.println(changePassword("bruh", "dope", "cool"));
-        ArrayList<String> users = getAllUsernames();
-        for (int i = 0; i < users.size(); i++) {
-            System.out.println(users.get(i));
-        }
+        //ArrayList<String> users = getAllUsernames();
+        System.out.println(getSpecificPassword("CS lab"));
+        //for (int i = 0; i < users.size(); i++) {
+       //     System.out.println(users.get(i));
+        //}
     }
 }
 
