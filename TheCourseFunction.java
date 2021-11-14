@@ -8,15 +8,13 @@ import java.util.Scanner;
  * Runs a course feature in a learning management system.
  *
  * @author Anushka Nilangekar
- * @version November 13, 2021
+ * @version November 14, 2021
  */
 
 
 public class TheCourseFunction {
 
-    private String name;
-
-    public static void main() throws InvalidCourseException, InvalidQuizException {
+    public static void main() throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
 
         Scanner scanner = new Scanner(System.in);
         String answer;
@@ -26,7 +24,7 @@ public class TheCourseFunction {
         do {
             System.out.println("Select the action you want:");
             System.out.println("1. Create a course");
-            System.out.println("2. Use quiz options for the course");
+            System.out.println("2. Use quiz options for a course");
             System.out.println("3. Delete a course");
             System.out.println("4. Exit");
             String temp = "Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. Delete a course\n4. Exit";
@@ -36,13 +34,30 @@ public class TheCourseFunction {
             if (answer.equals("1")) {
                 System.out.println("What's the course's title?");
                 answer = scanner.nextLine();
-                System.out.println("What's the course's assigned teacher?");
-                teacher = scanner.nextLine();  //?
+                System.out.println("What's the full name of the course's assigned teacher?");
+                String teacherName = scanner.nextLine();
+                var allTeachers = Teacher.getTeachers();
+                Teacher teacher = null;
+                for (int i = 0; i < allTeachers.size(); i++) {
+                    if (allTeachers.get(i).getName().equals(teacherName)) {
+                        teacher = allTeachers.get(i);
+                        break;
+                    }
+                }
                 System.out.println("What's the course's enrollment capacity?");
                 int enrollmentCapacity = scanner.nextInt();
-                creatingACourse( scanner,  answer,  courseArchive,  quizArchive ,  teacher /*?*/,  enrollmentCapacity);
+                creatingACourse(scanner, answer, courseArchive, quizArchive, teacher, enrollmentCapacity);
             } else if (answer.equals("2")) {
-                TheQuizFunction.main(quizArchive);
+                System.out.println("What's the course's title?");
+                answer = scanner.nextLine();
+                ArrayList<Course> courses = courseArchive.getCourses();
+                for (int i = 0; i < courses.size(); i++) {
+                    if (courses.get(i).getName().equals(answer)) {
+                        Course course = courses.get(i);
+                        course.callTheQuizFunction();
+                        break;
+                    }
+                }
 
             } else if (answer.equals("3")) {
                 System.out.println("What's the course's title?");
@@ -50,36 +65,23 @@ public class TheCourseFunction {
                 courseArchive.deleteACourse(answer);
 
             } else if (answer.equals("4"))
-                    break;
+                break;
 
-            } while (true);
+        } while (true);
 
-            System.out.println("Thank you for using our course portal!");
+        System.out.println("Thank you for using our course portal!");
 
     }
 
     public static void creatingACourse(Scanner scanner, String answer, CourseArchive courseArchive, QuizArchive quizArchive
-                                        , Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
-        for (int i = 0; i<courseArchive.getCourses().size(); i++) {
-
-            if(courseArchive.getCourses().get(i).getName().equals(answer))
+            , Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
+        for (int i = 0; i < courseArchive.getCourses().size(); i++) {
+            if (courseArchive.getCourses().get(i).getName().equals(answer))
                 return;
-
         }
 
         Course course = new Course(answer, teacher, enrollmentCapacity);
         courseArchive.addCourses(course);
-
-
-        do {
-            System.out.println("Do you want to access the quiz menu? (yes/no)");
-            String choice = scanner.nextLine();
-            if (choice.toLowerCase().equals("yes")) {
-                TheQuizFunction.main(quizArchive);
-            } else {
-                break;
-            }
-        } while (true);
 
     }
 
