@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class QuizArchive {
 
-    private ArrayList<Quiz> quizzes;
+    private static ArrayList<Quiz> quizzes;
 
 
     public QuizArchive() {
