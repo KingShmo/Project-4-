@@ -34,8 +34,8 @@ public class Student {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public static void setPassword(String pass) {
+        password = pass;
     }
 
     public static void createAccount(String firstName, String lastName, String username, String password)
@@ -115,6 +115,8 @@ public class Student {
             for (int i = 0; i < fileContents.size() / 4; i++) {
                 String user = fileContents.get(1 + 4 * i);
                 allUsernames.add(user.substring(10));
+                String pass = fileContents.get(2 + 4 * i);
+                allUsernames.add(pass.substring(10));
             }
         }
         return allUsernames;
@@ -200,6 +202,7 @@ public class Student {
                     usernameExist = 1;
                     if (fileContents.contains(oldPassword)) {
                         fileContents = fileContents.replace(oldPassword, newPassword);
+                        Student.setPassword(fileContents);
                         oldPasswordExist = 1;
                     }
                 }
@@ -214,7 +217,7 @@ public class Student {
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                System.out.println(splitContents[i]);
+                //System.out.println(splitContents[i]);
                 pw.println(splitContents[i]);
             }
             pw.flush();
@@ -256,6 +259,13 @@ public class Student {
         pw.println("Score: " + grade + "/100");
         pw.println();
         pw.flush();
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> usersAndPass = getAllUsernamesAndPasswords();
+        for (int i = 0; i < usersAndPass.size(); i++) {
+            System.out.println(usersAndPass.get(i));
+        }
     }
 
 }
