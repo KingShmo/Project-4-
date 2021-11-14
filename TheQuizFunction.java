@@ -130,7 +130,7 @@ public class TheQuizFunction {
         if (check)
             return false;
 
-        System.out.println("Do you want to change the quizz's title? (yes/no)");
+        System.out.println("Do you want to change the quiz's title? (yes/no)");
         answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
         if (answer.equals("Yes") || answer.equals("yes")) {
 
@@ -277,20 +277,21 @@ public class TheQuizFunction {
     }
 
     public static void viewStudentSubmissions(Scanner scanner, QuizArchive quizArchive) throws FileNotFoundException {
+        String answer;
         System.out.println("Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)");
-        int choice = scanner.nextInt();
-        if (choice == 1) {
+        String temp = "Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)";
+        String[] options = {"1", "2"};
+        answer = inputChecker(scanner, options, temp, "Invalid input.");
+        if (answer.equals("1")) {
             System.out.println("What is the first name of the student? ");
             String firstName = scanner.nextLine();
             System.out.println("What is the last name of the student? ");
             String lastName = scanner.nextLine();
             readQuizByStudentName(firstName, lastName);
-        } else if (choice == 2) {
+        } else if (answer.equals("2")) {
             System.out.println("What is the name of the quiz? ");
             String quizName = scanner.nextLine();
             readQuizByQuizName(quizName);
-        } else {
-
         }
 
     }
