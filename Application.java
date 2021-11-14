@@ -223,10 +223,10 @@ public class Application {
                 scanner.nextLine();
                 String newPassword = scanner.nextLine();
                 String oldPassword = item.getPassword();
-                item.setPassword(newPassword);
                 Teacher teacher = new Teacher(null,null, username, oldPassword);
                 teacher.changePassword(username, oldPassword, newPassword );
                 System.out.println(signInAgain);
+                item.setPassword(newPassword);
                 signIn(scanner);
             }
         }
@@ -237,12 +237,12 @@ public class Application {
             if (username.equals(item.getUsername()))
             {
                 System.out.println(enterNewPassword);
-                String newPassword = scanner.nextLine();
                 scanner.nextLine();
+                String newPassword = scanner.nextLine();
                 String oldPassword = item.getPassword();
-                item.setPassword(newPassword);
                 Student student = new Student(null,null, username, oldPassword);
                 student.changePassword(username, oldPassword, newPassword );
+                item.setPassword(newPassword);
                 System.out.println(signInAgain);
                 signIn(scanner);
             }
@@ -296,29 +296,36 @@ public class Application {
     }
 
     public static void deleteAccountStudent(String username, Scanner scanner) throws Exception{
-        System.out.println(confirmQuestion);
-        int confirmation = scanner.nextInt();
-        for (Student item: students) {
-            if (username.equals(item.getUsername()))
-            {
-                if (confirmation == 1)
-                {
-                    students.remove(item);
-                    Student student = new Student(enterFirstName, enterLastName, username, enterPassword);
-                    student.deleteAccount(username);
-                    System.out.println("Account deleted!\n");
-                    register(scanner);
-                }
-                else if (confirmation == 2)
-                {
-                    menuStudent(username, scanner);
-                }
-                else
-                {
-                    System.out.println(incorrectAnswer);
-                    menuStudent(username, scanner);
+        try {
+            for (Student item : students) {
+                if (username.equals(item.getUsername())) {
+                    System.out.println(confirmQuestion);
+                    int confirmation = scanner.nextInt();
+                    if (confirmation == 1) {
+                        students.remove(item);
+                        Student student = new Student(enterFirstName, enterLastName, username, enterPassword);
+                        student.deleteAccount(username);
+                        System.out.println("Account deleted!\n");
+                        System.out.println(signInOrRegister);
+                        int choice = scanner.nextInt();
+
+                        if (choice == 1) {
+                            signIn(scanner);
+                        } else if (choice == 2) {
+                            register(scanner);
+                        } else {
+                            System.out.println(incorrectAnswer);
+                        }
+                    } else if (confirmation == 2) {
+                        menuStudent(username, scanner);
+                    } else {
+                        System.out.println(incorrectAnswer);
+                        menuStudent(username, scanner);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -384,3 +391,4 @@ public class Application {
     }
 
 }
+
