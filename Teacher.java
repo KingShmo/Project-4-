@@ -42,7 +42,7 @@ public class Teacher {
     }
 
     public String getName() { //Returns the full name of a teacher
-        return firstName + " " + lastName;
+        return getFirstName() + " " + getLastName();
     }
 
     public String getUsername() { //Returns the username of a teacher (use it to find out if username already exists)
@@ -375,10 +375,10 @@ public class Teacher {
 
 
     public static void main(String[] args) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
-        Scanner scanner=new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         boolean check;
         do {
-            check=TheCourseFunction.courseFunctionMenu(scanner);
+            check = TheCourseFunction.courseFunctionMenu(scanner);
         } while (check);
 
     }
