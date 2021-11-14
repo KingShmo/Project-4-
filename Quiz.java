@@ -320,9 +320,9 @@ public class Quiz {
 
                 for (int k = 0; k < checkRepetitive.size(); k++) {
 
-                        if (checkRepetitive.get(k) == temp) {
-                            check = false;
-                        }
+                    if (checkRepetitive.get(k) == temp) {
+                        check = false;
+                    }
                 }
 
                 if (check) {

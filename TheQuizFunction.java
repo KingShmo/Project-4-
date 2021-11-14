@@ -55,6 +55,7 @@ public class TheQuizFunction {
         } while (true);
 
         System.out.println("Thank you for using our quiz portal!");
+        scanner.nextLine();
 
     }
 
