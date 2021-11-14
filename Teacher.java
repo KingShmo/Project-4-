@@ -375,9 +375,11 @@ public class Teacher {
 
 
     public static void main(String[] args) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+        Scanner scanner=new Scanner(System.in);
+        boolean check;
         do {
-            TheCourseFunction.main();
-        } while (true);
+            check=TheCourseFunction.courseFunctionMenu(scanner);
+        } while (check);
 
     }
 
