@@ -17,11 +17,11 @@ import java.util.Scanner;
 
 public class TheQuizFunction {
 
-    public static void main() throws InvalidQuizException {
+    public static void main(QuizArchive quizArchive) throws InvalidQuizException {
 
         Scanner scanner = new Scanner(System.in);
         String answer;
-        QuizArchive quizArchive = new QuizArchive();
+        quizArchive = new QuizArchive();
 
         do {
             System.out.println("Select the action you want:");
