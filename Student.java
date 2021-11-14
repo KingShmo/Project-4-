@@ -34,8 +34,8 @@ public class Student {
         return password;
     }
 
-    public static void setPassword(String pass) {
-        password = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public static void createAccount(String firstName, String lastName, String username, String password)
@@ -67,7 +67,7 @@ public class Student {
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(username)) {
-                    fileContents = fileContents.replace("Username: username", "Username: deleteAccount");
+                    fileContents = fileContents.replace("Username: " + username, "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -200,9 +200,8 @@ public class Student {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(username)) {
                     usernameExist = 1;
-                    if (fileContents.contains(oldPassword)) {
-                        fileContents = fileContents.replace(oldPassword, newPassword);
-                        Student.setPassword(fileContents);
+                    if (fileContents.contains("Password: " + oldPassword)) {
+                        fileContents = fileContents.replace("Password: " + oldPassword, "Password: " + newPassword);
                         oldPasswordExist = 1;
                     }
                 }
@@ -217,7 +216,6 @@ public class Student {
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                //System.out.println(splitContents[i]);
                 pw.println(splitContents[i]);
             }
             pw.flush();
