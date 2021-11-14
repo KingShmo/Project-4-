@@ -19,7 +19,7 @@ public class TheCourseFunction {
         Scanner scanner = new Scanner(System.in);
         String answer;
         CourseArchive courseArchive = new CourseArchive();
-        QuizArchive quizArchive = new QuizArchive();
+
 
         do {
             System.out.println("Select the action you want:");
@@ -46,7 +46,9 @@ public class TheCourseFunction {
                 }
                 System.out.println("What's the course's enrollment capacity?");
                 int enrollmentCapacity = scanner.nextInt();
+                QuizArchive quizArchive = new QuizArchive();
                 creatingACourse(scanner, answer, courseArchive, quizArchive, teacher, enrollmentCapacity);
+                System.out.println("Course created!");
             } else if (answer.equals("2")) {
                 System.out.println("What's the course's title?");
                 answer = scanner.nextLine();
