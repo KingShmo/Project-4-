@@ -1,3 +1,5 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -196,7 +198,7 @@ public class TheQuizFunction {
      * @return a string arrayList containing the answers of a particular student, or
      * returns a message containing a description of the error.
      */
-    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
+    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive, TimeStamp timeStamp) {
 
         var quizzes = quizArchive.getQuizzes();
         boolean check = false;
@@ -227,7 +229,7 @@ public class TheQuizFunction {
 
                     String wholeQuestion = questions.get(j);
 
-                    String question = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
+                    String quesiton = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
                     wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
 
                     String option1 = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
@@ -241,17 +243,20 @@ public class TheQuizFunction {
 
                     String option4 = wholeQuestion;
 
-                    System.out.println((questionNum++) + question.substring(1) + ":");
-                    System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1));
+                    System.out.println((questionNum++) + quesiton.substring(1) + ":");
+                    System.out.print(option1 + option2 + option3 + option4);
 
                     System.out.print("Your answer: ");
                     String[] options = {"1", "2", "3", "4"};
-                    answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
+                    answer = inputChecker(scanner, options, "Your answer: ",
+                            "Answer should be from 1 to 4.");
 
                     studentAnswers.add(Integer.valueOf(answer));
 
 
                 }
+                timeStamp.submissionTime();
+
 
             }
 
@@ -426,6 +431,7 @@ public class TheQuizFunction {
         } while (true);
 
     }
+
 
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
