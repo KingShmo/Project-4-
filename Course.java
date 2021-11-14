@@ -1,17 +1,17 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
+
 /**
  * Course class
- *
+ * <p>
  * A representation for one course that a certain number of students
  * can access.
  *
  * @author Anushka Nilangekar
- *
- * @version November 13, 2021
- *
+ * @version November 14, 2021
  */
 public class Course {
     /**
@@ -28,6 +28,8 @@ public class Course {
     private int enrollmentCapacity;
 
     private ArrayList<Student> students;
+
+    QuizArchive quizArchive = new QuizArchive();
 
     public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException {
         this.name = name;
@@ -77,4 +79,8 @@ public class Course {
         this.name = newName;
     }
 
+    public void callTheQuizFunction() throws InvalidQuizException, FileNotFoundException {
+        TheQuizFunction.main(quizArchive);
+
+    }
 }
