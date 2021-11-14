@@ -27,7 +27,7 @@ public class Course {
      */
     private int enrollmentCapacity;
 
-    private ArrayList<Student> students;
+    private ArrayList<Student> studentsInThisCourse;
 
     QuizArchive quizArchive = new QuizArchive();
 
@@ -35,7 +35,7 @@ public class Course {
         this.name = name;
         this.courseTeacher = teacher;
         this.enrollmentCapacity = enrollmentCapacity;
-        students = new ArrayList<>();
+        studentsInThisCourse = new ArrayList<>();
         if (enrollmentCapacity < 1)
             throw new InvalidCourseException("A course should have a minimum student enrollment of 1!");
     }
@@ -51,8 +51,8 @@ public class Course {
      */
 
 
-    public void addAStudent(Student student) {
-        students.add(student);
+    public void addAStudentToTheCourse(Student student) {
+        studentsInThisCourse.add(student);
     }
 
     public String getName() {
@@ -71,8 +71,8 @@ public class Course {
         this.courseTeacher = newCourseTeacher;
     }
 
-    public void setEnrollmentCapacity(String newEnrollmentCapacity) {
-        this.name = newEnrollmentCapacity;
+    public void setEnrollmentCapacity(int newEnrollmentCapacity) {
+        this.enrollmentCapacity = newEnrollmentCapacity;
     }
 
     public void setName(String newName) {
