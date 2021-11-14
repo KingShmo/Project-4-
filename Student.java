@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Student {
-
     int option;
     private static String firstName;
     private static String lastName;
@@ -57,7 +56,7 @@ public class Student {
     public String getPassword() { //Returns the password of a student
         return password;
     }
-    public void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, QuizArchive q, Quiz grades) {
+    public void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, QuizArchive q, Quiz newStudent, int[] score) {
         ArrayList<Quiz> Quizzes = q.getQuizzes();
         int loop = 0;
         do {
@@ -71,7 +70,8 @@ public class Student {
                 System.out.println(answersQuiz.get(i) + ";");
             }
             System.out.println(answersQuiz.get(answersQuiz.size() - 1));
-            System.out.println("Score: " + grades.getScore());
+            System.out.println("Questions correct: " + this.getScore(newStudent));
+            System.out.println("Score: " + this.getModifiedScore(score, newStudent));
             System.out.println("Do you want to view another quiz?");
             System.out.println("1. Yes\n" +
                     "2. No\n");
@@ -96,7 +96,7 @@ public class Student {
         Quiz quiz = null;
         String answer;
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i = 0; i<quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
 
@@ -150,7 +150,6 @@ public class Student {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 System.out.println(yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
 
-
             }
 
             if (check)
@@ -164,6 +163,48 @@ public class Student {
         }
 
         quiz.setStudentAnswers(studentAnswers);
+
+    }
+    public static void getStudentAnswers(Quiz answers) {
+        answers.getStudentAnswers();
+    }
+    public static int[] assignPointValues(Quiz temp, Scanner scanner) {
+        int[] pointValues = new int[temp.getSizeOfQuiz()];
+        for (int i = 0; i < temp.getSizeOfQuiz(); i++) {
+            System.out.println("How many points is question " + i + " worth?");
+            int points = scanner.nextInt();
+            pointValues[i] = points;
+        }
+        return pointValues;
+    }
+    public String getModifiedScore(int[] pointValue, Quiz q) {
+
+        int count = 0;
+
+        for (int i = 0; i < q.getStudentAnswers().size(); i++) {
+
+            if (q.getStudentAnswers().get(i) == q.getCorrectAnswers().get(i))
+                count += pointValue[i];
+        }
+        int sum = 0;
+        for(int i = 0; i < pointValue.length; i++){
+            sum = sum + pointValue[i];
+        }
+
+        return "" + count + "/" + sum;
+
+    }
+    public String getScore(Quiz q) {
+
+        int count = 0;
+
+        for (int i = 0; i < q.getStudentAnswers().size(); i++) {
+
+            if (q.getStudentAnswers().get(i) == q.getCorrectAnswers().get(i))
+                count++;
+        }
+
+        return "" + count + "/" + q.getStudentAnswers().size();
 
     }
 
