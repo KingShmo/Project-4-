@@ -21,6 +21,7 @@ public class Application {
     private static String passwordDoesntMatch = "Sorry, the password you entered doesn't match the username";
     private static String enterNewPassword = "Please, enter the new password";
     private static String signInAgain = "Please Sign In again to confirm your password change";
+    private static String thankYouMessage = "Thank you for using Quiz app!";
     private static String confirmQuestion =
             "Are you sure that you want to delete your account?\n" +
                     "Press [1] for yes, or [2] for no";
@@ -31,18 +32,22 @@ public class Application {
             "Do you want to register as a teacher or as a student?\n" +
                     "Pick [1] for teacher or [2] for student.";
     private static String menuTeacher =
-            "[1] Change your password\n" +
-                    "[2] Delete your account\n"; // And other options
+            "Menu:\n" +
+                    "[1] Change your password\n" +
+                    "[2] Delete your account\n" +
+                    "[3] Sign Out\n";// And other options
     private static String menuStudent =
             "Menu:\n" +
                     "[1] Change your password\n" +
-                    "[2] Delete your account\n"; // And other options
+                    "[2] Delete your account\n" +
+                    "[3] Sign Out\n"; // And other options
     private static String chooseOne = "Pick a corresponding number to choose an option";
     static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
     static ArrayList<Student> students = new ArrayList<Student>();
     static int usernameStatus = 1;
     static int check1 = 0; // Checks if there is already a user with that username
     static int check2 = 0;
+    static int check3 = 0;
 
 
 
@@ -51,21 +56,18 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println(welcomeMessage);
-        System.out.println(signInOrRegister);
-        int choiceSignInOrRegister = scanner.nextInt();
+        do {
+            System.out.println(signInOrRegister);
+            int choiceSignInOrRegister = scanner.nextInt();
 
-        if (choiceSignInOrRegister == 1)
-        {
-            signIn(scanner);
-        }
-        else if (choiceSignInOrRegister == 2)
-        {
-            register(scanner);
-        }
-        else
-        {
-            System.out.println(incorrectAnswer);
-        }
+            if (choiceSignInOrRegister == 1) {
+                signIn(scanner);
+            } else if (choiceSignInOrRegister == 2) {
+                register(scanner);
+            } else {
+                System.out.println(incorrectAnswer);
+            }
+        } while(check3 == 0);
 
     }
 
@@ -235,8 +237,8 @@ public class Application {
             if (username.equals(item.getUsername()))
             {
                 System.out.println(enterNewPassword);
-                scanner.nextLine();
                 String newPassword = scanner.nextLine();
+                scanner.nextLine();
                 String oldPassword = item.getPassword();
                 item.setPassword(newPassword);
                 Student student = new Student(null,null, username, oldPassword);
@@ -335,6 +337,10 @@ public class Application {
                     deleteAccountTeacher(username, scanner);
                     break;
 
+                case 3:
+                    signOut(scanner);
+                    break;
+
                 default:
                     System.out.println(incorrectAnswer);
                     break;
@@ -345,24 +351,36 @@ public class Application {
     }
 
     public static void menuStudent(String username, Scanner scanner) throws Exception{
-        System.out.println(menuStudent);
-        System.out.println(chooseOne);
-        int choice = scanner.nextInt();
+        try {
+            System.out.println(menuStudent);
+            System.out.println(chooseOne);
+            int choice = scanner.nextInt();
 
-        switch(choice) {
-            case 1:
-                changePasswordStudent(username, scanner);
-                break;
+            switch (choice) {
+                case 1:
+                    changePasswordStudent(username, scanner);
+                    break;
 
-            case 2:
-                deleteAccountStudent(username, scanner);
-                break;
+                case 2:
+                    deleteAccountStudent(username, scanner);
+                    break;
 
-            default:
-                System.out.println(incorrectAnswer);
-                break;
+                case 3:
+                    signOut(scanner);
+                    break;
+
+                default:
+                    System.out.println(incorrectAnswer);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-}
+    public static void signOut(Scanner scanner) {
+        System.out.println(thankYouMessage);
+        check3 = 1;
+    }
 
+}
