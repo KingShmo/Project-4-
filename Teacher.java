@@ -246,8 +246,8 @@ public class Teacher {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(username)) {
                     usernameExist = 1;
-                    if (fileContents.contains(oldPassword)) {
-                        fileContents = fileContents.replace(oldPassword, newPassword);
+                    if (fileContents.contains("Password: " + oldPassword)) {
+                        fileContents = fileContents.replace("Password: " + oldPassword, "Password: " + newPassword);
                         oldPasswordExist = 1;
                     }
                 }
@@ -262,7 +262,6 @@ public class Teacher {
             FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                System.out.println(splitContents[i]);
                 pw.println(splitContents[i]);
             }
             pw.flush();
