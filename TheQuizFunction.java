@@ -17,11 +17,11 @@ import java.util.Scanner;
 
 public class TheQuizFunction {
 
-    public static void main(QuizArchive quizArchive) throws InvalidQuizException {
+    public static void main() throws InvalidQuizException {
 
         Scanner scanner = new Scanner(System.in);
         String answer;
-        quizArchive = new QuizArchive();
+        QuizArchive quizArchive = new QuizArchive();
 
         do {
             System.out.println("Select the action you want:");
@@ -206,7 +206,7 @@ public class TheQuizFunction {
         Quiz quiz = null;
         String answer;
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i=0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
 
@@ -278,7 +278,7 @@ public class TheQuizFunction {
 
         String answer;
 
-
+        Quiz temp = null;
         do {
 
             System.out.println("Do you want to add a quiz? (yes/no)");
@@ -291,7 +291,7 @@ public class TheQuizFunction {
 
                 System.out.println("How many numbers of questions?");
                 String[] questionNumberChoices = new String[121];
-                for (int i=0; i<questionNumberChoices.length; i++) {
+                for (int i=0; i < questionNumberChoices.length; i++) {
                     questionNumberChoices[i] = "" + i;
                 }
                 answer = inputChecker(scanner, questionNumberChoices, "How many numbers of questions?",
@@ -358,6 +358,7 @@ public class TheQuizFunction {
                             String[] correctAnswerOptions = {"1", "2", "3", "4"};
 
                             System.out.println("What's the correct answer?");
+
                             String correct = inputChecker(scanner, correctAnswerOptions, "What's the correct answer?",
                                     "Correct answers should be from 1 to 4.");
 
@@ -379,6 +380,7 @@ public class TheQuizFunction {
 
 
                     Quiz q1 = new Quiz(answer, numOfQuestions);
+                    temp = q1;
                     quizArchive.addQuizes(q1);
 
 
@@ -423,12 +425,12 @@ public class TheQuizFunction {
                     }
 
                 }
-
+                Student.assignPointValues(temp, scanner);
             }
 
             break;
 
-        } while (true);
+        }  while (true);
 
     }
 
