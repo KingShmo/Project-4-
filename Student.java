@@ -57,7 +57,7 @@ public class Student {
     public String getPassword() { //Returns the password of a student
         return password;
     }
-    public void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
+    public void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, QuizArchive q, Quiz grades) {
         ArrayList<Quiz> Quizzes = q.getQuizzes();
         int loop = 0;
         do {
@@ -71,7 +71,7 @@ public class Student {
                 System.out.println(answersQuiz.get(i) + ";");
             }
             System.out.println(answersQuiz.get(answersQuiz.size() - 1));
-            System.out.println("Score: " + grade + "/100");
+            System.out.println("Score: " + grades.getScore());
             System.out.println("Do you want to view another quiz?");
             System.out.println("1. Yes\n" +
                     "2. No\n");
