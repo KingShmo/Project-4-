@@ -270,10 +270,14 @@ public class Quiz {
 
         String[] options = new String[4];
 
+
+        int countOptions = 1;
+
         for (int i = 0; i < options.length; i++) {
 
-            if (questions.indexOf("^_^") == -1)
-                options[i] = question;
+            if (question.indexOf("^_^") == -1) {
+                options[i] = question + "^_^";
+            }
             else {
                 options[i] = question.substring(0, question.indexOf("^_^") + 3);
                 question = question.substring(question.indexOf("^_^") + 3);
@@ -289,7 +293,7 @@ public class Quiz {
         }
 
 
-        return collectQuestionParts;
+        return collectQuestionParts.substring(0, collectQuestionParts.length() - 3);
 
 
     }
@@ -342,8 +346,8 @@ public class Quiz {
         for (int i=1; i<questionsNumbers.length; i++) {
 
             String oneQuestion = oldQuestions.get(questionsNumbers[i] - 1);
-            //String modifiedOptions = randomizeOptions(oneQuestion);
-            newQuestions.add(oneQuestion);
+            String modifiedOptions = randomizeOptions(oneQuestion);
+            newQuestions.add(modifiedOptions);
 
         }
 
@@ -378,7 +382,9 @@ public class Quiz {
         return questions;
     }
 
-
+    public ArrayList<Integer> getStudentAnswers() {
+        return studentAnswers;
+    }
     public void setStudentAnswers(ArrayList<Integer> a) {
         studentAnswers = a;
     }
@@ -397,7 +403,7 @@ public class Quiz {
         return "" + count + "/" + studentAnswers.size();
 
     }
-    
+
 
     public ArrayList<Integer> getCorrectAnswers() {
         return correctAnswers;
@@ -422,5 +428,6 @@ public class Quiz {
     public void setName(String newName) {
         this.name = newName;
     }
+
 
 }

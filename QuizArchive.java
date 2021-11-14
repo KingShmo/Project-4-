@@ -44,6 +44,6 @@ public class QuizArchive {
                            "getName()\ngetQuestions()\ngetCorrectAnswers()\ngetStudentAnswers()";
 
         return toBeSaved;
-        
+
     }
  }
