@@ -8,10 +8,18 @@
  */
 public class InvalidQuizException extends Exception {
 
+    /**
+     * Calls the super class
+     */
     public InvalidQuizException() {
         super();
     }
 
+    /**
+     * Calls the super class overloaded constructor
+     *
+     * @param message = the message to be printed as an error
+     */
     public InvalidQuizException(String message) {
         super(message);
     }
