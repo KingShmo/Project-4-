@@ -28,9 +28,9 @@ public class StudentAnish {
     }
 
 
-    public static void main(CourseArchive courseArchive) throws InvalidCourseException {
+    public static void main() throws InvalidCourseException {
 
-        CourseArchive listOfCourses = courseArchive;
+        CourseArchive listOfCourses = new CourseArchive();
 
         Scanner scanner = new Scanner(System.in);
         int option = 0;
