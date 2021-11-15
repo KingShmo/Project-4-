@@ -280,6 +280,78 @@ public class Student {
         pw.flush();
     }
 
+    
+     public static void readStudents(ArrayList<Student> students) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("StudentAccounts.txt"));
+
+        String line = br.readLine();
+
+        while (line != null && !line.isEmpty() && !line.isBlank())  {
+
+
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            Student student = new Student(firstName, lastName, username, password);
+
+            students.add(student);
+
+            line = br.readLine();
+
+        }
+
+
+
+
+    }
+
+
+    public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
+
+        String line = br.readLine();
+
+        while (line != null && !line.isEmpty() && !line.isBlank())  {
+
+
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            Teacher teacher = new Teacher(firstName, lastName, username, password);
+
+            teachers.add(teacher);
+
+            line = br.readLine();
+
+        }
+
+
+
+
+    }
+
+    
+    
     //Start of Zuhair's modification
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
 
