@@ -55,7 +55,7 @@ public class TheQuizFunction {
         } while (true);
 
         System.out.println("Thank you for using our quiz portal!");
-        scanner.nextLine();
+
 
     }
 
@@ -252,10 +252,6 @@ public class TheQuizFunction {
 
 
                 }
-                SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
-                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
 
             }
 
@@ -421,7 +417,6 @@ public class TheQuizFunction {
                         q1.addOneQuestion(question, options, Integer.valueOf(answer));
 
                     }
-                    Student.assignPointValues(temp, scanner);
 
                 }
 
