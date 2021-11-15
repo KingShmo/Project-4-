@@ -12,7 +12,7 @@ import java.io.IOException;
  * <p>
  * Runs a quiz feature in a learning management system.
  *
- * @author Zuhair Almansouri, lab sec L16
+ * @author Zuhair Almansouri, lab sec L16, Troy Tamura
  * All code is done by Zuhair except for specific lines that
  * has a comment on them stating the author who wrote them.
  * @version November 15, 2021
@@ -348,6 +348,7 @@ public class TheQuizFunction {
     }
 
     //Troy's method
+    //Create method to find all the students and results of their quizzes for one type of quiz
     public static ArrayList<String> readQuizByQuizName(String quizName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
@@ -381,6 +382,7 @@ public class TheQuizFunction {
     }
 
     //Troy's method
+    //Create method to find all quizzes taken by a student by searching and using their name
     public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
