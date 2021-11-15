@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat;
 /**
  * TimeStamp class
  * 
- * Prints a timestamp for a quiz
+ * Prints a timestamp everytime a student has taken the quiz and allows a teacher to access the timestamp if needed
  *
  * @author Anish 
  * 
