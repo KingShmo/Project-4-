@@ -307,6 +307,7 @@ public class TheQuizFunction {
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
+                //Anish's code that prints a timestamp only when a student has COMPLETED a quiz which a student sees and which the teacher can access if needed.
 
             }
 
@@ -572,6 +573,7 @@ public class TheQuizFunction {
                 }
 
                 StudentAnish.assignPointValues(temp, scanner);
+                // Anish's method that asks a teacher the specific value for each question when they create a quiz
             }
 
             break;
