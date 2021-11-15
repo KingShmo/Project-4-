@@ -27,34 +27,58 @@ public class Application {
     private static String enterNewPassword = "Please, enter the new password";
     private static String signInAgain = "Please Sign In again to confirm your password change";
     private static String thankYouMessage = "Thank you for using Quiz app!";
+    /**
+     * Asks a user to confirm that they want to delete their account
+     */
     private static String confirmQuestion =
             "Are you sure that you want to delete your account?\n" +
                     "Press [1] for yes, or [2] for no";
     private static String teacherOrStudentSignIn =
             "Do you want to sign in as a teacher or as a student?\n" +
                     "Pick [1] for teacher or [2] for student.";
+    /**
+     * Choose to sign in either as a teacher, or as a student
+     */
     private static String teacherOrStudentRegister =
             "Do you want to register as a teacher or as a student?\n" +
                     "Pick [1] for teacher or [2] for student.";
+    /**
+     * Choose to register either as a teacher, or as a student
+     */
     private static String menuTeacher =
             "Menu:\n" +
                     "[1] Change your password\n" +
                     "[2] Delete your account\n" +
-                    "[3] Sign Out\n";// And other options
+                    "[3] Sign Out\n";
     private static String menuStudent =
             "Menu:\n" +
                     "[1] Change your password\n" +
                     "[2] Delete your account\n" +
-                    "[3] Sign Out\n"; // And other options
+                    "[3] Sign Out\n";
+    /**
+     * Choose an option from the menu
+     */
     private static String chooseOne = "Pick a corresponding number to choose an option";
     static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
     static ArrayList<Student> students = new ArrayList<Student>();
+    /**
+     * Shows if username already exists
+     */
     static int usernameStatus = 1;
-    static int check1 = 0; // Checks if there is already a user with that username
+    /**
+     * These "check" variables indicate if there is the object in either teachers ArrayList or students ArrayList with corresponding username
+     */
+    static int check1 = 0; 
     static int check2 = 0;
     static int check3 = 0;
 
-
+    /**
+     * Runs the program from the beginning
+     * Checks if user wants to Sign In or Register
+     * Runs an infinite loop till the user decides to Sign Out
+     *
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
@@ -78,17 +102,29 @@ public class Application {
 
 
     }
-
+    
+    /**
+     * @return = ArrayList of teachers
+     */
     public ArrayList<Teacher> getTeachers() {
 
         return teachers;
     }
-
+    
+    /**
+     * @return = ArrayList of students
+     */
     public ArrayList<Student> getStudents() {
 
         return students;
     }
-
+    
+    /**
+     * Allows either student or teacher to sign in with their username and password
+     *
+     * @param scanner = object of an imported class Scanner
+     * @throws Exception
+     */
     public static void signIn(Scanner scanner) throws Exception { // Sign in method either for teachers or students
 
         System.out.println("Sign In\n");
@@ -146,7 +182,13 @@ public class Application {
             System.out.println(incorrectAnswer);
         }
     }
-
+    
+    /**
+     * Allows either student or teacher to register with their first name, last name, username and password
+     *
+     * @param scanner = object of an imported class Scanner
+     * @throws Exception
+     */
     public static void register(Scanner scanner) throws Exception { // Allows user to register and then Sign In
 
         System.out.println("Register\n");
@@ -212,7 +254,14 @@ public class Application {
         }
 
     }
-
+    
+    /**
+     * Allows teachers to change their passwords
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular teacher
+     * @throws Exception
+     */
     public static void changePasswordTeacher(String username, Scanner scanner) throws Exception {
         for (Teacher item : teachers) {
             if (username.equals(item.getUsername())) {
@@ -228,7 +277,14 @@ public class Application {
             }
         }
     }
-
+    
+    /**
+     * Allows students to change their passwords
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular student
+     * @throws Exception
+     */
     public static void changePasswordStudent(String username, Scanner scanner) throws Exception {
         for (Student item : students) {
             if (username.equals(item.getUsername())) {
@@ -244,7 +300,14 @@ public class Application {
             }
         }
     }
-
+    
+    /**
+     * Allows teachers to delete their accounts
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular teacher
+     * @throws Exception
+     */
     public static void deleteAccountTeacher(String username, Scanner scanner) throws Exception {
         try {
             for (Teacher item : teachers) {
@@ -280,6 +343,13 @@ public class Application {
         }
     }
 
+    /**
+     * Allows students to delete their accounts
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular student
+     * @throws Exception
+     */
     public static void deleteAccountStudent(String username, Scanner scanner) throws Exception {
         try {
             for (Student item : students) {
@@ -313,7 +383,14 @@ public class Application {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Shows the menu with all the things a teacher can do
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular teacher
+     * @throws Exception
+     */
     public static void menuTeacher(String username, Scanner scanner) throws Exception {
         try {
             System.out.println(menuTeacher + "[4] Go to the Courses and Quiz Function");
@@ -345,6 +422,13 @@ public class Application {
         }
     }
 
+    /**
+     * Shows the menu with all the things a student can do
+     *
+     * @param scanner = object of an imported class Scanner
+     * @param username = A unique username of the particular student
+     * @throws Exception
+     */
     public static void menuStudent(String username, Scanner scanner) throws Exception {
         try {
             System.out.println(menuStudent + "[4] view Courses");
@@ -376,7 +460,12 @@ public class Application {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Allows either student or teacher to Sign Out from their accounts
+     *
+     * @param scanner = object of an imported class Scanner
+     */
     public static void signOut(Scanner scanner) {
         System.out.println(thankYouMessage);
         check3 = 1;
