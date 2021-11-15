@@ -40,7 +40,7 @@ public class PrintInformation {
 
         var allQuizzes = quizArchive.getQuizzes();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt", true));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt"));
         BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
         if (br.readLine() != null) {
             bw.write("\n");
