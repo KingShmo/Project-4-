@@ -1,15 +1,35 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+/**
+ * CourseArchive
+ * 
+ * saves all courses
+ *
+ * @author Anushka
+ *
+ * @version November 15, 2021
+ * 
+ */
+
 public class CourseArchive {
-
+    /**
+     * all courses
+     */
     private ArrayList<Course> courses;
-
+    /**
+     * courses that are read
+     */
     private ArrayList<Course> coursesAfterReading;
-
+    /*
+     * all courses (static)
+     */
     private static ArrayList<Course> allCourses;
 
-
+    /**
+     * contructs courses
+     * @throws InvalidCourseException = thrown when appropriate
+     */
     public CourseArchive() throws InvalidCourseException {
         coursesAfterReading = Teacher.readCourses();
         if (coursesAfterReading != null) {
@@ -18,7 +38,11 @@ public class CourseArchive {
             courses = new ArrayList<>();
         }
     }
-
+    /**
+     * contructs courses
+     * @param course = to be added
+     * @throws InvalidCourseException = thrown when appropriate
+     */
     public CourseArchive(Course course) throws InvalidCourseException, FileNotFoundException {
 
         this();
