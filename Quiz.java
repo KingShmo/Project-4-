@@ -245,6 +245,12 @@ public class Quiz {
 
     }
 
+    /**
+     * Randomizes the options for a question
+     *
+     * @param question = the question's options to be randomized
+     * @return a String containing the questions with the randomized options
+     */
     public String randomizeOptions(String question) {
 
         Random random = new Random();
@@ -375,33 +381,68 @@ public class Quiz {
 
     }
 
+    /**
+     * add a student
+     *
+     * @param student = student to be added
+     */
     public void addAStudent(Student student) {
         students.add(student);
     }
 
+    /**
+     * get name
+     *
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * get attempts
+     *
+     * @return attempts
+     */
     public ArrayList<Integer> getAttempts() {
         return attempts;
     }
 
+    /**
+     * get students
+     *
+     * @return students
+     */
 
     public ArrayList<Student> getStudents() {
         return students;
     }
 
+    /**
+     * get questions
+     *
+     * @return questions
+     */
     public ArrayList<String> getQuestions() {
         return questions;
     }
 
+    /**
+     * get studentAnswers
+     *
+     * @return studentAnswers
+     */
     public ArrayList<Integer> getStudentAnswers() {
         return studentAnswers;
     }
 
-    public void setStudentAnswers(ArrayList<Integer> a) {
-        studentAnswers = a;
+    /**
+     * set student answers
+     *
+     * @param studentAnswers = new studentAnswers
+     */
+    public void setStudentAnswers(ArrayList<Integer> studentAnswers) {
+        this.studentAnswers = studentAnswers;
     }
 
     /**
@@ -424,26 +465,54 @@ public class Quiz {
     }
 
 
+    /**
+     * get correctAnswers
+     *
+     * @return correctAnswers
+     */
     public ArrayList<Integer> getCorrectAnswers() {
         return correctAnswers;
     }
 
+    /**
+     * get the state of the quiz, if it's ready to be launched
+     *
+     * @return boolean variable, true if the quiz is ready, false otherwise.
+     */
     public boolean isQuizIsReady() {
         return quizIsReady;
     }
 
+    /**
+     * set quizIsReady to true
+     */
     public void launchQuiz() {
         quizIsReady = true;
     }
 
+    /**
+     * get sizeOfQuiz
+     *
+     * @return sizeOfQuiz
+     */
     public int getSizeOfQuiz() {
         return sizeOfQuiz;
     }
 
+    /**
+     * sets questions instance variable
+     *
+     * @param questions = new questions
+     */
     public void setQuestions(ArrayList<String> questions) {
         this.questions = questions;
     }
 
+    /**
+     * set name instance variable
+     *
+     * @param newName = new name
+     */
     public void setName(String newName) {
         this.name = newName;
     }
