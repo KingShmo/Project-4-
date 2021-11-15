@@ -12,7 +12,10 @@ import java.util.ArrayList;
 
 public class PrintInformation {
 
-
+    /**
+     * instantiates quizArchive
+     * @return quizArchive
+     */
     public static QuizArchive getQuizArchive() {
         QuizArchive quizArchive = new QuizArchive();
         return quizArchive;
@@ -33,6 +36,11 @@ public class PrintInformation {
 
     }
 
+    /**
+     * Write questions and correct answers to a file
+     * @param quizArchive = retrieve quizzes
+     * @throws IOException = when an error occurs while writing or reading
+     */
     public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
 
         var allQuizzes = quizArchive.getQuizzes();
@@ -70,6 +78,12 @@ public class PrintInformation {
 
     }
 
+    /**
+     * Reads the quizzes from a file
+     * @param quizArchive = store the quizzes in quizeArchive
+     * @throws IOException = When an error occurs while reading
+     * @throws InvalidQuizException = if the quiz is invalid
+     */
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
 
 
