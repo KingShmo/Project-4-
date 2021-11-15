@@ -330,7 +330,11 @@ public class Student {
         pw.flush();
     }
 
-
+    /**
+     * reads students from a file
+     * @param students = store students
+     * @throws IOException = when an error occurs while reading
+     */
     public static void readStudents(ArrayList<Student> students) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader("StudentAccounts.txt"));
@@ -362,7 +366,11 @@ public class Student {
 
     }
 
-
+    /**
+     * read teachers from a file
+     * @param teachers = store the teachers
+     * @throws IOException = when an error occurs while reading
+     */
     public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
@@ -398,7 +406,12 @@ public class Student {
     }
 
 
-    //Start of Zuhair's modification
+    /**
+     * Reads the quizzes from a file
+     * @param quizArchive = store the quizzes in quizeArchive
+     * @throws IOException = When an error occurs while reading
+     * @throws InvalidQuizException = if the quiz is invalid
+     */
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
 
 
@@ -462,6 +475,11 @@ public class Student {
 
     }
 
+    /**
+     * Write questions and correct answers to a file
+     * @param quizArchive = retrieve quizzes
+     * @throws IOException = when an error occurs while writing or reading
+     */
     public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
 
         var allQuizzes = quizArchive.getQuizzes();
@@ -499,6 +517,14 @@ public class Student {
 
     }
 
+    /**
+     * Write finished answers to a file
+     * @param firstName = student first name
+     * @param lastName = student last name
+     * @param course = their assigned course
+     * @param quizArchive = retrieve the quizzes
+     * @throws FileNotFoundException = thrown when the file is not found
+     */
     public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course, QuizArchive quizArchive)
             throws FileNotFoundException {
 
@@ -527,6 +553,14 @@ public class Student {
         pw.close();
     }
 
+    /**
+     * Writes student answers to a file
+     * @param firstName = student first name
+     * @param lastName = student last name
+     * @param course = their assigned course
+     * @param quizArchive = retrieve the quizzes
+     * @throws FileNotFoundException = if the file is not found
+     */
     public static void writeUnfinishedQuizAnswersToFile(String firstName, String lastName,
                                                         String course, QuizArchive quizArchive)
             throws FileNotFoundException {
