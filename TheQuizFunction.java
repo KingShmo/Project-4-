@@ -9,15 +9,13 @@ import java.io.IOException;
 
 /**
  * TheQuizFunction
- *
+ * <p>
  * Runs a quiz feature in a learning management system.
  *
  * @author Zuhair Almansouri, lab sec L16
  * All code is done by Zuhair except for specific lines that
  * has a comment on them stating the author who wrote them.
- *
  * @version November 15, 2021
- *
  */
 
 
@@ -27,10 +25,11 @@ public class TheQuizFunction {
      * Runs a menu for Teacher's use.
      * Added a "Start quiz" method for the student to use in their class, so
      * they can take a quiz.
+     *
      * @param quizArchive = includes all the quizzes. It is passes as a parameter
      *                    from the teacher who created the quizzes.
      * @throws InvalidQuizException = whenever a quiz can't be made, this is thrown.
-     * @throws IOException = whenever there is trouble writing quiz information into a file
+     * @throws IOException          = whenever there is trouble writing quiz information into a file
      */
     public static void main(QuizArchive quizArchive) throws InvalidQuizException, IOException {
 
@@ -60,8 +59,7 @@ public class TheQuizFunction {
                 //Creates a new Quiz object and saves it in QuizArchive
                 creatingAQuiz(scanner, quizArchive);
 
-            }
-            else if (answer.equals("2")) {
+            } else if (answer.equals("2")) {
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 //Modifies a Quiz based on its title/name. Modifies the options, question, or name of the quiz.
@@ -99,7 +97,8 @@ public class TheQuizFunction {
     /**
      * Randomizes a quiz's questions and options based on its title.
      * The correct answer is also updated based on the randomized options.
-     * @param title = the quiz that should be randomized
+     *
+     * @param title       = the quiz that should be randomized
      * @param quizArchive = extract a single Quiz from the QuizArchive
      */
     public static void randomizeQuestions(String title, QuizArchive quizArchive) {
@@ -126,14 +125,15 @@ public class TheQuizFunction {
 
     /**
      * A teacher launches a quiz to make it available for students
-     * @param title = the title of the quiz to be launched.
+     *
+     * @param title       = the title of the quiz to be launched.
      * @param quizArchive = extract a single Quiz from the QuizArchive
      */
     public static void launchAQuiz(String title, QuizArchive quizArchive) {
 
         var quizzes = quizArchive.getQuizzes(); //all quizzes
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i = 0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
                 quizzes.get(i).launchQuiz(); //sets quizIsReady to true
@@ -148,8 +148,9 @@ public class TheQuizFunction {
 
     /**
      * Modifies a quiz question, options, or title
-     * @param scanner = accepted user input
-     * @param title = title of the quiz to be modified.
+     *
+     * @param scanner     = accepted user input
+     * @param title       = title of the quiz to be modified.
      * @param quizArchive = the archive that contains the quizzes.
      * @return true if the modification was done successfully. Otherwise, false.
      * @throws InvalidQuizException if the quiz is not found, or the newOptions/newQuestion to be modified is not valid.
@@ -161,7 +162,7 @@ public class TheQuizFunction {
         Quiz quiz = null;
         boolean check = true; //checks quiz availability
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i = 0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
                 quiz = quizzes.get(i);
@@ -191,9 +192,9 @@ public class TheQuizFunction {
 
 
         String[] options = new String[size];
-        for (int i=1; i<=size; i++) {
+        for (int i = 1; i <= size; i++) {
 
-            options[i-1] = "" + i;
+            options[i - 1] = "" + i;
 
         }
         answer = inputChecker(scanner, options, "Question number you want to modify?", "Invalid question number.");
@@ -218,8 +219,8 @@ public class TheQuizFunction {
             String[] newOptions = new String[4];
             for (int i = 0; i < newOptions.length; i++) {
 
-                System.out.println("Option " + (i+1) + ":");
-                newOptions[i] = (i+1) + ". " + scanner.nextLine() + "\n";
+                System.out.println("Option " + (i + 1) + ":");
+                newOptions[i] = (i + 1) + ". " + scanner.nextLine() + "\n";
             }
 
             String[] correctAnswerOptions = {"1", "2", "3", "4"};
@@ -238,8 +239,9 @@ public class TheQuizFunction {
 
     /**
      * Start a quiz by listing all the questions, options, and accepting student answers
-     * @param scanner = gets the input.
-     * @param title = the title of the quiz you would like to run.
+     *
+     * @param scanner     = gets the input.
+     * @param title       = the title of the quiz you would like to run.
      * @param quizArchive = search for a particular quiz in the quizArchive.
      * @return a string arrayList containing the answers of a particular student, or
      * returns a message containing a description of the error.
@@ -252,7 +254,7 @@ public class TheQuizFunction {
         Quiz quiz = null;
         String answer;
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i = 0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
 
@@ -271,7 +273,7 @@ public class TheQuizFunction {
 
                 int questionNum = 1;
 
-                for (int j=0; j<questions.size(); j++) {
+                for (int j = 0; j < questions.size(); j++) {
 
                     String wholeQuestion = questions.get(j);
 
@@ -412,10 +414,11 @@ public class TheQuizFunction {
 
     /**
      * Creates a new quiz
-     * @param scanner = accepts input from the user
+     *
+     * @param scanner     = accepts input from the user
      * @param quizArchive = extract a single Quiz from the QuizArchive
      * @throws InvalidQuizException = throws an exception whenever a quiz with the given information
-     * can't possibly be created.
+     *                              can't possibly be created.
      */
     public static void creatingAQuiz(Scanner scanner, QuizArchive quizArchive) throws InvalidQuizException {
 
@@ -434,7 +437,7 @@ public class TheQuizFunction {
 
                 System.out.println("How many numbers of questions?");
                 String[] questionNumberChoices = new String[121];
-                for (int i=0; i<questionNumberChoices.length; i++) {
+                for (int i = 0; i < questionNumberChoices.length; i++) {
                     questionNumberChoices[i] = "" + i;
                 }
                 answer = inputChecker(scanner, questionNumberChoices, "How many numbers of questions?",
@@ -458,8 +461,7 @@ public class TheQuizFunction {
                     if (answer.equals("No") || answer.equals("no")) {
                         System.out.println("An empty quiz was created.");
                         break;
-                    }
-                    else {
+                    } else {
 
                         System.out.println("Type STOP to stop adding questions.");
 
@@ -487,7 +489,7 @@ public class TheQuizFunction {
                             String[] options = new String[4];
                             for (int i = 0; i < options.length; i++) {
 
-                                System.out.println("Option " + (i+1) + ":");
+                                System.out.println("Option " + (i + 1) + ":");
                                 String oneOption = "";
                                 do {
                                     oneOption = scanner.nextLine();
@@ -496,7 +498,7 @@ public class TheQuizFunction {
                                     System.out.println("The option is empty.");
                                 } while (true);
 
-                                options[i] = (i+1) + ". " + oneOption + "\n";
+                                options[i] = (i + 1) + ". " + oneOption + "\n";
                             }
 
                             String[] correctAnswerOptions = {"1", "2", "3", "4"};
@@ -531,7 +533,7 @@ public class TheQuizFunction {
 
                         String[] options = new String[4];
 
-                        System.out.println("Question " + (i+1) + ":");
+                        System.out.println("Question " + (i + 1) + ":");
 
                         String question = "";
                         do {
@@ -545,7 +547,7 @@ public class TheQuizFunction {
 
                         for (int j = 0; j < options.length; j++) {
 
-                            System.out.println("Option " + (j+1) + ":");
+                            System.out.println("Option " + (j + 1) + ":");
 
                             String oneOption = "";
                             do {
@@ -555,7 +557,7 @@ public class TheQuizFunction {
                                 System.out.println("The option is empty.");
                             } while (true);
 
-                            options[j] = (j+1) + ". " + oneOption + "\n";
+                            options[j] = (j + 1) + ". " + oneOption + "\n";
 
                         }
 
@@ -580,9 +582,10 @@ public class TheQuizFunction {
 
     /**
      * Checks for user input and make sure it's valid.
-     * @param scanner = accepts user input
-     * @param choices = the valid choices
-     * @param question = reprints the question again in case the input was invalid.
+     *
+     * @param scanner      = accepts user input
+     * @param choices      = the valid choices
+     * @param question     = reprints the question again in case the input was invalid.
      * @param errorMessage = prints the given error message if the input was invalid.
      * @return a String that includes a valid option chosen by the user.
      */

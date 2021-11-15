@@ -3,13 +3,11 @@ import java.util.ArrayList;
 
 /**
  * PrintInformation class
- *
+ * <p>
  * prints and writes quiz information to/from a notepad
  *
  * @author Zuhair Almansouri, lab sec L16
- *
  * @version November 15, 2021
- *
  */
 
 public class PrintInformation {
@@ -33,14 +31,13 @@ public class PrintInformation {
         writeQuizQuestions(quizArchive);
 
 
-
     }
 
     public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
 
         var allQuizzes = quizArchive.getQuizzes();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt", true));
         BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
         if (br.readLine() != null) {
             bw.write("\n");
@@ -62,7 +59,7 @@ public class PrintInformation {
             for (int j = 0; j < correctAnswers.size(); j++) {
 
 
-                bw.write("Question " + (j+1) + ":" + correctAnswers.get(j) + " ");
+                bw.write("Question " + (j + 1) + ":" + correctAnswers.get(j) + " ");
 
             }
 
@@ -77,7 +74,6 @@ public class PrintInformation {
 
 
         BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
-
 
 
         String quizName = br.readLine();

@@ -1,13 +1,12 @@
 import java.util.ArrayList;
+
 /**
  * PrintInformation class
- *
+ * <p>
  * Stores quizzes
  *
  * @author Zuhair Almansouri, lab sec L16
- *
  * @version November 15, 2021
- *
  */
 public class QuizArchive {
 
@@ -35,7 +34,7 @@ public class QuizArchive {
 
     public void deleteAQuiz(String titleOfTheQuiz) {
 
-        for (int i=0; i<quizzes.size(); i++) {
+        for (int i = 0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(titleOfTheQuiz)) {
                 quizzes.remove(i);

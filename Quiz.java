@@ -2,18 +2,17 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
+
 /**
  * Quiz class
- *
+ * <p>
  * A representation for one quiz that a certain number of students
  * can take.
  *
  * @author Zuhair Almansouri, lab sec L16
  * All code is done by Zuhair except for specific lines that
  * has a comment on them stating the author who wrote them.
- *
  * @version November 15, 2021
- *
  */
 public class Quiz {
 
@@ -204,9 +203,10 @@ public class Quiz {
 
     /**
      * Modifies options for a question
+     *
      * @param questionNumber = question's options to be modified
-     * @param newOptions = new options that replace the previous ones.
-     * @param correctAnswer = correct answer for the new options.
+     * @param newOptions     = new options that replace the previous ones.
+     * @param correctAnswer  = correct answer for the new options.
      * @return a new question with modified options
      * @throws InvalidQuizException = thrown when appropriate
      */
@@ -313,6 +313,7 @@ public class Quiz {
 
     /**
      * Rnadomizes questions
+     *
      * @param quiz = the quiz to be randomized
      * @return a string indicating if the process of randomizing was completed
      */
@@ -370,7 +371,6 @@ public class Quiz {
         quiz.setQuestions(newQuestions);
 
 
-
         return "Questions randomized!";
 
     }
@@ -406,6 +406,7 @@ public class Quiz {
 
     /**
      * Calculates the basic score
+     *
      * @return a string containing the score
      */
     public String getScore() {
@@ -449,6 +450,7 @@ public class Quiz {
 
     /**
      * makes question ready to be printed in a notepad
+     *
      * @return a string with questions that are ready to be printed
      */
     public String questionsPrinter() {
@@ -500,12 +502,10 @@ public class Quiz {
             sum = sum + pointValue[i];
         }
 
-            return "" + count + "/" + sum;
+        return "" + count + "/" + sum;
 
 
-
-        }
-
+    }
 
 
 }
