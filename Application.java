@@ -1,13 +1,16 @@
-/*
-This class starts the program and asks a user to sign in or register
-*
-In order to save all the registration information, I need Troy's file technology implemented
-*
-Need to make a while loop for main function + quit from the program
-*/
-
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
+
+/**
+ * Application class
+ *
+ * This class starts the program and asks a user to sign in or register
+ * 
+ * @author Artemii
+ *
+ * @version November 15, 2021
+ *
+ */
 
 public class Application {
 
