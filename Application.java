@@ -365,7 +365,7 @@ public class Application {
                     break;
 
                 case 4:
-                    Student.main();
+                    StudentAnish.main();
                     break;
 
                 default:
