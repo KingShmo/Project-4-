@@ -26,16 +26,16 @@ public class CourseArchive {
         Teacher.writeCourses(courses);
         allCourses.add(course);
     }
-
+//adds a course to the courseArchive
     public void addCourses(Course course) {
         courses.add(course);
         allCourses.add(course);
     }
-
+//method that allows teacher to see all the courses
     public ArrayList<Course> getCourses() {
         return courses;
     }
-
+//method which allows a teacher to delete an unwanted course
     public void deleteACourse(String titleOfTheCourse) {
 
         for (int i = 0; i < courses.size(); i++) {
