@@ -89,7 +89,8 @@ public class Teacher {
     public void addCourse(Course course) {
         courses.add(course);
     }
-
+    
+    //write courses to a file with info including course name, teacher name, enrollment capacity, and students enrolled
     public static void writeCourses(ArrayList<Course> courses)
             throws FileNotFoundException {
         FileOutputStream fos = new FileOutputStream("CourseDetails.txt", true);
@@ -111,6 +112,7 @@ public class Teacher {
         pw.flush();
     }
 
+    //reads a file that will get the course name, teacher name, enrollment capcity, and the students
     public static ArrayList<Course> readCourses() throws InvalidCourseException {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<Course> allInfo = new ArrayList<>();
@@ -148,7 +150,8 @@ public class Teacher {
         }
         return allInfo;
     }
-
+    
+    //save a teacher account to the txt file 
     public static void createAccount(String firstName, String lastName, String username, String password) throws FileNotFoundException {
         FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", true);
         StringBuilder courses = new StringBuilder();
@@ -161,6 +164,7 @@ public class Teacher {
     }
 
     /**
+     * //get all usernames of teacher accounts
      * public static ArrayList<String> getAllUsernames(){
      * ArrayList<String> fileContents = new ArrayList<>();
      * ArrayList<String> allUsernames = new ArrayList<>();
@@ -185,6 +189,7 @@ public class Teacher {
      * }
      */
 
+    //find the account in the file by using the username and then delete the contents of that account and rewrite the file
     public static String deleteAccount(String username) throws FileNotFoundException {
         int deleteAcc = 0;
         StringBuffer buffer = new StringBuffer();
@@ -232,6 +237,7 @@ public class Teacher {
         return "Your account has been deleted!";
     }
 
+    //return all the usernames and passwords of all registered accounts
     public static ArrayList<String> getAllUsernamesAndPasswords() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allInfo = new ArrayList<>();
@@ -257,6 +263,7 @@ public class Teacher {
         return allInfo;
     }
 
+    //return all the names of teachers 
     public static ArrayList<String> getAllTeacherNames() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allInfo = new ArrayList<>();
@@ -273,13 +280,15 @@ public class Teacher {
             return null;
         } else {
             for (int i = 0; i < fileContents.size() / 4; i++) {
+                //where the teacher name is stored in text file
                 String name = fileContents.get(4 * i);
                 allInfo.add(name.substring(6));
             }
         }
         return allInfo;
     }
-
+    
+    //get specific password of the username that is input
     public static String getSpecificPassword(String inputUsername) {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
@@ -303,42 +312,8 @@ public class Teacher {
         }
         return null;
     }
-
-    public static String changeUsername(String oldUsername, String newUsername) throws FileNotFoundException {
-        int usernameExist = 0;
-        StringBuffer buffer = new StringBuffer();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                buffer.append(line + " \n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String fileContents = buffer.toString();
-        if (buffer.isEmpty()) {
-            return "No teacher accounts have been created.";
-        } else {
-            for (int i = 0; i < fileContents.length(); i++) {
-                if (fileContents.contains(oldUsername)) {
-                    fileContents = fileContents.replace(oldUsername, newUsername);
-                    usernameExist = 1;
-                }
-            }
-            if (usernameExist != 1) {
-                return "Your current username does not exist.";
-            }
-            String[] splitContents = fileContents.split("\n");
-            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
-            PrintWriter pw = new PrintWriter(fos);
-            for (int i = 0; i < splitContents.length; i++) {
-                pw.println(splitContents[i]);
-            }
-            pw.flush();
-        }
-        return "Your username has been changed!";
-    }
-
+    
+    //change the password in a textfile by finding the username and old password, and then rewriting the whole file
     public static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
         int usernameExist = 0;
         int oldPasswordExist = 0;
@@ -382,6 +357,7 @@ public class Teacher {
         return "Your password has been changed!";
     }
 
+    //return quizzes by inputting a students name
     public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
@@ -413,7 +389,8 @@ public class Teacher {
         }
         return specificQuiz;
     }
-
+    
+    //return quizzes by inputting a quiz name
     public static ArrayList<String> readQuizByQuizName(String quizName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
