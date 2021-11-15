@@ -431,7 +431,7 @@ public class Quiz {
      * get studentAnswers
      *
      * @return studentAnswers
-     */
+     *///method by Anish!
     public ArrayList<Integer> getStudentAnswers() {
         return studentAnswers;
     }
@@ -440,7 +440,7 @@ public class Quiz {
      * set student answers
      *
      * @param studentAnswers = new studentAnswers
-     */
+     *///Method by Anish!
     public void setStudentAnswers(ArrayList<Integer> studentAnswers) {
         this.studentAnswers = studentAnswers;
     }
@@ -449,7 +449,7 @@ public class Quiz {
      * Calculates the basic score
      *
      * @return a string containing the score
-     */
+     *///Method by Anish!
     public String getScore() {
 
         int count = 0;
@@ -469,7 +469,7 @@ public class Quiz {
      * get correctAnswers
      *
      * @return correctAnswers
-     */
+     *///Method for teacher to get the correct answers in a quiz and compare them to student answers made by Anish
     public ArrayList<Integer> getCorrectAnswers() {
         return correctAnswers;
     }
