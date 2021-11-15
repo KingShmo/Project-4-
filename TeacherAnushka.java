@@ -2,23 +2,22 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Teacher {
+public class TeacherAnushka {
     private static String firstName;
     private static String lastName;
     private static String username;
     private static String password;
     ArrayList<Course> courses = new ArrayList<Course>();
-    static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-    private static CourseArchive courseArchive;
+    static ArrayList<TeacherAnushka> teachers = new ArrayList<TeacherAnushka>();
 
-    public Teacher(String firstName, String lastName) {
+    public TeacherAnushka(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        teachers = new ArrayList<>();
+        teachers = new ArrayList<TeacherAnushka>();
         addATeacher(this);
     }
 
-    public Teacher(String firstName, String lastName, String username, String password) {
+    public TeacherAnushka(String firstName, String lastName, String username, String password) {
         this(firstName, lastName);
         this.username = username;
         this.password = password;
@@ -26,11 +25,11 @@ public class Teacher {
 
     }
 
-    public void addATeacher(Teacher teacher) {
+    public void addATeacher(TeacherAnushka teacher) {
         teachers.add(teacher);
     }
 
-    public static ArrayList<Teacher> getTeachers() {
+    public static ArrayList<TeacherAnushka> getTeachers() {
         return teachers;
     }
 
@@ -374,23 +373,9 @@ public class Teacher {
         return specificQuiz;
     }
 
-    public static CourseArchive getCourseArchive() {
-        return courseArchive;
-    }
 
-    public static void setCourseArchive(CourseArchive c) {
-        courseArchive = c;
-
-    }
-
-    public static void main() throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+    public static void main(CourseArchive courseArchive) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
-        setCourseArchive(courseArchive);
-        CourseArchive courseArchive = new CourseArchive();
-        StudentAnish.main(courseArchive);
-        TeacherAnushka.main(courseArchive);
-        TheCourseFunction.main(courseArchive);
-        
         boolean check;
         do {
             check = TheCourseFunction.courseFunctionMenu(scanner, courseArchive);

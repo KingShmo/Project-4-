@@ -14,14 +14,16 @@ import java.util.Scanner;
 
 public class TheCourseFunction {
 
-    public static void main() {
+    public static void main(CourseArchive courseArchive) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
+
+
     }
 
-    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+    public static boolean courseFunctionMenu(Scanner scanner, CourseArchive courseArchive) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         String answer;
         String answer2;
-        CourseArchive courseArchive = new CourseArchive();
+
 
         do {
             System.out.println("Select the action you want:");
@@ -168,6 +170,7 @@ public class TheCourseFunction {
                     System.out.println("What's the new course title?");
                     answer2 = scanner.nextLine();
                     course.setName(answer2);
+                    System.out.println("Course name modified!");
                 } else if (answer.equals("2")) {
                     System.out.println("What's the new course teacher's full name?");
                     String teacherName = scanner.nextLine();
@@ -186,10 +189,12 @@ public class TheCourseFunction {
                         break;
                     }
                     course.setCourseTeacher(teacher);
+                    System.out.println("Course teacher changed!");
                 } else if (answer.equals("3")) {
                     System.out.println("What's the new course enrollment capacity?");
                     answer2 = scanner.nextLine();
                     course.setEnrollmentCapacity(Integer.parseInt(answer2));
+                    System.out.println("Course enrollment capacity modified!");
                 } else if (answer.equals("4")) {
                     break;
                 }

@@ -4,36 +4,19 @@ import java.util.ArrayList;
 /*
 This class contains all variables and methods that each student has
 */
-public class Student {
+public class StudentArtemiAndTroy {
 
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
-    static ArrayList<Student> students = Application.students;
+    private static String firstName;
+    private static String lastName;
+    private static String username;
+    private static String password;
 
-    public Student(String firstName, String lastName) {
+    public StudentArtemiAndTroy(String firstName, String lastName, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        students = new ArrayList<>();
-        addAStudent(this);
-    }
-
-    public Student(String firstName, String lastName, String username, String password) {
-        this(firstName, lastName);
         this.username = username;
         this.password = password;
     }
-
-    public static ArrayList<Student> getStudents() {
-        return students;
-    }
-
-
-    public void addAStudent(Student student) {
-        students.add(student);
-    }
-
 
     public String getFirstName() { //Returns the first name of a student
         return firstName;
@@ -41,10 +24,6 @@ public class Student {
 
     public String getLastName() { //Returns the last name of a student
         return lastName;
-    }
-
-    public String getName() { //Returns the full name of a teacher
-        return getFirstName() + " " + getLastName();
     }
 
     public String getUsername() { //Returns the username of a student (use it to find out if username already exists)
@@ -95,17 +74,17 @@ public class Student {
             if (deleteAcc != 1) {
                 return "Please input correct password";
             }
-            String[] splitContents = fileContents.split("\n");
+            String [] splitContents = fileContents.split("\n");
             ArrayList<String> stringArrayList = new ArrayList<>();
             for (int i = 0; i < splitContents.length; i++) {
                 stringArrayList.add(splitContents[i]);
             }
             for (int i = 0; i < stringArrayList.size(); i++) {
                 if (stringArrayList.get(i).contains("Username: deleteAccount")) {
-                    stringArrayList.remove(i + 2);
-                    stringArrayList.remove(i + 1);
+                    stringArrayList.remove(i+2);
+                    stringArrayList.remove(i+1);
                     stringArrayList.remove(i);
-                    stringArrayList.remove(i - 1);
+                    stringArrayList.remove(i-1);
                 }
             }
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
@@ -118,7 +97,7 @@ public class Student {
         return "Your account has been deleted!";
     }
 
-    public static ArrayList<String> getAllUsernamesAndPasswords() {
+    public static ArrayList<String> getAllUsernamesAndPasswords(){
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
@@ -191,7 +170,7 @@ public class Student {
             if (usernameExist != 1) {
                 return "Your current username does not exist.";
             }
-            String[] splitContents = fileContents.split("\n");
+            String [] splitContents = fileContents.split("\n");
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
@@ -233,7 +212,7 @@ public class Student {
             if (usernameExist != 1) {
                 return "Your current username does not exist.";
             }
-            String[] splitContents = fileContents.split("\n");
+            String [] splitContents = fileContents.split("\n");
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
@@ -280,11 +259,83 @@ public class Student {
         pw.flush();
     }
 
+
+    public static void readStudents(ArrayList<Student> students) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("StudentAccounts.txt"));
+
+        String line = br.readLine();
+
+        while (line != null && !line.isEmpty() && !line.isBlank())  {
+
+
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            Student student = new Student(firstName, lastName, username, password);
+
+            students.add(student);
+
+            line = br.readLine();
+
+        }
+
+
+
+
+    }
+
+
+    public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
+
+        String line = br.readLine();
+
+        while (line != null && !line.isEmpty() && !line.isBlank())  {
+
+
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            Teacher teacher = new Teacher(firstName, lastName, username, password);
+
+            teachers.add(teacher);
+
+            line = br.readLine();
+
+        }
+
+
+
+
+    }
+
+
     //Start of Zuhair's modification
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
 
 
         BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
+
 
 
         String quizName = br.readLine();
@@ -370,7 +421,7 @@ public class Student {
             for (int j = 0; j < correctAnswers.size(); j++) {
 
 
-                bw.write("Question " + (j + 1) + ":" + correctAnswers.get(j) + " ");
+                bw.write("Question " + (j+1) + ":" + correctAnswers.get(j) + " ");
 
             }
 
@@ -440,6 +491,8 @@ public class Student {
         pw.close();
 
     }
+
+
 
 
     public static void main(String[] args) {

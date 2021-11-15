@@ -1,22 +1,25 @@
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * TheQuizFunction
- * <p>
+ *
  * Runs a quiz feature in a learning management system.
  *
- * @author Zuhair Almansouri, Anushka Nilangekar
- * @version November 14, 2021
+ * @author Zuhair Almansouri, lab sec L16
+ *
+ * @version November 8, 2021
+ *
  */
 
 
 public class TheQuizFunction {
-
 
     public static void main(QuizArchive quizArchive) throws InvalidQuizException, FileNotFoundException {
 
@@ -90,7 +93,7 @@ public class TheQuizFunction {
 
         var quizzes = quizArchive.getQuizzes();
 
-        for (int i = 0; i < quizzes.size(); i++) {
+        for (int i=0; i<quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
                 quizzes.get(i).launchQuiz();
@@ -105,9 +108,8 @@ public class TheQuizFunction {
 
     /**
      * Modifies a quiz question or options
-     *
-     * @param scanner     = accepted user input
-     * @param title       = title of the quiz to be modified.
+     * @param scanner = accepted user input
+     * @param title = title of the quiz to be modified.
      * @param quizArchive = the archive that contains the quizzes.
      * @return true if the modification was done successfully. Otherwise, false.
      * @throws InvalidQuizException if the quiz is not found, or the newOptions/newQuestion to be modified is not valid.
@@ -119,7 +121,7 @@ public class TheQuizFunction {
         Quiz quiz = null;
         boolean check = true;
 
-        for (int i = 0; i < quizzes.size(); i++) {
+        for (int i=0; i<quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
                 quiz = quizzes.get(i);
@@ -130,7 +132,7 @@ public class TheQuizFunction {
         if (check)
             return false;
 
-        System.out.println("Do you want to change the quiz's title? (yes/no)");
+        System.out.println("Do you want to change the quizz's title? (yes/no)");
         answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
         if (answer.equals("Yes") || answer.equals("yes")) {
 
@@ -149,9 +151,9 @@ public class TheQuizFunction {
 
 
         String[] options = new String[size];
-        for (int i = 1; i <= size; i++) {
+        for (int i=1; i<=size; i++) {
 
-            options[i - 1] = "" + i;
+            options[i-1] = "" + i;
 
         }
         answer = inputChecker(scanner, options, "Question number you want to modify?", "Invalid question number.");
@@ -176,8 +178,8 @@ public class TheQuizFunction {
             String[] newOptions = new String[4];
             for (int i = 0; i < newOptions.length; i++) {
 
-                System.out.println("Option " + (i + 1) + ":");
-                newOptions[i] = (i + 1) + ". " + scanner.nextLine() + "\n";
+                System.out.println("Option " + (i+1) + ":");
+                newOptions[i] = (i+1) + ". " + scanner.nextLine() + "\n";
             }
 
             String[] correctAnswerOptions = {"1", "2", "3", "4"};
@@ -196,9 +198,8 @@ public class TheQuizFunction {
 
     /**
      * Start a quiz by listing all the questions and options.
-     *
-     * @param scanner     = gets the input.
-     * @param title       = the title of the quiz you would like to run.
+     * @param scanner = gets the input.
+     * @param title = the title of the quiz you would like to run.
      * @param quizArchive = search for a particular quiz in the quizArchive.
      * @return a string arrayList containing the answers of a particular student, or
      * returns a message containing a description of the error.
@@ -211,7 +212,7 @@ public class TheQuizFunction {
         Quiz quiz = null;
         String answer;
 
-        for (int i = 0; i < quizzes.size(); i++) {
+        for (int i=0; i<quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
 
@@ -230,7 +231,7 @@ public class TheQuizFunction {
 
                 int questionNum = 1;
 
-                for (int j = 0; j < questions.size(); j++) {
+                for (int j=0; j<questions.size(); j++) {
 
                     String wholeQuestion = questions.get(j);
 
@@ -260,6 +261,11 @@ public class TheQuizFunction {
 
                 }
 
+                SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
+
             }
 
             if (check)
@@ -272,7 +278,8 @@ public class TheQuizFunction {
 
         }
 
-        quiz.setStudentAnswers(studentAnswers);
+        if (quiz != null)
+            quiz.setStudentAnswers(studentAnswers);
 
     }
 
@@ -364,7 +371,7 @@ public class TheQuizFunction {
 
         String answer;
 
-
+        Quiz temp = null;
         do {
 
             System.out.println("Do you want to add a quiz? (yes/no)");
@@ -377,7 +384,7 @@ public class TheQuizFunction {
 
                 System.out.println("How many numbers of questions?");
                 String[] questionNumberChoices = new String[121];
-                for (int i = 0; i < questionNumberChoices.length; i++) {
+                for (int i=0; i<questionNumberChoices.length; i++) {
                     questionNumberChoices[i] = "" + i;
                 }
                 answer = inputChecker(scanner, questionNumberChoices, "How many numbers of questions?",
@@ -393,6 +400,7 @@ public class TheQuizFunction {
                     } while (answer.isEmpty() || answer.isBlank());
 
                     Quiz q1 = new Quiz(answer);
+                    temp = q1;
                     quizArchive.addQuizzes(q1);
 
                     System.out.println("Do you want to add questions? (yes/no)");
@@ -400,7 +408,8 @@ public class TheQuizFunction {
                     if (answer.equals("No") || answer.equals("no")) {
                         System.out.println("An empty quiz was created.");
                         break;
-                    } else {
+                    }
+                    else {
 
                         System.out.println("Type STOP to stop adding questions.");
 
@@ -428,7 +437,7 @@ public class TheQuizFunction {
                             String[] options = new String[4];
                             for (int i = 0; i < options.length; i++) {
 
-                                System.out.println("Option " + (i + 1) + ":");
+                                System.out.println("Option " + (i+1) + ":");
                                 String oneOption = "";
                                 do {
                                     oneOption = scanner.nextLine();
@@ -437,7 +446,7 @@ public class TheQuizFunction {
                                     System.out.println("The option is empty.");
                                 } while (true);
 
-                                options[i] = (i + 1) + ". " + oneOption + "\n";
+                                options[i] = (i+1) + ". " + oneOption + "\n";
                             }
 
                             String[] correctAnswerOptions = {"1", "2", "3", "4"};
@@ -464,6 +473,7 @@ public class TheQuizFunction {
 
 
                     Quiz q1 = new Quiz(answer, numOfQuestions);
+                    temp = q1;
                     quizArchive.addQuizzes(q1);
 
 
@@ -471,7 +481,7 @@ public class TheQuizFunction {
 
                         String[] options = new String[4];
 
-                        System.out.println("Question " + (i + 1) + ":");
+                        System.out.println("Question " + (i+1) + ":");
 
                         String question = "";
                         do {
@@ -485,7 +495,7 @@ public class TheQuizFunction {
 
                         for (int j = 0; j < options.length; j++) {
 
-                            System.out.println("Option " + (j + 1) + ":");
+                            System.out.println("Option " + (j+1) + ":");
 
                             String oneOption = "";
                             do {
@@ -495,7 +505,7 @@ public class TheQuizFunction {
                                 System.out.println("The option is empty.");
                             } while (true);
 
-                            options[j] = (j + 1) + ". " + oneOption + "\n";
+                            options[j] = (j+1) + ". " + oneOption + "\n";
 
                         }
 
@@ -509,6 +519,7 @@ public class TheQuizFunction {
 
                 }
 
+                StudentAnish.assignPointValues(temp, scanner);
             }
 
             break;
