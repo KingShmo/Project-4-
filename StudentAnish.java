@@ -3,6 +3,16 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
+/**
+ * Student class
+ * <p>
+ * A class for student that has menus that only students see and has methods related to Quiz such as taking one,
+ * viewing the grades for a specifics quiz, accessing courses, etc.
+ *
+ * @author Anish Ketha
+ * @version November 15, 2021
+ * All code written by me unless stated
+ */
 
 public class StudentAnish {
     int option;
