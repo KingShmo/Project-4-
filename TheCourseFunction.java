@@ -19,7 +19,7 @@ public class TheCourseFunction {
 
 
     }
-
+//menu that only the teacher sees.
     public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         String answer;
         String answer2;
@@ -225,7 +225,7 @@ public class TheCourseFunction {
         } while (true);
         return true;
     }
-
+//method for a person that is logged in as a teacher to create their own course to store quizzes in which students access
     public static void creatingACourse(Scanner scanner, String answer, CourseArchive courseArchive, QuizArchive quizArchive
             , Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
 
