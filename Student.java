@@ -1,9 +1,18 @@
 import java.io.*;
 import java.util.ArrayList;
 
-/*
-This class contains all variables and methods that each student has
-*/
+/**
+ * Student class
+ *
+ * Represents a student. Assigns name and account information.
+ * Writes and reads from/to txt files.
+ *
+ * @author Troy, Artemii, Anushka
+ *
+ *
+ * @version November 15, 2021
+ *
+ */
 public class Student {
 
     private String firstName;
