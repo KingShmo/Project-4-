@@ -77,6 +77,66 @@ public class Teacher {
         courses.add(course);
     }
 
+    public static void writeCourses(ArrayList<Course> courses)
+            throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream("CourseDetails.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+        for (int i = 0; i < courses.size(); i++) {
+            ArrayList<String> listStudents;
+            listStudents = null;
+            pw.println("Course name: " + courses.get(i).getName());
+            pw.println("Teacher name: " + courses.get(i).getCourseTeacher().getName());
+            pw.println("Enrollment capacity: " + courses.get(i).getEnrollmentCapacity());
+            for (int j = 0; j < courses.get(i).getStudentsInThisCourse().size(); j++) {
+                String studentFirstName=courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
+                String studentLastName=courses.get(i).getStudentsInThisCourse().get(j).getLastName();
+                String name=studentFirstName+studentLastName;
+                listStudents.add(name);
+            }
+            pw.println("Students in course: " + listStudents.toString());
+            pw.println();
+        }
+        pw.flush();
+    }
+
+    public static ArrayList<Course> readCourses() throws InvalidCourseException {
+        ArrayList<String> fileContents = new ArrayList<>();
+        ArrayList<Course> allInfo = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContents.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (fileContents.size() == 0) {
+            return null;
+        } else {
+            for (int i = 0; i < fileContents.size() / 5; i++) {
+                String courseName = fileContents.get(5 * i);
+                String teacherName = fileContents.get(1 + 5 * i);
+                String[] splitTeacherName = teacherName.split(" ");
+                String teacherFirstName = splitTeacherName[0];
+                String teacherLastName = splitTeacherName[1];
+                Teacher teacher=new Teacher(teacherFirstName,teacherLastName);
+                int enrollmentCapacity = Integer.parseInt(fileContents.get(2 + 5 * i));
+                String [] students = fileContents.get(3 + 5 * i).split(",");
+                ArrayList<Student> studentsList = new ArrayList<>();
+                for (int j = 0; j < students.length; j++) {
+                    String[] splitName = students[j].split(" ");
+                    String firstName = splitName[0];
+                    String lastName = splitName[1];
+                    Student student = new Student (firstName, lastName);
+                    studentsList.set(j, student);
+                }
+                Course course = new Course( courseName,  teacher,  enrollmentCapacity,  studentsList);
+            }
+        }
+        return allInfo;
+    }
+    
     public static void createAccount(String firstName, String lastName, String username, String password) throws FileNotFoundException {
         FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", true);
         StringBuilder courses = new StringBuilder();
