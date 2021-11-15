@@ -10,12 +10,22 @@ import java.util.ArrayList;
  */
 public class QuizArchive {
 
-    private static ArrayList<Quiz> quizzes;
+    private static ArrayList<Quiz> quizzes; //All quizzes
+
+
+    /**
+     * instantiates the quizzes arrayList
+     */
 
     public QuizArchive() {
         quizzes = new ArrayList<>();
     }
 
+    /**
+     * calls the default constructor and adds a quiz
+     *
+     * @param quiz = adds a quiz
+     */
     public QuizArchive(Quiz quiz) {
 
         this();
@@ -23,15 +33,29 @@ public class QuizArchive {
 
     }
 
-
+    /**
+     * Add Quizzes
+     *
+     * @param quiz = the quiz to be added
+     */
     public void addQuizzes(Quiz quiz) {
         quizzes.add(quiz);
     }
 
+    /**
+     * returns quizzes arrayList
+     *
+     * @return quizzes arrayList
+     */
     public ArrayList<Quiz> getQuizzes() {
         return quizzes;
     }
 
+    /**
+     * deletes a quiz
+     *
+     * @param titleOfTheQuiz = the quiz to be deleted
+     */
     public void deleteAQuiz(String titleOfTheQuiz) {
 
         for (int i = 0; i < quizzes.size(); i++) {
@@ -44,6 +68,11 @@ public class QuizArchive {
         }
     }
 
+    /**
+     * Used to list all things that need to be written to a file
+     *
+     * @return = the string that has the information needed to be saved
+     */
     public String toString() {
 
         String toBeSaved = "Save this information:\n" + "Save the quizzes ArrayList.\n" +
