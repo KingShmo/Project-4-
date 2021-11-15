@@ -26,14 +26,20 @@ public class Course {
      * Enrollment capacity of the course
      */
     private int enrollmentCapacity;
-
+    /**
+     * Array list of students in the course
+     */
     private ArrayList<Student> studentsInThisCourse;
 
     QuizArchive quizArchive = new QuizArchive();
 
+    
     public ArrayList<Student> getStudentsInThisCourse() {
         return this.studentsInThisCourse;
     }
+    /**
+     * Returns the array list of students in the course
+     */
 
     public void setStudentsInThisCourse(ArrayList<Student> studentsInThisCourse) {
         this.studentsInThisCourse = studentsInThisCourse;
@@ -73,14 +79,23 @@ public class Course {
     public String getName() {
         return this.name;
     }
+    /**
+     * Returns the name of the course
+     */
 
     public Teacher getCourseTeacher() {
         return this.courseTeacher;
     }
+    /**
+     * Returns the teacher for this course
+     */
 
     public int getEnrollmentCapacity() {
         return this.enrollmentCapacity;
     }
+    /**
+     * Returns the enrollment capacity the course
+     */
 
     public void setCourseTeacher(Teacher newCourseTeacher) {
         this.courseTeacher = newCourseTeacher;
