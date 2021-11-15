@@ -36,7 +36,7 @@ public class StudentAnish {
         int option = 0;
         QuizArchive quizArchive = new QuizArchive();
 
-
+        //Below is a menu for only students which loops and handles any exceptions
         System.out.println("Welcome! Which course would you like to access?");
         int course = 0;
         int secondaryLoop = 1;
@@ -131,7 +131,7 @@ public class StudentAnish {
         } while (secondaryLoop == 1);
     }
 
-
+//method that checks for input in a multiple choice question to make it more streamlined and efficient
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
@@ -167,7 +167,7 @@ public class StudentAnish {
     public String getPassword() { //Returns the password of a student
         return password;
     }
-
+//this is what the student uses if they want to see the grade for a quiz in a specific course
     public static void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName,
                                 ArrayList<Character> answersQuiz, QuizArchive q, Quiz newStudent, int[] score) {
         ArrayList<Quiz> Quizzes = q.getQuizzes();
@@ -201,7 +201,7 @@ public class StudentAnish {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
-
+//method implemented when a student wants to take a quiz in a specific course
     public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
 
         var quizzes = quizArchive.getQuizzes();
@@ -279,11 +279,11 @@ public class StudentAnish {
         quiz.setStudentAnswers(studentAnswers);
 
     }
-
+//method for student and teacher to recall their answers and view the point values for each question
     public static void getStudentAnswers(Quiz answers) {
         answers.getStudentAnswers();
     }
-
+//method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when assigning a quiz!
     public static int[] assignPointValues(Quiz temp, Scanner scanner) {
 
         if (temp.getQuestions().size() == 0) {
@@ -299,7 +299,7 @@ public class StudentAnish {
         }
         return pointValues;
     }
-
+//this method shows the score the student got based on the point values assigned for each Question by the teacher
     public static String getModifiedScore(int[] pointValue, Quiz q) {
 
         int count = 0;
@@ -317,7 +317,7 @@ public class StudentAnish {
         return "" + count + "/" + sum;
 
     }
-
+//method for the teacher and student to get the number of questions correct out of total questions in a specific quiz in a specific course!
     public static String getScore(Quiz q) {
 
         int count = 0;
