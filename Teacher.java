@@ -455,6 +455,15 @@ public class Teacher {
 
     }
 
+    /**
+     * Checks for user input and make sure it's valid.
+     *
+     * @param scanner      = accepts user input
+     * @param choices      = the valid choices
+     * @param question     = reprints the question again in case the input was invalid.
+     * @param errorMessage = prints the given error message if the input was invalid.
+     * @return a String that includes a valid option chosen by the user.
+     */
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
