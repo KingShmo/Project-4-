@@ -313,7 +313,7 @@ public class Application {
 
     public static void menuTeacher(String username, Scanner scanner) throws Exception {
         try {
-            System.out.println(menuTeacher + "[4] Go to the Quiz Function");
+            System.out.println(menuTeacher + "[4] Go to the Courses and Quiz Function");
             System.out.println(chooseOne);
             int choice = scanner.nextInt();
 
