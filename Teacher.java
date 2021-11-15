@@ -2,6 +2,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Teacher class
+ *
+ * Creates a representation for teacher. It assigns courses, name of the teacher
+ * , and writes and reads from/to notepad files.
+ *
+ * @author Troy, Anushka, and Artemii
+ *
+ * @version November 15, 2021
+ * 
+ */
+
+
 public class Teacher {
     private static String firstName;
     private static String lastName;
