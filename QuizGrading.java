@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class QuizGrading {
     int option;
 
-
+    //prints a quiz to the console
     public void viewQuiz(String firstName, String lastName, String course, String quizName,
                          ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
         Scanner scanner = new Scanner(System.in);
@@ -48,7 +48,8 @@ public class QuizGrading {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
-
+    
+    //deletes a quiz
     public void deleteQuiz(QuizArchive q, String nameOfQuiz) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Quiz> allQuizzes = q.getQuizzes();
