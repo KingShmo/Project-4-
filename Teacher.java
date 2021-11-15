@@ -95,8 +95,7 @@ public class Teacher {
         FileOutputStream fos = new FileOutputStream("CourseDetails.txt", true);
         PrintWriter pw = new PrintWriter(fos);
         for (int i = 0; i < courses.size(); i++) {
-            ArrayList<String> listStudents;
-            listStudents = null;
+            ArrayList<String> listStudents=new ArrayList<>();
             pw.println("Course name: " + courses.get(i).getName());
             pw.println("Teacher name: " + courses.get(i).getCourseTeacher().getName());
             pw.println("Enrollment capacity: " + courses.get(i).getEnrollmentCapacity());
