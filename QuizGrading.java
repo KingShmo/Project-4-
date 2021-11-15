@@ -1,11 +1,23 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+/**
+ * QuizGrading
+ * <p>
+ * Runs methods for teacher that allows them to delete and view quiz and as well as assign points to each
+ * individual question
+ * in a learning management system.
+ *
+ * @author Anish Ketha
+ * @version November 14, 2021
+ */
+
 
 public class QuizGrading {
     int option;
 
 
-    public void viewQuiz(String firstName, String lastName, String course, String quizName, ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
+    public void viewQuiz(String firstName, String lastName, String course, String quizName,
+                         ArrayList<Character> answersQuiz, int grade, QuizArchive q) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Quiz> Quizzes = q.getQuizzes();
         int loop = 0;
