@@ -68,8 +68,7 @@ public class Application {
     /**
      * These "check" variables indicate if there is the object in either teachers ArrayList or students ArrayList with corresponding username
      */
-    static int check1 = 0;
-    static int check2 = 0;
+
     static int check3 = 0;
 
     /**
@@ -127,6 +126,8 @@ public class Application {
      */
     public static void signIn(Scanner scanner) throws Exception { // Sign in method either for teachers or students
 
+        int check1 = 0;
+        int check2 = 0;
         while (true) {
             System.out.println("Sign In\n");
             System.out.println(teacherOrStudentSignIn);
@@ -178,10 +179,13 @@ public class Application {
                 }
                 if (check1 == 0) {
                     System.out.println(usernameDoesntExist);
+                    register(scanner);
+                    break;
                 }
             } else {
                 System.out.println(incorrectAnswer);
             }
+
         }
     }
 
@@ -247,7 +251,7 @@ public class Application {
                     String password = scanner.nextLine();
                     students.add(new Student(firstName, lastName, username, password));
                     Student student = new Student(firstName, lastName, username, password);
-                    Student.createAccount(firstName, lastName, username, password);
+                    student.createAccount(firstName, lastName, username, password);
                     signIn(scanner);
 
                 }
@@ -294,7 +298,7 @@ public class Application {
                 String newPassword = scanner.nextLine();
                 String oldPassword = item.getPassword();
                 Student student = new Student(null, null, username, oldPassword);
-                Student.changePassword(username, oldPassword, newPassword);
+                student.changePassword(username, oldPassword, newPassword);
                 item.setPassword(newPassword);
                 System.out.println(signInAgain);
                 signIn(scanner);
@@ -337,6 +341,7 @@ public class Application {
                         System.out.println(incorrectAnswer);
                         menuTeacher(username, scanner);
                     }
+                    break;
                 }
             }
         } catch (Exception e) {
@@ -360,24 +365,29 @@ public class Application {
                     if (confirmation.equals("1")) {
                         students.remove(item);
                         Student student = new Student(enterFirstName, enterLastName, username, enterPassword);
-                        Student.deleteAccount(username);
+                        student.deleteAccount(username);
                         System.out.println("Account deleted!\n");
-                        System.out.println(signInOrRegister);
-                        String choice = scanner.nextLine();
+                        do {
+                            System.out.println(signInOrRegister);
+                            String choice = scanner.nextLine();
 
-                        if (choice.equals("1")) {
-                            signIn(scanner);
-                        } else if (choice.equals("2")) {
-                            register(scanner);
-                        } else {
-                            System.out.println(incorrectAnswer);
-                        }
+                            if (choice.equals("1")) {
+                                signIn(scanner);
+                                break;
+                            } else if (choice.equals("2")) {
+                                register(scanner);
+                                break;
+                            } else {
+                                System.out.println(incorrectAnswer);
+                            }
+                        } while (true);
                     } else if (confirmation.equals("2")) {
                         menuStudent(username, scanner);
                     } else {
                         System.out.println(incorrectAnswer);
                         menuStudent(username, scanner);
                     }
+                    break;
                 }
             }
         } catch (Exception e) {
@@ -428,6 +438,8 @@ public class Application {
      * @throws Exception
      */
     public static void menuStudent(String username, Scanner scanner) throws Exception {
+        int loop = 0;
+
         try {
             while (true) {
                 System.out.println(menuStudent + "[4] View Courses");
