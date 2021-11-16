@@ -79,6 +79,7 @@ public class Student {
         pw.println("Username: " + username);
         pw.println("Password: " + password);
         pw.flush();
+        pw.close();
     }
 
     public static String deleteAccount(String username) throws FileNotFoundException {
