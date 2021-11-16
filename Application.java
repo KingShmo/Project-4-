@@ -87,6 +87,8 @@ public class Application {
         teachers = Teacher.teachers;
         students = Student.students;
 
+        Teacher.readAllCourses();
+
 
 
         System.out.println(welcomeMessage);
