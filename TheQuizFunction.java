@@ -452,6 +452,12 @@ public class TheQuizFunction {
 
                         System.out.println("What's the quiz's title?");
                         answer = scanner.nextLine();
+                        var allQuizzes = quizArchive.getQuizzes();
+                        for (Quiz quiz : allQuizzes) {
+                            if (quiz.getName().equals(answer)) {
+                                answer = "";
+                            }
+                        }
 
                     } while (answer.isEmpty() || answer.isBlank());
 
