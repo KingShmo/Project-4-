@@ -43,10 +43,12 @@ public class PrintInformation {
      */
     public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
 
+        if (quizArchive.getQuizzes().size() == 0)
+            return;
         var allQuizzes = quizArchive.getQuizzes();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt", true));
-        BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("src/QuizQuestions.txt", true));
+        BufferedReader br = new BufferedReader(new FileReader("src/QuizQuestions.txt"));
         if (br.readLine() != null) {
             bw.write("\n");
         }
@@ -86,8 +88,10 @@ public class PrintInformation {
      */
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
 
+        if (quizArchive.getQuizzes().size() == 0)
+            return;
 
-        BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("src/QuizQuestions.txt"));
 
 
         String quizName = br.readLine();
@@ -100,7 +104,9 @@ public class PrintInformation {
         while (true) {
 
             String quizQuestion = br.readLine();
-
+            if (quizQuestion == null) {
+                break;
+            }
             if (quizQuestion.equals("Correct answers:"))
                 break;
 
@@ -124,7 +130,9 @@ public class PrintInformation {
         br.close();
 
         while (true) {
-
+            if (lastLine == null) {
+                break;
+            }
 
             if ((lastLine.indexOf(":") + 3) > lastLine.length())
                 break;
