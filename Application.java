@@ -127,59 +127,61 @@ public class Application {
      */
     public static void signIn(Scanner scanner) throws Exception { // Sign in method either for teachers or students
 
-        System.out.println("Sign In\n");
-        System.out.println(teacherOrStudentSignIn);
-        String choiceTeacherOrStudent = scanner.nextLine();
+        while (true) {
+            System.out.println("Sign In\n");
+            System.out.println(teacherOrStudentSignIn);
+            String choiceTeacherOrStudent = scanner.nextLine();
 
-        if (choiceTeacherOrStudent.equals("1")) {
-            System.out.println(enterUsername);
-            String username = scanner.nextLine();
+            if (choiceTeacherOrStudent.equals("1")) {
+                System.out.println(enterUsername);
+                String username = scanner.nextLine();
 
-            for (Teacher item : teachers) {
+                for (Teacher item : teachers) {
 
-                if (username.equals(item.getUsername())) {
-                    check2 = 1;
-                    System.out.println(enterPassword);
-                    String password = scanner.nextLine();
-                    if (password.equals(item.getPassword())) {
+                    if (username.equals(item.getUsername())) {
+                        check2 = 1;
+                        System.out.println(enterPassword);
+                        String password = scanner.nextLine();
+                        if (password.equals(item.getPassword())) {
 
-                        System.out.println("Success!\n");
-                        menuTeacher(username, scanner);
+                            System.out.println("Success!\n");
+                            menuTeacher(username, scanner);
 
-                    } else {
-                        System.out.println(passwordDoesntMatch);
+                        } else {
+                            System.out.println(passwordDoesntMatch);
+                        }
                     }
                 }
-            }
-            if (check2 == 0) {
-                System.out.println(usernameDoesntExist);
-            }
-        } else if (choiceTeacherOrStudent.equals("2")) {
-            System.out.println(enterUsername);
+                if (check2 == 0) {
+                    System.out.println(usernameDoesntExist);
+                }
+            } else if (choiceTeacherOrStudent.equals("2")) {
+                System.out.println(enterUsername);
 
-            String username = scanner.nextLine();
+                String username = scanner.nextLine();
 
-            for (Student item : students) {
+                for (Student item : students) {
 
-                if (username.equals(item.getUsername())) {
-                    check1 = 1;
-                    System.out.println(enterPassword);
-                    String password = scanner.nextLine();
-                    if (password.equals(item.getPassword())) {
+                    if (username.equals(item.getUsername())) {
+                        check1 = 1;
+                        System.out.println(enterPassword);
+                        String password = scanner.nextLine();
+                        if (password.equals(item.getPassword())) {
 
-                        System.out.println("Success!\n");
-                        menuStudent(username, scanner);
+                            System.out.println("Success!\n");
+                            menuStudent(username, scanner);
 
-                    } else {
-                        System.out.println(passwordDoesntMatch);
+                        } else {
+                            System.out.println(passwordDoesntMatch);
+                        }
                     }
                 }
+                if (check1 == 0) {
+                    System.out.println(usernameDoesntExist);
+                }
+            } else {
+                System.out.println(incorrectAnswer);
             }
-            if (check1 == 0) {
-                System.out.println(usernameDoesntExist);
-            }
-        } else {
-            System.out.println(incorrectAnswer);
         }
     }
 
@@ -191,64 +193,67 @@ public class Application {
      */
     public static void register(Scanner scanner) throws Exception { // Allows user to register and then Sign In
 
-        System.out.println("Register\n");
-        System.out.println(teacherOrStudentRegister);
-        String choiceTeacherOrStudent = scanner.nextLine();
+        while (true) {
+            System.out.println("Register\n");
+            System.out.println(teacherOrStudentRegister);
+            String choiceTeacherOrStudent = scanner.nextLine();
 
 
-        if (choiceTeacherOrStudent.equals("1")) {
-            System.out.println(enterFirstName);
-            String firstName = scanner.nextLine();
-            System.out.println(enterLastName);
-            String lastName = scanner.nextLine();
-            System.out.println(enterUsername);
-            String username = scanner.nextLine();
+            if (choiceTeacherOrStudent.equals("1")) {
+                System.out.println(enterFirstName);
+                String firstName = scanner.nextLine();
+                System.out.println(enterLastName);
+                String lastName = scanner.nextLine();
+                System.out.println(enterUsername);
+                String username = scanner.nextLine();
 
-            for (Teacher item : teachers) {
+                for (Teacher item : teachers) {
 
-                if (username.equals(item.getUsername())) {
-                    System.out.println(takenUsername);
-                    usernameStatus = 0;
-                    break;
+                    if (username.equals(item.getUsername())) {
+                        System.out.println(takenUsername);
+                        usernameStatus = 0;
+                        break;
+                    }
                 }
-            }
 
 
-            if (usernameStatus == 1) {
-                System.out.println(enterPassword);
-                String password = scanner.nextLine();
-                teachers.add(new Teacher(firstName, lastName, username, password));
-                Teacher teacher = new Teacher(firstName, lastName, username, password);
-                teacher.createAccount(firstName, lastName, username, password);
-                signIn(scanner);
-            }
-        } else if (choiceTeacherOrStudent.equals("2")) {
-            System.out.println(enterFirstName);
-            String firstName = scanner.nextLine();
-            System.out.println(enterLastName);
-            String lastName = scanner.nextLine();
-            System.out.println(enterUsername);
-            String username = scanner.nextLine();
-
-            for (Student item : students) {
-
-                if (username.equals(item.getUsername())) {
-                    System.out.println(takenUsername);
-                    usernameStatus = 0;
-                    break;
+                if (usernameStatus == 1) {
+                    System.out.println(enterPassword);
+                    String password = scanner.nextLine();
+                    teachers.add(new Teacher(firstName, lastName, username, password));
+                    Teacher teacher = new Teacher(firstName, lastName, username, password);
+                    teacher.createAccount(firstName, lastName, username, password);
+                    signIn(scanner);
                 }
-            }
+            } else if (choiceTeacherOrStudent.equals("2")) {
+                System.out.println(enterFirstName);
+                String firstName = scanner.nextLine();
+                System.out.println(enterLastName);
+                String lastName = scanner.nextLine();
+                System.out.println(enterUsername);
+                String username = scanner.nextLine();
 
-            if (usernameStatus == 1) {
-                System.out.println(enterPassword);
-                String password = scanner.nextLine();
-                students.add(new Student(firstName, lastName, username, password));
-                Student student = new Student(firstName, lastName, username, password);
-                student.createAccount(firstName, lastName, username, password);
-                signIn(scanner);
+                for (Student item : students) {
+
+                    if (username.equals(item.getUsername())) {
+                        System.out.println(takenUsername);
+                        usernameStatus = 0;
+                        break;
+                    }
+                }
+
+                if (usernameStatus == 1) {
+                    System.out.println(enterPassword);
+                    String password = scanner.nextLine();
+                    students.add(new Student(firstName, lastName, username, password));
+                    Student student = new Student(firstName, lastName, username, password);
+                    Student.createAccount(firstName, lastName, username, password);
+                    signIn(scanner);
+
+                }
+            } else {
+                System.out.println(incorrectAnswer);
             }
-        } else {
-            System.out.println(incorrectAnswer);
         }
 
     }
@@ -264,7 +269,6 @@ public class Application {
         for (Teacher item : teachers) {
             if (username.equals(item.getUsername())) {
                 System.out.println(enterNewPassword);
-                scanner.nextLine();
                 String newPassword = scanner.nextLine();
                 String oldPassword = item.getPassword();
                 Teacher teacher = new Teacher(null, null, username, oldPassword);
@@ -287,11 +291,10 @@ public class Application {
         for (Student item : students) {
             if (username.equals(item.getUsername())) {
                 System.out.println(enterNewPassword);
-                scanner.nextLine();
                 String newPassword = scanner.nextLine();
                 String oldPassword = item.getPassword();
                 Student student = new Student(null, null, username, oldPassword);
-                student.changePassword(username, oldPassword, newPassword);
+                Student.changePassword(username, oldPassword, newPassword);
                 item.setPassword(newPassword);
                 System.out.println(signInAgain);
                 signIn(scanner);
@@ -357,7 +360,7 @@ public class Application {
                     if (confirmation.equals("1")) {
                         students.remove(item);
                         Student student = new Student(enterFirstName, enterLastName, username, enterPassword);
-                        student.deleteAccount(username);
+                        Student.deleteAccount(username);
                         System.out.println("Account deleted!\n");
                         System.out.println(signInOrRegister);
                         String choice = scanner.nextLine();
@@ -427,7 +430,7 @@ public class Application {
     public static void menuStudent(String username, Scanner scanner) throws Exception {
         try {
             while (true) {
-                System.out.println(menuStudent + "[4] view Courses");
+                System.out.println(menuStudent + "[4] View Courses");
                 System.out.println(chooseOne);
                 String choice = scanner.nextLine();
 
