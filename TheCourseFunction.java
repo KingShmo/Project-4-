@@ -21,10 +21,11 @@ public class TheCourseFunction {
 
     }
 
-    
+
 
     //menu that only the teacher sees.
-    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, IOException {
+    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException,
+                                                              IOException {
         String answer;
         String answer2;
         CourseArchive courseArchive = new CourseArchive();
@@ -37,7 +38,9 @@ public class TheCourseFunction {
             System.out.println("4. Modify course attributes-Course teacher/Course enrollment/Course name");
             System.out.println("5. Delete a course");
             System.out.println("6. Exit");
-            String temp = "Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. Add students to a course\n4. Modify course attributes-Course teacher/Course enrollment/Course name\n5. Delete a course\n6. Exit";
+            String temp = "Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. " +
+                          "Add students to a course\n4. Modify course attributes-Course teacher/Course enrollment/" +
+                          "Course name\n5. Delete a course\n6. Exit";
             String[] options = {"1", "2", "3", "4", "5", "6"};
             answer = inputChecker(scanner, options, temp, "Invalid input.");
 
@@ -97,9 +100,13 @@ public class TheCourseFunction {
 
                 QuizArchive quizArchive = new QuizArchive();
                 System.out.println("Course created!");
+
                 Course course = new Course(answer, assignedTeacher, enrollmentCapacity);
                 CourseArchive courseArchive1 = new CourseArchive();
                 courseArchive1.addCourses(course);
+
+                Teacher.writeCourses(CourseArchive.allCourses);
+
                 //creatingACourse(answer, assignedTeacher, enrollmentCapacity);
 
             } else if (answer.equals("2")) {
