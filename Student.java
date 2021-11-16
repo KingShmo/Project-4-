@@ -340,6 +340,8 @@ public class Student {
 
         String line = br.readLine();
 
+        if (line == null)
+            return;
         while (line != null) {
 
             String wholeName = line.substring(line.indexOf(":") + 2);
