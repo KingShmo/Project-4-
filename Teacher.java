@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -92,7 +93,7 @@ public class Teacher {
     //write courses to a file with info including course name, teacher name, enrollment capacity, and students enrolled
     public static void writeCourses(ArrayList<Course> courses)
             throws FileNotFoundException {
-        FileOutputStream fos = new FileOutputStream("CourseDetails.txt", true);
+        FileOutputStream fos = new FileOutputStream("CourseDetails.txt");
         PrintWriter pw = new PrintWriter(fos);
         for (int i = 0; i < courses.size(); i++) {
             ArrayList<String> listStudents=new ArrayList<>();
@@ -112,7 +113,52 @@ public class Teacher {
     }
 
     //reads a file that will get the course name, teacher name, enrollment capcity, and the students
-    public static ArrayList<Course> readAllCourses() throws InvalidCourseException {
+
+    public static void readAllCourses() throws InvalidCourseException {
+
+
+
+        try(BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+
+            String line = br.readLine();
+
+            while (line != null) {
+
+                String courseName = line.substring(line.indexOf(":") + 2);
+
+                line = br.readLine();
+
+                String wholeName = line.substring(line.indexOf(":") + 2);
+                String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+                String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+                line = br.readLine();
+
+                int enrollment = Integer.valueOf(line.substring(line.indexOf(":") + 2));
+
+                line = br.readLine();
+
+                Teacher teacher = new Teacher(firstName, lastName);
+
+
+
+                line = br.readLine();
+
+                Course course = new Course(courseName, teacher, enrollment);
+
+                CourseArchive.addStaticCourses(course);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public static ArrayList<Course> readAllCoursess() throws InvalidCourseException {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<Course> allInfo = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("CourseDetails.txt"))) {
