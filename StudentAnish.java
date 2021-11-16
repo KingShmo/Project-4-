@@ -100,7 +100,8 @@ public class StudentAnish {
                                     System.out.println("Answers for " + course + " quiz: " + quizName);
                                     System.out.println("Questions Correct: " + Quizzes.get(i).getScore());
                                     System.out.println("Quiz Grade : " +
-                                            Quizzes.get(i).getModifiedScore(assignPointValues(),Quizzes.get(i)));
+                                            Quizzes.get(i).getModifiedScore(assignPointValues(Quizzes.get(i), scanner),Quizzes.get(i)));
+                                    //Check the line above
                                     //static method cannot be called from an object, only associated with the name of
                                     //the class
                                 }
@@ -233,7 +234,7 @@ public class StudentAnish {
 
                     String wholeQuestion = questions.get(j);
 
-                    String quesiton = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
+                    String question = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
                     wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
 
                     String option1 = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
@@ -247,22 +248,23 @@ public class StudentAnish {
 
                     String option4 = wholeQuestion;
 
-                    System.out.println((questionNum++) + quesiton.substring(1) + ":");
-                    System.out.print(option1 + option2 + option3 + option4);
+                    System.out.println((questionNum++) + question.substring(1) + ":");
+                    System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1));
 
                     System.out.print("Your answer: ");
                     String[] options = {"1", "2", "3", "4"};
-                    answer = inputChecker(scanner, options, "Your answer: ",
-                            "Answer should be from 1 to 4.");
+                    answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
 
                     studentAnswers.add(Integer.valueOf(answer));
 
 
                 }
+
                 SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
+                //Anish's code that prints a timestamp only when a student has COMPLETED a quiz which a student sees and which the teacher can access if needed.
 
             }
 
@@ -276,7 +278,8 @@ public class StudentAnish {
 
         }
 
-        quiz.setStudentAnswers(studentAnswers);
+        if (quiz != null)
+            quiz.setStudentAnswers(studentAnswers);
 
     }
     //method for student and teacher to recall their answers and view the point values for each question
