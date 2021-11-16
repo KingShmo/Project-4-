@@ -84,7 +84,7 @@ public class Application {
 
         Student.readTeachers(teachers);
         Student.readStudents(students);
-        //teachers = Teacher.teachers;
+        teachers = Teacher.teachers;
         students = Student.students;
 
 
