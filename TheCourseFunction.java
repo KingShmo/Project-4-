@@ -19,8 +19,8 @@ public class TheCourseFunction {
 
 
     }
-//menu that only the teacher sees.
-    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+    //menu that only the teacher sees.
+    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, IOException {
         String answer;
         String answer2;
         CourseArchive courseArchive = new CourseArchive();
@@ -56,11 +56,14 @@ public class TheCourseFunction {
 
                 System.out.println("What's the full name of the course's assigned teacher?");
                 String teacherName = scanner.nextLine();
+                Teacher assignedTeacher = new Teacher(teacherName.substring(0, teacherName.indexOf(" ")),
+                        teacherName.substring(teacherName.indexOf(" ") + 1));
                 var allTeachers = Teacher.getTeachers();
                 Teacher teacher = null;
                 boolean found = false;
                 if (allTeachers.size() == 0) {
-                    System.out.println("No teachers available to be assigned! Please make sure teachers are available and then try again.\n");
+                    System.out.println("No teachers available to be assigned! Please make sure teachers are " +
+                            "available and then try again.\n");
                     break;
                 } else {
                     for (int i = 0; i < allTeachers.size(); i++) {
@@ -79,8 +82,8 @@ public class TheCourseFunction {
                 System.out.println("What's the course's enrollment capacity?");
                 int enrollmentCapacity = scanner.nextInt();
                 QuizArchive quizArchive = new QuizArchive();
-                creatingACourse(scanner, answer, courseArchive, quizArchive, teacher, enrollmentCapacity);
                 System.out.println("Course created!");
+                creatingACourse(answer, assignedTeacher, enrollmentCapacity);
 
             } else if (answer.equals("2")) {
                 boolean courseExists = false;
@@ -121,12 +124,13 @@ public class TheCourseFunction {
                     break;
                 }
 
-                System.out.println("What's the full name of the student you want to add?");
+                System.out.println("What's the full name of the student you want to add? (First Name Last Name");
                 String studentName = scanner.nextLine();
                 var allStudents = Student.getStudents();
                 Student student = null;
                 if (allStudents.size() == 0) {
-                    System.out.println("No students available to be added to course! Please make sure students are available and then try again.\n");
+                    System.out.println("No students available to be added to course! Please make sure students are " +
+                            "available and then try again.\n");
                     break;
                 } else {
                     for (int i = 0; i < allStudents.size(); i++) {
@@ -162,7 +166,8 @@ public class TheCourseFunction {
                 System.out.println("2. Change course teacher");
                 System.out.println("3. Modify course enrollment capacity");
                 System.out.println("4. Exit");
-                temp = "Select the action you want:\n1. Modify course name\n2. Change course teacher\n3. Modify course enrollment capacity\n4. Exit";
+                temp = "Select the action you want:\n1. Modify course name\n2. Change course teacher\n3. " +
+                        "Modify course enrollment capacity\n4. Exit";
                 String[] options2 = {"1", "2", "3", "4"};
                 answer = inputChecker(scanner, options2, temp, "Invalid input.");
 
@@ -225,10 +230,11 @@ public class TheCourseFunction {
         } while (true);
         return true;
     }
-//method for a person that is logged in as a teacher to create their own course to store quizzes in which students access
-    public static void creatingACourse(Scanner scanner, String answer, CourseArchive courseArchive, QuizArchive quizArchive
-            , Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
-
+    //method for a person that is logged in as a teacher to create their own course to store quizzes
+    // in which students access
+    public static void creatingACourse(String answer, Teacher teacher,
+                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
+        CourseArchive courseArchive = new CourseArchive();
         Course course = new Course(answer, teacher, enrollmentCapacity);
         courseArchive.addCourses(course);
 
