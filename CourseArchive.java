@@ -6,7 +6,7 @@ import java.util.ArrayList;
  *
  * saves all courses
  *
- * @author Anushka
+ * @author Anushka, Anish Ketha, Zuhair
  *
  * @version November 15, 2021
  *
@@ -16,22 +16,21 @@ public class CourseArchive {
     /**
      * all courses
      */
-    private ArrayList<Course> courses;
+    public ArrayList<Course> courses;
     /**
      * courses that are read
      */
-    private ArrayList<Course> coursesAfterReading;
+    public ArrayList<Course> coursesAfterReading;
     /*
      * all courses (static)
      */
-    private static ArrayList<Course> allCourses;
+    public static ArrayList<Course> allCourses = new ArrayList<>();
 
     /**
      * contructs courses
      * @throws InvalidCourseException = thrown when appropriate
      */
     public CourseArchive() throws InvalidCourseException {
-        allCourses = new ArrayList<>();
         coursesAfterReading = new ArrayList<>();
         courses = new ArrayList<>();
         coursesAfterReading = Teacher.readAllCourses();
