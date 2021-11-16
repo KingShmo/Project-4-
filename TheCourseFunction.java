@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -19,6 +20,9 @@ public class TheCourseFunction {
 
 
     }
+
+    
+
     //menu that only the teacher sees.
     public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException, IOException {
         String answer;
@@ -79,12 +83,24 @@ public class TheCourseFunction {
                     break;
                 }
 
-                System.out.println("What's the course's enrollment capacity?");
-                int enrollmentCapacity = scanner.nextInt();
+                int enrollmentCapacity = 0;
+                do {
+
+                    System.out.println("What's the course's enrollment capacity?");
+                    try {
+                        enrollmentCapacity = scanner.nextInt();
+                        break;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input!");
+                    }
+                } while (true);
+
                 QuizArchive quizArchive = new QuizArchive();
                 System.out.println("Course created!");
-                creatingACourse(answer, assignedTeacher, enrollmentCapacity);
-                System.out.println(courseArchive.getCourses().get(0));
+                Course course = new Course(answer, assignedTeacher, enrollmentCapacity);
+                CourseArchive courseArchive1 = new CourseArchive();
+                courseArchive1.addCourses(course);
+                //creatingACourse(answer, assignedTeacher, enrollmentCapacity);
 
             } else if (answer.equals("2")) {
                 boolean courseExists = false;
