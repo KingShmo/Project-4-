@@ -6,7 +6,7 @@ import java.util.*;
  *
  * This class starts the program and asks a user to sign in or register
  *
- * @author Artemii
+ * @author Artemii, Zuhair Almansouri, Anish Ketha
  *
  * @version November 15, 2021
  *
@@ -150,11 +150,13 @@ public class Application {
 
                         } else {
                             System.out.println(passwordDoesntMatch);
+                            break;
                         }
                     }
                 }
                 if (check2 == 0) {
                     System.out.println(usernameDoesntExist);
+                    break;
                 }
             } else if (choiceTeacherOrStudent.equals("2")) {
                 System.out.println(enterUsername);
@@ -174,12 +176,12 @@ public class Application {
 
                         } else {
                             System.out.println(passwordDoesntMatch);
+                            break;
                         }
                     }
                 }
                 if (check1 == 0) {
                     System.out.println(usernameDoesntExist);
-                    register(scanner);
                     break;
                 }
             } else {
@@ -475,7 +477,6 @@ public class Application {
      */
     public static void signOut(Scanner scanner) {
         System.out.println(thankYouMessage);
-        check3 = 1;
     }
 
 }
