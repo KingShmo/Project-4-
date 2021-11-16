@@ -84,6 +84,10 @@ public class Application {
 
         Student.readTeachers(teachers);
         Student.readStudents(students);
+        //teachers = Teacher.teachers;
+        students = Student.students;
+
+
 
         System.out.println(welcomeMessage);
         do {
@@ -413,7 +417,7 @@ public class Application {
     public static void menuTeacher(String username, Scanner scanner) throws Exception {
         try {
             while (true) {
-                System.out.println(menuTeacher + "[4] Go to the Courses");
+                System.out.println(menuTeacher + "[4] Go to Teacher Portal");
                 System.out.println(chooseOne);
                 String choice = scanner.nextLine();
 
