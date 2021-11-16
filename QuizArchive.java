@@ -5,12 +5,13 @@ import java.util.ArrayList;
  * <p>
  * Stores quizzes
  *
- * @author Zuhair Almansouri, lab sec L16
+ * @author Zuhair Almansouri, Anish Ketha lab sec L16
  * @version November 15, 2021
  */
 public class QuizArchive {
 
-    private static ArrayList<Quiz> quizzes; //All quizzes
+    private static ArrayList<Quiz> quizzes = new ArrayList<>(); //All quizzes
+
 
 
     /**
@@ -18,7 +19,7 @@ public class QuizArchive {
      */
 
     public QuizArchive() {
-        quizzes = new ArrayList<>();
+
     }
 
     /**
