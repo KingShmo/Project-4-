@@ -5,7 +5,7 @@ import java.util.*;
  * Application class
  *
  * This class starts the program and asks a user to sign in or register
- * 
+ *
  * @author Artemii
  *
  * @version November 15, 2021
@@ -68,7 +68,7 @@ public class Application {
     /**
      * These "check" variables indicate if there is the object in either teachers ArrayList or students ArrayList with corresponding username
      */
-    static int check1 = 0; 
+    static int check1 = 0;
     static int check2 = 0;
     static int check3 = 0;
 
@@ -83,8 +83,8 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
 
 
-        StudentArtemiAndTroy.readTeachers(teachers);
-        StudentArtemiAndTroy.readStudents(students);
+        Student.readTeachers(teachers);
+        Student.readStudents(students);
 
         System.out.println(welcomeMessage);
         do {
@@ -102,7 +102,7 @@ public class Application {
 
 
     }
-    
+
     /**
      * @return = ArrayList of teachers
      */
@@ -110,7 +110,7 @@ public class Application {
 
         return teachers;
     }
-    
+
     /**
      * @return = ArrayList of students
      */
@@ -118,7 +118,7 @@ public class Application {
 
         return students;
     }
-    
+
     /**
      * Allows either student or teacher to sign in with their username and password
      *
@@ -182,7 +182,7 @@ public class Application {
             System.out.println(incorrectAnswer);
         }
     }
-    
+
     /**
      * Allows either student or teacher to register with their first name, last name, username and password
      *
@@ -198,7 +198,6 @@ public class Application {
 
         if (choiceTeacherOrStudent.equals("1")) {
             System.out.println(enterFirstName);
-            scanner.nextLine();
             String firstName = scanner.nextLine();
             System.out.println(enterLastName);
             String lastName = scanner.nextLine();
@@ -225,7 +224,6 @@ public class Application {
             }
         } else if (choiceTeacherOrStudent.equals("2")) {
             System.out.println(enterFirstName);
-            scanner.nextLine();
             String firstName = scanner.nextLine();
             System.out.println(enterLastName);
             String lastName = scanner.nextLine();
@@ -254,7 +252,7 @@ public class Application {
         }
 
     }
-    
+
     /**
      * Allows teachers to change their passwords
      *
@@ -277,7 +275,7 @@ public class Application {
             }
         }
     }
-    
+
     /**
      * Allows students to change their passwords
      *
@@ -300,7 +298,7 @@ public class Application {
             }
         }
     }
-    
+
     /**
      * Allows teachers to delete their accounts
      *
@@ -313,24 +311,24 @@ public class Application {
             for (Teacher item : teachers) {
                 if (username.equals(item.getUsername())) {
                     System.out.println(confirmQuestion);
-                    int confirmation = scanner.nextInt();
-                    if (confirmation == 1) {
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equals("1")) {
                         teachers.remove(item);
                         Teacher teacher = new Teacher(enterFirstName, enterLastName, username, enterPassword);
                         teacher.deleteAccount(username);
                         System.out.println("Account deleted!\n");
                         System.out.println(signInOrRegister);
-                        int choice = scanner.nextInt();
+                        String choice = scanner.nextLine();
 
-                        if (choice == 1) {
+                        if (choice.equals("1")) {
                             signIn(scanner);
-                        } else if (choice == 2) {
+                        } else if (choice.equals("2")) {
                             register(scanner);
                         } else {
                             System.out.println(incorrectAnswer);
                         }
 
-                    } else if (confirmation == 2) {
+                    } else if (confirmation.equals("2")) {
                         menuTeacher(username, scanner);
                     } else {
                         System.out.println(incorrectAnswer);
@@ -355,23 +353,23 @@ public class Application {
             for (Student item : students) {
                 if (username.equals(item.getUsername())) {
                     System.out.println(confirmQuestion);
-                    int confirmation = scanner.nextInt();
-                    if (confirmation == 1) {
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equals("1")) {
                         students.remove(item);
                         Student student = new Student(enterFirstName, enterLastName, username, enterPassword);
                         student.deleteAccount(username);
                         System.out.println("Account deleted!\n");
                         System.out.println(signInOrRegister);
-                        int choice = scanner.nextInt();
+                        String choice = scanner.nextLine();
 
-                        if (choice == 1) {
+                        if (choice.equals("1")) {
                             signIn(scanner);
-                        } else if (choice == 2) {
+                        } else if (choice.equals("2")) {
                             register(scanner);
                         } else {
                             System.out.println(incorrectAnswer);
                         }
-                    } else if (confirmation == 2) {
+                    } else if (confirmation.equals("2")) {
                         menuStudent(username, scanner);
                     } else {
                         System.out.println(incorrectAnswer);
@@ -383,7 +381,7 @@ public class Application {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Shows the menu with all the things a teacher can do
      *
@@ -393,29 +391,26 @@ public class Application {
      */
     public static void menuTeacher(String username, Scanner scanner) throws Exception {
         try {
-            System.out.println(menuTeacher + "[4] Go to the Courses and Quiz Function");
-            System.out.println(chooseOne);
-            int choice = scanner.nextInt();
+            while (true) {
+                System.out.println(menuTeacher + "[4] Go to the Courses and Quiz Function");
+                System.out.println(chooseOne);
+                String choice = scanner.nextLine();
 
-            switch (choice) {
-                case 1:
+                if (choice.equals("1")) {
                     changePasswordTeacher(username, scanner);
                     break;
-
-                case 2:
+                } else if (choice.equals("2")) {
                     deleteAccountTeacher(username, scanner);
                     break;
-
-                case 3:
+                } else if (choice.equals("3")) {
                     signOut(scanner);
                     break;
-
-                case 4:
+                } else if (choice.equals("4")) {
                     Teacher.main();
                     break;
-                default:
+                } else {
                     System.out.println(incorrectAnswer);
-                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -431,36 +426,33 @@ public class Application {
      */
     public static void menuStudent(String username, Scanner scanner) throws Exception {
         try {
-            System.out.println(menuStudent + "[4] view Courses");
-            System.out.println(chooseOne);
-            int choice = scanner.nextInt();
+            while (true) {
+                System.out.println(menuStudent + "[4] view Courses");
+                System.out.println(chooseOne);
+                String choice = scanner.nextLine();
 
-            switch (choice) {
-                case 1:
+                if (choice.equals("1")) {
                     changePasswordStudent(username, scanner);
                     break;
-
-                case 2:
+                } else if (choice.equals("2")) {
                     deleteAccountStudent(username, scanner);
                     break;
-
-                case 3:
+                } else if (choice.equals("3")) {
                     signOut(scanner);
                     break;
-
-                case 4:
+                } else if (choice.equals("4")) {
                     StudentAnish.main();
                     break;
-
-                default:
+                } else {
                     System.out.println(incorrectAnswer);
-                    break;
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Allows either student or teacher to Sign Out from their accounts
      *
