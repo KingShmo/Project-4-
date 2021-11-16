@@ -33,39 +33,40 @@ public class StudentAnish {
         CourseArchive listOfCourses = new CourseArchive();
 
         Scanner scanner = new Scanner(System.in);
-        int option = 0;
+        String option;
         QuizArchive quizArchive = new QuizArchive();
 
         //Below is a menu for only students which loops and handles any exceptions
         System.out.println("Welcome! Which course would you like to access?");
         int course = 0;
-        int secondaryLoop = 1;
+        int secondaryLoop = 0;
         do {
+            secondaryLoop = 0;
             do {
-                for (int i = 0; i < listOfCourses.getAllCourses().size(); i++) {
-                    System.out.println((i + 1) + ". " + listOfCourses.getAllCourses().get(i).getName());
+                for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+                    if (CourseArchive.allCourses.size() == 0) {
+                        System.out.println("There are no courses available!");
+                        secondaryLoop = 1;
+                    } else {
+                        System.out.println((i + 1) + ". " + CourseArchive.allCourses.get(i).getName());
+                    }
                 }
-                if (listOfCourses.getAllCourses().size() == 0) {
-                    System.out.println("There are no courses available!");
-                }
-                System.out.println(listOfCourses.getAllCourses().size() + 1 + ". Exit");
+                System.out.println(CourseArchive.allCourses.size() + 1 + ". Exit");
                 course = scanner.nextInt();
-                if (course == (listOfCourses.getAllCourses().size() + 1)) {
+                if (course == (listOfCourses.getCourses().size() + 1)) {
                     System.out.println("Thank you for using the student portal!");
-                    secondaryLoop = 2;
                     return;
-                } else if (course <= 0 || course > listOfCourses.getAllCourses().size() + 1) {
+                } else if (course <= 0 || course > CourseArchive.allCourses.size() + 1) {
                     System.out.println("Invalid input! Please try again!");
                 }
-            } while (course <= 0 || course > listOfCourses.getAllCourses().size() + 1);
+            } while (course <= 0 || course > CourseArchive.allCourses.size() + 1);
             int initialLoop;
             do {
                 initialLoop = 0;
                 System.out.println("Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
                         "3. Exit the course");
-                option = scanner.nextInt();
-                scanner.nextLine();
-                if (option == 1) {
+                option = scanner.nextLine();
+                if (option.equals("1")) {
                     if (quizArchive.getQuizzes().size() == 0) {
                         System.out.println("There are no available quizzes for this course!");
                         initialLoop = 1;
@@ -76,7 +77,7 @@ public class StudentAnish {
                         startAQuiz(scanner, title, quizArchive);
                         break;
                     }
-                } else if (option == 2) {
+                } else if (option.equals("2")) {
                     int loop = 0;
                     do {
                         loop = 0;
@@ -87,7 +88,7 @@ public class StudentAnish {
                             System.out.println("Which quiz do you want to view");
                             QuizArchive q = new QuizArchive();
                             ArrayList<Quiz> Quizzes = q.getQuizzes();
-                            for (int i = 0; i < listOfCourses.getAllCourses().size(); i++) {
+                            for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
                                 for (int j = 0; j < quizArchive.getQuizzes().size(); j++) {
                                     System.out.println(Quizzes.get(i).getName());
                                 }
@@ -99,8 +100,7 @@ public class StudentAnish {
                                     System.out.println("Answers for " + course + " quiz: " + quizName);
                                     System.out.println("Questions Correct: " + Quizzes.get(i).getScore());
                                     System.out.println("Quiz Grade : " +
-                                            Quiz.getModifiedScore(assignPointValues(Quizzes.get(i), scanner),
-                                                    Quizzes.get(i)));
+                                            Quizzes.get(i).getModifiedScore(assignPointValues(),Quizzes.get(i)));
                                     //static method cannot be called from an object, only associated with the name of
                                     //the class
                                 }
@@ -121,7 +121,7 @@ public class StudentAnish {
                             } while (studentOption != 1 && studentOption != 2);
                         }
                     } while (loop == 1);
-                } else if (option == 3) {
+                } else if (option.equals("3")) {
                     initialLoop = 2;
                 } else {
                     System.out.println("Invalid option! Please try again!");
@@ -131,7 +131,7 @@ public class StudentAnish {
         } while (secondaryLoop == 1);
     }
 
-//method that checks for input in a multiple choice question to make it more streamlined and efficient
+    //method that checks for input in a multiple choice question to make it more streamlined and efficient
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
@@ -167,7 +167,7 @@ public class StudentAnish {
     public String getPassword() { //Returns the password of a student
         return password;
     }
-//this is what the student uses if they want to see the grade for a quiz in a specific course
+    //this is what the student uses if they want to see the grade for a quiz in a specific course
     public static void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName,
                                 ArrayList<Character> answersQuiz, QuizArchive q, Quiz newStudent, int[] score) {
         ArrayList<Quiz> Quizzes = q.getQuizzes();
@@ -201,7 +201,7 @@ public class StudentAnish {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
-//method implemented when a student wants to take a quiz in a specific course
+    //method implemented when a student wants to take a quiz in a specific course
     public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
 
         var quizzes = quizArchive.getQuizzes();
@@ -279,11 +279,12 @@ public class StudentAnish {
         quiz.setStudentAnswers(studentAnswers);
 
     }
-//method for student and teacher to recall their answers and view the point values for each question
+    //method for student and teacher to recall their answers and view the point values for each question
     public static void getStudentAnswers(Quiz answers) {
         answers.getStudentAnswers();
     }
-//method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when assigning a quiz!
+    //method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when
+    // assigning a quiz!
     public static int[] assignPointValues(Quiz temp, Scanner scanner) {
 
         if (temp.getQuestions().size() == 0) {
@@ -295,11 +296,12 @@ public class StudentAnish {
         for (int i = 0; i < temp.getSizeOfQuiz(); i++) {
             System.out.println("How many points is question " + (i + 1) + " worth?");
             int points = scanner.nextInt();
+            scanner.nextLine();
             pointValues[i] = points;
         }
         return pointValues;
     }
-//this method shows the score the student got based on the point values assigned for each Question by the teacher
+    //this method shows the score the student got based on the point values assigned for each Question by the teacher
     public static String getModifiedScore(int[] pointValue, Quiz q) {
 
         int count = 0;
@@ -317,7 +319,7 @@ public class StudentAnish {
         return "" + count + "/" + sum;
 
     }
-//method for the teacher and student to get the number of questions correct out of total questions in a specific quiz in a specific course!
+    //method for the teacher and student to get the number of questions correct out of total questions in a specific quiz in a specific course!
     public static String getScore(Quiz q) {
 
         int count = 0;
