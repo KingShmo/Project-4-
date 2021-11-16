@@ -78,7 +78,6 @@ public class Student {
         pw.println("Name: " + firstName + " " + lastName);
         pw.println("Username: " + username);
         pw.println("Password: " + password);
-        pw.println();
         pw.flush();
     }
 
@@ -341,7 +340,7 @@ public class Student {
 
         String line = br.readLine();
 
-        while (line != null && !line.isEmpty() && !line.isBlank()) {
+        while (line != null) {
 
             String wholeName = line.substring(line.indexOf(":") + 2);
             String firstName = wholeName.substring(0, wholeName.indexOf(" "));
@@ -377,7 +376,9 @@ public class Student {
 
         String line = br.readLine();
 
-        while (line != null && !line.isEmpty() && !line.isBlank()) {
+        if (line == null)
+            return;
+        while (line != null) {
 
             //get the information needed to create a teacher object 
             String wholeName = line.substring(line.indexOf(":") + 2);
@@ -391,17 +392,18 @@ public class Student {
             line = br.readLine();
 
             String password = line.substring(line.indexOf(":") + 2);
-            
+
             //create a new teacher and add the teacher to an arraylist
 
             Teacher teacher = new Teacher(firstName, lastName, username, password);
+            Teacher.addATeacher(teacher);
 
-            teachers.add(teacher);
+
 
             line = br.readLine();
 
         }
-
+        br.close();
 
     }
 
