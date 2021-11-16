@@ -8,7 +8,7 @@ import java.util.Scanner;
  * A representation for one quiz that a certain number of students
  * can take.
  *
- * @author Zuhair Almansouri, lab sec L16
+ * @author Zuhair Almansouri, Anish Ketha lab sec L16
  *
  * @version November 12, 2021
  *
