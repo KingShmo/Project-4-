@@ -152,12 +152,14 @@ public class Application {
                             System.out.println(passwordDoesntMatch);
                             break;
                         }
+
                     }
                 }
                 if (check2 == 0) {
                     System.out.println(usernameDoesntExist);
-                    break;
+
                 }
+                break;
             } else if (choiceTeacherOrStudent.equals("2")) {
                 System.out.println(enterUsername);
 
@@ -282,9 +284,10 @@ public class Application {
                 String oldPassword = item.getPassword();
                 Teacher teacher = new Teacher(null, null, username, oldPassword);
                 teacher.changePassword(username, oldPassword, newPassword);
-                System.out.println(signInAgain);
                 item.setPassword(newPassword);
+                System.out.println(signInAgain);
                 signIn(scanner);
+
             }
         }
     }
@@ -410,7 +413,7 @@ public class Application {
     public static void menuTeacher(String username, Scanner scanner) throws Exception {
         try {
             while (true) {
-                System.out.println(menuTeacher + "[4] Go to the Courses and Quiz Function");
+                System.out.println(menuTeacher + "[4] Go to the Courses");
                 System.out.println(chooseOne);
                 String choice = scanner.nextLine();
 
