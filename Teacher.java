@@ -162,7 +162,9 @@ public class Teacher {
         pw.println("Name: " + firstName + " " + lastName);
         pw.println("Username: " + username);
         pw.println("Password: " + password);
+        pw.flush();
         pw.close();
+
     }
 
     /**
