@@ -84,6 +84,7 @@ public class TheCourseFunction {
                 QuizArchive quizArchive = new QuizArchive();
                 System.out.println("Course created!");
                 creatingACourse(answer, assignedTeacher, enrollmentCapacity);
+                System.out.println(courseArchive.getCourses().get(0));
 
             } else if (answer.equals("2")) {
                 boolean courseExists = false;
