@@ -147,7 +147,7 @@ public class Application {
 
                             System.out.println("Success!\n");
                             menuTeacher(username, scanner);
-
+                            break;
                         } else {
                             System.out.println(passwordDoesntMatch);
                             break;
@@ -182,8 +182,9 @@ public class Application {
                 }
                 if (check1 == 0) {
                     System.out.println(usernameDoesntExist);
-                    break;
+
                 }
+                break;
             } else {
                 System.out.println(incorrectAnswer);
             }
@@ -231,6 +232,7 @@ public class Application {
                     teacher.createAccount(firstName, lastName, username, password);
                     signIn(scanner);
                 }
+                break;
             } else if (choiceTeacherOrStudent.equals("2")) {
                 System.out.println(enterFirstName);
                 String firstName = scanner.nextLine();
@@ -257,6 +259,7 @@ public class Application {
                     signIn(scanner);
 
                 }
+                break;
             } else {
                 System.out.println(incorrectAnswer);
             }
