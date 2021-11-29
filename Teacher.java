@@ -96,20 +96,29 @@ public class Teacher {
         FileOutputStream fos = new FileOutputStream("CourseDetails.txt");
         PrintWriter pw = new PrintWriter(fos);
         for (int i = 0; i < courses.size(); i++) {
-            ArrayList<String> listStudents=new ArrayList<>();
+            ArrayList<String> listStudents = new ArrayList<>();
+
             pw.println("Course name: " + courses.get(i).getName());
             pw.println("Teacher name: " + courses.get(i).getCourseTeacher().getName());
             pw.println("Enrollment capacity: " + courses.get(i).getEnrollmentCapacity());
             for (int j = 0; j < courses.get(i).getStudentsInThisCourse().size(); j++) {
-                String studentFirstName = courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
-                String studentLastName = courses.get(i).getStudentsInThisCourse().get(j).getLastName();
-                String name = studentFirstName + studentLastName;
+                //String studentFirstName = courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
+                //String studentLastName = courses.get(i).getStudentsInThisCourse().get(j).getLastName();
+                String name = courses.get(i).getStudentsInThisCourse().get(j).getName();
                 listStudents.add(name);
             }
-            pw.println("Students in course: " + listStudents.toString());
-            pw.println();
+            String allStudents = "";
+            for (int j = 0; j < listStudents.size(); j++) {
+                if (j + 1 == listStudents.size())
+                    allStudents += listStudents.get(j);
+                else
+                    allStudents += listStudents.get(j) + ",";
+            }
+            pw.println("Students in course: " + allStudents);
+
         }
         pw.flush();
+        pw.close();
     }
 
     //reads a file that will get the course name, teacher name, enrollment capcity, and the students
@@ -136,17 +145,57 @@ public class Teacher {
 
                 int enrollment = Integer.valueOf(line.substring(line.indexOf(":") + 2));
 
-                line = br.readLine();
-
                 Teacher teacher = new Teacher(firstName, lastName);
 
-
-
                 line = br.readLine();
+                Course course;
+                if (line.indexOf(":") + 2 == line.length()) {
+                    course = new Course(courseName, teacher, enrollment);
+                } else {
 
-                Course course = new Course(courseName, teacher, enrollment);
+                    line = line.substring(line.indexOf(":") + 2);
+
+                    ArrayList<Student> students = new ArrayList<>();
+
+                    boolean check = true;
+                    while (check) {
+
+                        int temp = line.indexOf(",");
+                        if (temp == -1) {
+                            check = false;
+                            temp = line.length();
+                        }
+
+                        String name = line.substring(0, temp);
+                        String fname = name.substring(0, name.indexOf(" "));
+                        String lname = name.substring(name.indexOf(" ") + 1);
+                        students.add(new Student(fname, lname));
+
+                        if (line.indexOf(",") == -1)
+                            check = false;
+                        else
+                            line = line.substring(line.indexOf(",") + 1);
+
+                    }
+
+                    course = new Course(courseName, teacher, enrollment, students);
+
+                }
+
+                course.assignStudentUsernames();
+                QuizArchive quizArchive = new QuizArchive();
+                for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
+
+                    Quiz q = quizArchive.getQuizzes().get(i);
+                    if (q.getCourse().equals(courseName))
+                        course.addCourseQuiz(q);
+
+                }
 
                 CourseArchive.addStaticCourses(course);
+                //CourseArchive.addStaticCourses(course);
+
+                line = br.readLine();
 
             }
 
@@ -155,10 +204,12 @@ public class Teacher {
         }
 
 
+
+
     }
 
 
-    public static ArrayList<Course> readAllCoursess() throws InvalidCourseException {
+    public static ArrayList<Course> readAllCoursess() throws InvalidCourseException, FileNotFoundException {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<Course> allInfo = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("CourseDetails.txt"))) {
@@ -196,18 +247,28 @@ public class Teacher {
         return allInfo;
     }
 
-    //save a teacher account to the txt file 
-    public static void createAccount(String firstName, String lastName, String username, String password) throws IOException {
-        FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", true);
+    //save a teacher account to the txt file
+    public static void createAccount() throws IOException {
+
+        FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt");
         StringBuilder courses = new StringBuilder();
         BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
         String line = br.readLine();
         PrintWriter pw = new PrintWriter(fos);
 
 
-        pw.println("Name: " + firstName + " " + lastName);
-        pw.println("Username: " + username);
-        pw.println("Password: " + password);
+        for (int i = 0; i < teachers.size(); i++) {
+
+            String firstName = teachers.get(i).getFirstName();
+            String lastName = teachers.get(i).getLastName();
+            String username = teachers.get(i).getUsername();
+            String password = teachers.get(i).getPassword();
+
+            pw.println("Name: " + firstName + " " + lastName);
+            pw.println("Username: " + username);
+            pw.println("Password: " + password);
+
+        }
         pw.flush();
         pw.close();
 
@@ -269,12 +330,17 @@ public class Teacher {
             for (int i = 0; i < splitContents.length; i++) {
                 stringArrayList.add(splitContents[i]);
             }
+
             for (int i = 0; i < stringArrayList.size(); i++) {
                 if (stringArrayList.get(i).contains("Username: deleteAccount")) {
                     stringArrayList.remove(i + 2);
+                    i--;
                     stringArrayList.remove(i + 1);
+                    i--;
                     stringArrayList.remove(i);
+                    i--;
                     stringArrayList.remove(i - 1);
+                    i--;
                 }
             }
             FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
@@ -313,7 +379,7 @@ public class Teacher {
         return allInfo;
     }
 
-    //return all the names of teachers 
+    //return all the names of teachers
     public static ArrayList<String> getAllTeacherNames() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allInfo = new ArrayList<>();
@@ -473,11 +539,11 @@ public class Teacher {
         return specificQuiz;
     }
 
-    public static void main() throws InvalidCourseException, InvalidQuizException, IOException {
+    public static void main(String username) throws InvalidCourseException, InvalidQuizException, IOException {
         Scanner scanner = new Scanner(System.in);
         boolean check;
         do {
-            check = TheCourseFunction.courseFunctionMenu(scanner);
+            check = TheCourseFunction.courseFunctionMenu(username, scanner);
         } while (check);
 
     }

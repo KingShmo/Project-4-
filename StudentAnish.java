@@ -28,7 +28,7 @@ public class StudentAnish {
     }
 
 
-    public static void main() throws InvalidCourseException {
+    public static void main(String username) throws InvalidCourseException {
 
         CourseArchive listOfCourses = new CourseArchive();
 
@@ -37,12 +37,117 @@ public class StudentAnish {
         QuizArchive quizArchive = new QuizArchive();
 
         //Below is a menu for only students which loops and handles any exceptions
-        System.out.println("Welcome! Which course would you like to access?");
-        int course = 0;
+
+        String course;
         int secondaryLoop = 0;
-        do {
+        Course accessedCourses;
+
+        //start
+
+        ArrayList<Course> enrolledCourses = new ArrayList<>();
+
+        for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+
+            var students = CourseArchive.allCourses.get(i).getStudentsInThisCourse();
+
+            for (int j = 0; j < students.size(); j++) {
+
+                if (students.get(j).getUsername().equals(username))
+                    enrolledCourses.add(CourseArchive.allCourses.get(i));
+            }
+
+        }
+
+        while (true) {
+            System.out.println("Welcome! Which course would you like to access?");
+            int z;
+
+            for (z = 0; z < enrolledCourses.size(); z++) {
+
+                System.out.println((z + 1) + ". " + enrolledCourses.get(z).getName());
+
+            }
+            if (z == 0) {
+                System.out.println("No enrolled courses.");
+                return;
+            }
+            System.out.println((++z) + ". Exit");
+
+            String[] options = new String[enrolledCourses.size() + 1];
+            for (int i = 0; i < options.length; i++)
+                options[i] = "" + (i + 1);
+
+            String answer = inputChecker(scanner, options, "Which course would you like to access?",
+                    "Invalid input.");
+            int choice = Integer.valueOf(answer);
+            if (choice == z) {
+                System.out.println("Thank you for using the student portal.");
+                return;
+            } else {
+
+                choice--;
+
+                Course chosenCourse = enrolledCourses.get(choice);
+
+
+
+
+                String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
+                        "3. Exit the course";
+                System.out.println(prompt);
+
+                answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
+
+                if (answer.equals("1")) {
+
+                    System.out.println("Choose a quiz:");
+
+                    var allQuizzes = chosenCourse.getQuizzes();
+                    if (allQuizzes.size() == 0) {
+                        System.out.println("There are no quizzes.");
+                        break;
+                    }
+                    String[] checkInput = new String[allQuizzes.size()];
+
+                    for (int i = 0; i < allQuizzes.size(); i++) {
+                        System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
+                        checkInput[i] = "" + (i + 1);
+                    }
+
+                    answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
+
+                    Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
+
+                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+
+
+                } else if (answer.equals("2")) {
+
+                    for (int i = 0; i < enrolledCourses.size(); i++) {
+
+                        Course c = enrolledCourses.get(i);
+                        var quizzes = c.getQuizzes();
+                        for (int j = 0; j < quizzes.size(); j++) {
+
+                            System.out.println("Raw score: " + StudentAnish.getScore(quizzes.get(j)));
+                            System.out.println("Score with point values: " +
+                                               StudentAnish.getModifiedScore(quizzes.get(j).getPointValues(),
+                                                       quizzes.get(j)));
+
+                        }
+
+                    }
+
+
+                }
+            }
+        }
+        //Finish
+        /*do {
             secondaryLoop = 0;
+            boolean check;
             do {
+                check = false;
                 for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
                     if (CourseArchive.allCourses.size() == 0) {
                         System.out.println("There are no courses available!");
@@ -52,15 +157,34 @@ public class StudentAnish {
                     }
                 }
                 System.out.println(CourseArchive.allCourses.size() + 1 + ". Exit");
-                course = scanner.nextInt();
-                if (course == (listOfCourses.getCourses().size() + 1)) {
+
+                String[] options = new String[CourseArchive.allCourses.size() + 1];
+                for (int i = 0; i < options.length; i++)
+                    options[i] = "" + (i + 1);
+                course = inputChecker(scanner, options, "Which course would you like to access?",
+                                             "Invalid input.");
+
+
+                if (Integer.valueOf(course) == (listOfCourses.getCourses().size() + 1)) {
                     System.out.println("Thank you for using the student portal!");
                     return;
-                } else if (course <= 0 || course > CourseArchive.allCourses.size() + 1) {
+                } else if (Integer.valueOf(course) <= 1 || Integer.valueOf(course) > CourseArchive.allCourses.size() + 1) {
                     System.out.println("Invalid input! Please try again!");
+                    check = true;
                 }
-            } while (course <= 0 || course > CourseArchive.allCourses.size() + 1);
+            } while (check);
             int initialLoop;
+
+
+            for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+                if (CourseArchive.allCourses.get(i).getName().equals(course)) {
+                    accessedCourse = CourseArchive.allCourses.get(i);
+                    break;
+                }
+            }
+
+
+
             do {
                 initialLoop = 0;
                 System.out.println("Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
@@ -129,7 +253,7 @@ public class StudentAnish {
                     initialLoop = 1;
                 }
             } while (initialLoop == 1);
-        } while (secondaryLoop == 1);
+        } while (secondaryLoop == 1);*/
     }
 
     //method that checks for input in a multiple choice question to make it more streamlined and efficient
@@ -298,7 +422,18 @@ public class StudentAnish {
         int[] pointValues = new int[temp.getSizeOfQuiz()];
         for (int i = 0; i < temp.getSizeOfQuiz(); i++) {
             System.out.println("How many points is question " + (i + 1) + " worth?");
-            int points = scanner.nextInt();
+            boolean check;
+            int points = 0;
+            do {
+                check = false;
+                try {
+                    points = scanner.nextInt();
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Enter a number.");
+                    check = true;
+                }
+            } while (check);
             scanner.nextLine();
             pointValues[i] = points;
         }

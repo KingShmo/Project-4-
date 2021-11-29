@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -33,13 +34,36 @@ public class Course {
     /**
      * QuizArchive with quizzes
      */
-    QuizArchive quizArchive = new QuizArchive();
+    static QuizArchive quizArchive = new QuizArchive();
+    /**
+     * all quizzes
+     */
+    ArrayList<Quiz> quizzes;
 
     /**
      * get students
      */
     public ArrayList<Student> getStudentsInThisCourse() {
         return this.studentsInThisCourse;
+    }
+
+    public void assignStudentUsernames() {
+
+        var students = Student.students;
+
+        for (int i = 0; i < students.size(); i++) {
+
+            for (int j = 0; j < studentsInThisCourse.size(); j++) {
+
+                if (students.get(i).getName().equals(studentsInThisCourse.get(j).getName())) {
+
+                    studentsInThisCourse.get(j).setUsername(students.get(i).getUsername());
+                }
+
+            }
+
+        }
+
     }
 
     /**
@@ -58,11 +82,12 @@ public class Course {
      * @param teacher = teacher to be assigned
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException {
+    public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, FileNotFoundException {
         this.name = name;
         this.courseTeacher = teacher;
         this.enrollmentCapacity = enrollmentCapacity;
         studentsInThisCourse = new ArrayList<>();
+        quizzes = new ArrayList<>();
         if (enrollmentCapacity < 1)
             throw new InvalidCourseException("A course should have a minimum student enrollment of 1!");
     }
@@ -76,11 +101,20 @@ public class Course {
      * @param studentsInThisCourse = students to be added for the course
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity, ArrayList<Student> studentsInThisCourse) throws InvalidCourseException {
+    public Course(String name, Teacher teacher, int enrollmentCapacity, ArrayList<Student> studentsInThisCourse) throws InvalidCourseException, FileNotFoundException {
         this(name, teacher, enrollmentCapacity);
         this.studentsInThisCourse = studentsInThisCourse;
         if (enrollmentCapacity < 1)
             throw new InvalidCourseException("A course should have a minimum student enrollment capacity of 1!");
+        quizzes = new ArrayList<>();
+    }
+
+    public ArrayList<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void addCourseQuiz(Quiz quiz) {
+        quizzes.add(quiz);
     }
 
     /**
@@ -140,12 +174,21 @@ public class Course {
     }
 
     /**
+     * get quizArchive
+     * @return quizArchive
+     */
+    public static QuizArchive getQuizArchive() {
+        return quizArchive;
+    }
+
+    /**
      * calls the quiz menu
      * @throws InvalidQuizException = thrown when appropriate
      * @throws FileNotFoundException = thrown when appropriate
      */
-    public void callTheQuizFunction() throws InvalidQuizException, FileNotFoundException {
-        TheQuizFunction.main(quizArchive);
+    public void callTheQuizFunction(String courseTitle) throws InvalidQuizException, IOException {
+        quizArchive = Application.quizArchive;
+        TheQuizFunction.main(quizArchive, courseTitle);
 
     }
 }

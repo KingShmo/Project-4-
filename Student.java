@@ -19,13 +19,11 @@ public class Student {
     private String lastName;
     private String username;
     private String password;
-    static ArrayList<Student> students = Application.students;
+    static ArrayList<Student> students = new ArrayList<>();
 
     public Student(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        students = new ArrayList<>();
-        addAStudent(this);
     }
 
     public Student(String firstName, String lastName, String username, String password) {
@@ -36,6 +34,10 @@ public class Student {
 
     public static ArrayList<Student> getStudents() {
         return students;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 
@@ -68,16 +70,25 @@ public class Student {
         this.password = password;
     }
 
-    public static void createAccount(String firstName, String lastName, String username, String password)
+    public static void createAccount()
             throws FileNotFoundException {
-        //write to StudentAccounts.txt 
-        FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", true);
+        //write to StudentAccounts.txt
+        FileOutputStream fos = new FileOutputStream("StudentAccounts.txt");
         //create new print writer
         PrintWriter pw = new PrintWriter(fos);
         //write the name, username, and password of each account
-        pw.println("Name: " + firstName + " " + lastName);
-        pw.println("Username: " + username);
-        pw.println("Password: " + password);
+
+        for (int i = 0; i < students.size(); i++) {
+
+            String firstName = students.get(i).getFirstName();
+            String lastName = students.get(i).getLastName();
+            String username = students.get(i).getUsername();
+            String password = students.get(i).getPassword();
+
+            pw.println("Name: " + firstName + " " + lastName);
+            pw.println("Username: " + username);
+            pw.println("Password: " + password);
+        }
         pw.flush();
         pw.close();
     }
@@ -85,9 +96,9 @@ public class Student {
     public static String deleteAccount(String username) throws FileNotFoundException {
         //
         int deleteAcc = 0;
-        //create string buffer 
+        //create string buffer
         StringBuffer buffer = new StringBuffer();
-        //read the lines within the file 
+        //read the lines within the file
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -133,7 +144,7 @@ public class Student {
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < stringArrayList.size(); i++) {
-                //write the new array list to the file 
+                //write the new array list to the file
                 pw.println(stringArrayList.get(i));
             }
             pw.flush();
@@ -158,7 +169,7 @@ public class Student {
             return null;
         } else {
             for (int i = 0; i < fileContents.size() / 4; i++) {
-                //add usernames and passwords to an arraylist and return it 
+                //add usernames and passwords to an arraylist and return it
                 String user = fileContents.get(1 + 4 * i);
                 allUsernames.add(user.substring(10));
                 String pass = fileContents.get(2 + 4 * i);
@@ -207,14 +218,14 @@ public class Student {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //set the string buffer to a string 
+        //set the string buffer to a string
         String fileContents = buffer.toString();
         if (buffer.isEmpty()) {
             return "No student accounts have been created.";
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(oldUsername)) {
-                    //replace the old username with the new username in the file 
+                    //replace the old username with the new username in the file
                     fileContents = fileContents.replace(oldUsername, newUsername);
                     usernameExist = 1;
                 }
@@ -222,12 +233,12 @@ public class Student {
             if (usernameExist != 1) {
                 return "Your current username does not exist.";
             }
-            //split the contents by the "\n" that separates different accounts 
+            //split the contents by the "\n" that separates different accounts
             String[] splitContents = fileContents.split("\n");
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                //rewrite all the new accounts 
+                //rewrite all the new accounts
                 pw.println(splitContents[i]);
             }
             pw.flush();
@@ -280,7 +291,7 @@ public class Student {
             FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                //write the updated contents into a txt file 
+                //write the updated contents into a txt file
                 pw.println(splitContents[i]);
             }
             pw.flush();
@@ -332,10 +343,9 @@ public class Student {
 
     /**
      * reads students from a file
-     * @param students = store students
      * @throws IOException = when an error occurs while reading
      */
-    public static void readStudents(ArrayList<Student> students) throws IOException {
+    public static void readStudents() throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader("StudentAccounts.txt"));
 
@@ -359,13 +369,13 @@ public class Student {
 
             Student student = new Student(firstName, lastName, username, password);
 
-            students.add(student);
+            student.addAStudent(student);
 
             line = br.readLine();
 
         }
 
-
+        br.close();
     }
 
     /**
@@ -383,7 +393,7 @@ public class Student {
             return;
         while (line != null) {
 
-            //get the information needed to create a teacher object 
+            //get the information needed to create a teacher object
             String wholeName = line.substring(line.indexOf(":") + 2);
             String firstName = wholeName.substring(0, wholeName.indexOf(" "));
             String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
@@ -598,6 +608,11 @@ public class Student {
 
     }
 
+    public String toString() {
+
+        return "Name: " + firstName + " " + lastName + " Username: " + username + " Password: " + password;
+
+    }
 
     public static void main(String[] args) {
         ArrayList<String> usersAndPass = getAllUsernamesAndPasswords();

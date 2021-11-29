@@ -25,6 +25,10 @@ public class Quiz {
      */
     private ArrayList<Integer> attempts;
     /**
+     * point values for quiz's questions
+     */
+    private int[] pointValues;
+    /**
      * All scores for the students. Each index represents the highest score for
      * a particular student.
      */
@@ -66,6 +70,10 @@ public class Quiz {
      * size of the quiz
      */
     private int sizeOfQuiz;
+    /**
+     * courses that have the quiz
+     */
+    private String course;
     /**
      * quiz questions counter
      */
@@ -169,6 +177,22 @@ public class Quiz {
      */
     public Quiz createQuiz() {
         return this;
+    }
+
+    /**
+     *
+     * @return courses
+     */
+    public String getCourse() {
+        return course;
+    }
+
+    /**
+     *
+     * @param c = course to be added
+     */
+    public void assignCourse(String c) {
+        course = c;
     }
 
     /**
@@ -511,6 +535,22 @@ public class Quiz {
     }
 
     /**
+     * get point values for the questions
+     * @return pointValues
+     */
+    public int[] getPointValues() {
+        return pointValues;
+    }
+
+    /**
+     * initialize point values instance variable
+     * @param p = point values that are copied
+     */
+    public void initializePointValues(int[] p) {
+        pointValues = p;
+    }
+
+    /**
      * set name instance variable
      *
      * @param newName = new name
@@ -557,6 +597,8 @@ public class Quiz {
 
         return toBePrinted;
     }
+
+
 
     //Anish's method
     public static String getModifiedScore(int[] pointValue, Quiz q) {

@@ -48,7 +48,7 @@ public class QuizGrading {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
-    
+
     //deletes a quiz
     public void deleteQuiz(QuizArchive q, String nameOfQuiz) {
         Scanner scanner = new Scanner(System.in);
