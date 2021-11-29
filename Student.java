@@ -20,16 +20,23 @@ public class Student {
     private String username;
     private String password;
     static ArrayList<Student> students = new ArrayList<>();
+    private ArrayList<String> scores;
 
     public Student(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        scores = new ArrayList<>();
     }
 
     public Student(String firstName, String lastName, String username, String password) {
         this(firstName, lastName);
         this.username = username;
         this.password = password;
+        scores = new ArrayList<>();
+    }
+
+    public void addScore(String score, String modifiedScore, String quiz) {
+        scores.add(score + "," + modifiedScore + "," + quiz);
     }
 
     public static ArrayList<Student> getStudents() {
@@ -376,7 +383,54 @@ public class Student {
         }
 
         br.close();
+
     }
+
+    /**
+     * read scores
+     */
+    public static void readStudentsScores() {
+
+        try(BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+
+            String line = br.readLine();
+
+            ArrayList<String> rawScores = new ArrayList<>();
+            ArrayList<String> modifiedScores = new ArrayList<>();
+            ArrayList<String> quizzes = new ArrayList<>();
+
+            while (line != null) {
+
+                rawScores.add(line.substring(0, line.indexOf(",")));
+                line = line.substring(line.indexOf(",") + 1);
+                modifiedScores.add(line.substring(0, line.indexOf(",")));
+                line = line.substring(line.indexOf(",") + 1);
+                quizzes.add(line);
+
+                line = br.readLine();
+
+            }
+
+            var allCourses = CourseArchive.allCourses;
+
+            for (int i = 0; i < allCourses.size(); i++) {
+
+                var allQuizzes =allCourses.get(i).getQuizzes();
+
+
+
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
 
     /**
      * read teachers from a file

@@ -118,7 +118,10 @@ public class StudentAnish {
 
                     Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
 
-                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                    if (chosenQuiz.getStudentAnswers() != null)
+                        System.out.println("Quiz already taken.");
+                    else
+                        startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
 
 
                 } else if (answer.equals("2")) {
@@ -127,8 +130,9 @@ public class StudentAnish {
 
                         Course c = enrolledCourses.get(i);
                         var quizzes = c.getQuizzes();
-                        for (int j = 0; j < quizzes.size(); j++) {
 
+                        for (int j = 0; j < quizzes.size(); j++) {
+                            System.out.println("Quiz name: " + quizzes.get(j).getName());
                             System.out.println("Raw score: " + StudentAnish.getScore(quizzes.get(j)));
                             System.out.println("Score with point values: " +
                                                StudentAnish.getModifiedScore(quizzes.get(j).getPointValues(),
@@ -444,6 +448,9 @@ public class StudentAnish {
 
         int count = 0;
 
+        if (q.getStudentAnswers() == null)
+            return "Quiz was not taken.";
+
         for (int i = 0; i < q.getStudentAnswers().size(); i++) {
 
             if (q.getStudentAnswers().get(i) == q.getCorrectAnswers().get(i))
@@ -461,8 +468,10 @@ public class StudentAnish {
     public static String getScore(Quiz q) {
 
         int count = 0;
-
+        if (q.getStudentAnswers() == null)
+            return "Quiz was not taken.";
         for (int i = 0; i < q.getStudentAnswers().size(); i++) {
+
 
             if (q.getStudentAnswers().get(i) == q.getCorrectAnswers().get(i))
                 count++;

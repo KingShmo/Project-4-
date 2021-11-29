@@ -88,6 +88,8 @@ public class Application {
 
         Teacher.readAllCourses();
 
+        //Student.readStudentsScores();
+
         teachers = Teacher.teachers;
         students = Student.students;
 

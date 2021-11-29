@@ -32,7 +32,7 @@ public class Quiz {
      * All scores for the students. Each index represents the highest score for
      * a particular student.
      */
-    private ArrayList<Double> scores;
+    private ArrayList<String> scores;
     /**
      * Students who took the quiz
      */
@@ -542,6 +542,30 @@ public class Quiz {
         return pointValues;
     }
 
+    /**
+     * add scores
+     * @param username = student who has the score
+     * @param score = raw score
+     * @param modifiedscore = modified score
+     */
+    public void addScore(String username, String score, String modifiedscore) {
+        var students = Student.students;
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getUsername().equals(username)) {
+                scores.add(username + "," + score + "," + modifiedscore);
+                break;
+            }
+        }
+    }
+
+    /**
+     *
+     * @return scores
+     */
+    public ArrayList<String> getScores() {
+        return scores;
+    }
     /**
      * initialize point values instance variable
      * @param p = point values that are copied
