@@ -24,8 +24,8 @@ public class TheCourseFunction {
 
 
     //menu that only the teacher sees.
-    public static boolean courseFunctionMenu(Scanner scanner) throws InvalidCourseException, InvalidQuizException,
-                                                              IOException {
+    public static boolean courseFunctionMenu(String username, Scanner scanner) throws InvalidCourseException, InvalidQuizException,
+            IOException {
         String answer;
         String answer2;
         CourseArchive courseArchive = new CourseArchive();
@@ -39,8 +39,8 @@ public class TheCourseFunction {
             System.out.println("5. Delete a course");
             System.out.println("6. Exit");
             String temp = "Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. " +
-                          "Add students to a course\n4. Modify course attributes-Course teacher/Course enrollment/" +
-                          "Course name\n5. Delete a course\n6. Exit";
+                    "Add students to a course\n4. Modify course attributes-Course teacher/Course enrollment/" +
+                    "Course name\n5. Delete a course\n6. Exit";
             String[] options = {"1", "2", "3", "4", "5", "6"};
             answer = inputChecker(scanner, options, temp, "Invalid input.");
 
@@ -60,9 +60,25 @@ public class TheCourseFunction {
                     System.out.println("This course already exists!\n");
                     break;
                 }
+                /*
+                int countSpaces;
+                String teacherName = null;
+                do {
+                    countSpaces = 0;
+                    System.out.println("What's the full name of the course's assigned teacher? (Firstname Lastname)");
+                    teacherName = scanner.nextLine();
+                    String teacherNameCopy = teacherName;
+                    while (teacherNameCopy.indexOf(" ") != -1) {
+                        teacherNameCopy = teacherNameCopy.substring(teacherNameCopy.indexOf(" ") + 1);
+                        countSpaces++;
+                    }
+                    if (countSpaces != 1)
+                        System.out.println("There should be a space between the first and last names.");
 
-                System.out.println("What's the full name of the course's assigned teacher?");
-                String teacherName = scanner.nextLine();
+                } while (countSpaces != 1);
+
+
+
                 Teacher assignedTeacher = new Teacher(teacherName.substring(0, teacherName.indexOf(" ")),
                         teacherName.substring(teacherName.indexOf(" ") + 1));
                 var allTeachers = Teacher.getTeachers();
@@ -85,6 +101,16 @@ public class TheCourseFunction {
                     System.out.println("The teacher entered does not exist in the database!\n");
                     break;
                 }
+                */
+
+                Teacher assignedTeacher = null;
+
+                for (int i = 0; i < Teacher.teachers.size(); i++) {
+                    if (Teacher.teachers.get(i).getUsername().equals(username)) {
+                        assignedTeacher = Teacher.teachers.get(i);
+                        break;
+                    }
+                }
 
                 int enrollmentCapacity = 0;
                 do {
@@ -98,7 +124,7 @@ public class TheCourseFunction {
                     }
                 } while (true);
 
-                QuizArchive quizArchive = new QuizArchive();
+                //QuizArchive quizArchive = new QuizArchive();
                 System.out.println("Course created!");
 
                 Course course = new Course(answer, assignedTeacher, enrollmentCapacity);
@@ -120,7 +146,7 @@ public class TheCourseFunction {
                     if (courses.get(i).getName().equals(answer)) {
                         courseExists = true;
                         Course course = courses.get(i);
-                        course.callTheQuizFunction();
+                        course.callTheQuizFunction(answer);
                         break;
                     }
                 }
@@ -148,9 +174,37 @@ public class TheCourseFunction {
                     break;
                 }
 
-                System.out.println("What's the full name of the student you want to add? (First Name Last Name");
-                String studentName = scanner.nextLine();
+
                 var allStudents = Student.getStudents();
+                if (allStudents.size() == 0) {
+                    System.out.println("No students available to be added to course! Please make sure students are " +
+                            "available and then try again.\n");
+                    break;
+                }
+                System.out.println("Select the student:");
+
+                for (int i = 0; i < allStudents.size(); i++) {
+                    System.out.println((i + 1) + ". " + allStudents.get(i).getName());
+                }
+
+                String studentNumber;
+                boolean check = false;
+                do {
+                    check = false;
+                    studentNumber = scanner.nextLine();
+                    try {
+                        int num = Integer.parseInt(studentNumber);
+                        if (!(num >= 1 && num <= allStudents.size()))
+                            check = true;
+                    } catch (NumberFormatException e) {
+                        check = true;
+                    }
+                } while (check);
+
+                Student student = allStudents.get(Integer.valueOf(studentNumber) - 1);
+                /*System.out.println("What's the full name of the student you want to add? (Firstname Lastname)");
+                String studentName = scanner.nextLine();
+
                 Student student = null;
                 if (allStudents.size() == 0) {
                     System.out.println("No students available to be added to course! Please make sure students are " +
@@ -163,8 +217,9 @@ public class TheCourseFunction {
                             break;
                         }
                     }
-                }
+                }*/
                 course.addAStudentToTheCourse(student);
+                Teacher.writeCourses(CourseArchive.allCourses);
 
             } else if (answer.equals("4")) {
                 boolean courseExists = false;
@@ -200,6 +255,7 @@ public class TheCourseFunction {
                     answer2 = scanner.nextLine();
                     course.setName(answer2);
                     System.out.println("Course name modified!");
+                    Teacher.writeCourses(CourseArchive.allCourses);
                 } else if (answer.equals("2")) {
                     System.out.println("What's the new course teacher's full name?");
                     String teacherName = scanner.nextLine();
@@ -219,11 +275,13 @@ public class TheCourseFunction {
                     }
                     course.setCourseTeacher(teacher);
                     System.out.println("Course teacher changed!");
+                    Teacher.writeCourses(CourseArchive.allCourses);
                 } else if (answer.equals("3")) {
                     System.out.println("What's the new course enrollment capacity?");
                     answer2 = scanner.nextLine();
                     course.setEnrollmentCapacity(Integer.parseInt(answer2));
                     System.out.println("Course enrollment capacity modified!");
+                    Teacher.writeCourses(CourseArchive.allCourses);
                 } else if (answer.equals("4")) {
                     break;
                 }
@@ -241,6 +299,7 @@ public class TheCourseFunction {
                         courseExists = true;
                         courseArchive.deleteACourse(answer);
                         System.out.println("Course deleted!");
+                        Teacher.writeCourses(CourseArchive.allCourses);
                         break;
                     }
                 }
@@ -257,7 +316,7 @@ public class TheCourseFunction {
     //method for a person that is logged in as a teacher to create their own course to store quizzes
     // in which students access
     public static void creatingACourse(String answer, Teacher teacher,
-                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException {
+                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         CourseArchive courseArchive = new CourseArchive();
         Course course = new Course(answer, teacher, enrollmentCapacity);
         courseArchive.addCourses(course);

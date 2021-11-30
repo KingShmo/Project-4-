@@ -2,11 +2,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 /**
  * TimeStamp class
- * 
+ *
  * Prints a timestamp everytime a student has taken the quiz and allows a teacher to access the timestamp if needed
  *
- * @author Anish 
- * 
+ * @author Anish
+ *
  * @version November 15, 2021
  */
 public class TimeStamp {

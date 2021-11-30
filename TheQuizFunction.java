@@ -1,3 +1,4 @@
+import java.nio.charset.CoderResult;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,10 +32,10 @@ public class TheQuizFunction {
      * @throws InvalidQuizException = whenever a quiz can't be made, this is thrown.
      * @throws IOException          = whenever there is trouble writing quiz information into a file
      */
-    public static void main(QuizArchive quizArchive) throws InvalidQuizException, IOException {
+    public static void main(QuizArchive quizArchive, String courseTitle) throws InvalidQuizException, IOException {
 
         //Reads all the quizzes from a notepad to retrieve them.
-        PrintInformation.readQuizQuestions(quizArchive);
+        //PrintInformation.readQuizQuestions(quizArchive);
 
 
         Scanner scanner = new Scanner(System.in); // Scanner for input
@@ -57,19 +58,20 @@ public class TheQuizFunction {
 
             if (answer.equals("1")) {
                 //Creates a new Quiz object and saves it in QuizArchive
-                creatingAQuiz(scanner, quizArchive);
-
+                creatingAQuiz(scanner, quizArchive, courseTitle);
+                PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("2")) {
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 //Modifies a Quiz based on its title/name. Modifies the options, question, or name of the quiz.
                 modifyAQuiz(scanner, answer, quizArchive);
-
+                PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("3")) {
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 //Teacher launches a quiz to make it available for students.
                 launchAQuiz(answer, quizArchive);
+                PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("4")) {
 
                 System.out.println("What's the quiz title?");
@@ -77,7 +79,7 @@ public class TheQuizFunction {
                 //Randomize options and questions for a given title of a quiz.
                 randomizeQuestions(answer, quizArchive);
 
-
+                PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("5")) {
                 //Anushka's method. It lists the student answers for their quiz.
                 viewStudentSubmissions(scanner, quizArchive);
@@ -88,7 +90,7 @@ public class TheQuizFunction {
         } while (true);
 
         //Prints the quiz information in a notepad to save it before terminating the quiz portal.
-        PrintInformation.main();
+        PrintInformation.writeQuizQuestions(quizArchive);
 
         System.out.println("Thank you for using our quiz portal!");
 
@@ -423,7 +425,8 @@ public class TheQuizFunction {
      * @throws InvalidQuizException = throws an exception whenever a quiz with the given information
      *                              can't possibly be created.
      */
-    public static void creatingAQuiz(Scanner scanner, QuizArchive quizArchive) throws InvalidQuizException {
+    public static void creatingAQuiz(Scanner scanner, QuizArchive quizArchive, String courseTitle)
+                                     throws InvalidQuizException {
 
         String answer;
 
@@ -439,12 +442,12 @@ public class TheQuizFunction {
             else {
 
                 System.out.println("How many numbers of questions?");
-                String[] questionNumberChoices = new String[121];
+                String[] questionNumberChoices = new String[120];
                 for (int i = 0; i < questionNumberChoices.length; i++) {
-                    questionNumberChoices[i] = "" + i;
+                    questionNumberChoices[i] = "" + (i + 1);
                 }
                 answer = inputChecker(scanner, questionNumberChoices, "How many numbers of questions?",
-                        "Number of questions should be no more than 120.");
+                        "Number of questions should be no more than 120 or less than 1.");
 
                 if (Integer.valueOf(answer) == 0) {
 
@@ -453,9 +456,12 @@ public class TheQuizFunction {
                         System.out.println("What's the quiz's title?");
                         answer = scanner.nextLine();
                         var allQuizzes = quizArchive.getQuizzes();
+
                         for (Quiz quiz : allQuizzes) {
                             if (quiz.getName().equals(answer)) {
                                 answer = "";
+                                System.out.println("The quiz title already exists.");
+
                             }
                         }
 
@@ -529,6 +535,14 @@ public class TheQuizFunction {
 
                         System.out.println("What's the quiz's title?");
                         answer = scanner.nextLine();
+                        var allQuizzes = quizArchive.getQuizzes();
+                        for (Quiz quiz : allQuizzes) {
+                            if (quiz.getName().equals(answer)) {
+                                answer = "";
+                                System.out.println("The quiz title already exists.");
+
+                            }
+                        }
 
                     } while (answer.isEmpty() || answer.isBlank());
 
@@ -578,10 +592,23 @@ public class TheQuizFunction {
 
                     }
 
+                    for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+
+                        if (CourseArchive.allCourses.get(i).getName().equals(courseTitle)) {
+                            CourseArchive.allCourses.get(i).addCourseQuiz(q1);
+                            q1.assignCourse(courseTitle);
+                        }
+
+                    }
+
+                    q1.initializePointValues(StudentAnish.assignPointValues(temp, scanner));
+                                            // Anish's method that asks a teacher the specific
+                                            // value for each question when they create a quiz
+
                 }
 
-                StudentAnish.assignPointValues(temp, scanner);
-                // Anish's method that asks a teacher the specific value for each question when they create a quiz
+
+
             }
 
             break;
