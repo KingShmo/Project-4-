@@ -31,6 +31,11 @@ public class TheCourseFunction {
         CourseArchive courseArchive = new CourseArchive();
 
         do {
+            System.out.println("Available Courses:");
+            int x = 0;
+            for (Course course : CourseArchive.allCourses) {
+                System.out.println((++x) + ". " + course.getName());
+            }
             System.out.println("Select the action you want:");
             System.out.println("1. Create a course");
             System.out.println("2. Use quiz options for a course");

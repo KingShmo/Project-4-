@@ -61,8 +61,12 @@ public class PrintInformation {
             var correctAnswers = oneQuiz.getCorrectAnswers();
             var quizName = oneQuiz.getName();
 
+            //Not taken '-', taken '--'
+            String taken = "-";
+            if (oneQuiz.isTaken())
+                taken = "--";
 
-            bw.write(quizName + "-" + oneQuiz.getCourse() + "\n");
+            bw.write(quizName + "-" + oneQuiz.getCourse() + taken + "\n");
             bw.write(oneQuiz.questionsPrinter());
 
             bw.write("Correct answers:\n");
@@ -79,7 +83,7 @@ public class PrintInformation {
             for (int j = 0; j < oneQuiz.getPointValues().length; j++) {
 
 
-                bw.write("" + temp[j]);
+                bw.write("" + temp[j] + ",");
 
             }
 
@@ -113,8 +117,24 @@ public class PrintInformation {
             }
 
 
+            String temp = quizName;
+
+            if (quizName.substring(quizName.length() - 1).equals("-")) {
+                quizName = quizName.substring(0, quizName.length() - 1);
+                if (quizName.substring(quizName.length() - 1).equals("-"))
+                    quizName = quizName.substring(0, quizName.length() - 1);
+            }
+
             Quiz quiz = new Quiz(quizName.substring(0, quizName.indexOf("-")));
             quiz.assignCourse(quizName.substring(quizName.indexOf("-") + 1));
+
+
+            /*if (temp.indexOf("--") != -1) {
+
+                quiz.toggleTaken();
+
+            }*/
+
 
             ArrayList<String> allQuizQuestions = new ArrayList<>();
             ArrayList<String[]> allQuizOptions = new ArrayList<>();
@@ -147,15 +167,21 @@ public class PrintInformation {
             String lastLine = br.readLine();
 
 
+            if (!(lastLine.substring(lastLine.length() - 1).equals(" "))) {
+                lastLine += " ";
+            }
+
             while (true) {
                 if (lastLine == null) {
                     break;
                 }
 
+
                 if ((lastLine.indexOf(":") + 3) > lastLine.length())
                     break;
 
                 String answer = lastLine.substring(lastLine.indexOf(":") + 1, lastLine.indexOf(":") + 2);
+
 
                 lastLine = lastLine.substring(lastLine.indexOf(":") + 3);
 
@@ -171,13 +197,153 @@ public class PrintInformation {
 
             lastLine = br.readLine();
 
-            int[] pointValues = new int[lastLine.length()];
+            ArrayList<Integer> pointValues = new ArrayList<>();
 
-            for (int i = 0; i < pointValues.length; i++) {
-                pointValues[i] = Integer.valueOf(lastLine.substring(i, i + 1));
+            if (lastLine.indexOf(",") == -1)
+                pointValues.add(Integer.valueOf(lastLine));
+            else {
+                while (true) {
+
+                    if (lastLine.indexOf(",") == -1)
+                        break;
+
+                    String onePointValue = lastLine.substring(0, lastLine.indexOf(","));
+                    lastLine = lastLine.substring(lastLine.indexOf(",") + 1);
+                    pointValues.add(Integer.valueOf(onePointValue));
+
+                }
+
             }
 
-            quiz.initializePointValues(pointValues);
+            int[] p = new int[pointValues.size()];
+            for (int i = 0; i < p.length; i++)
+                p[i] = pointValues.get(i);
+            quiz.initializePointValues(p);
+
+            quizArchive.addQuizzes(quiz);
+        }
+
+
+    }
+
+    public static void readQuizQuestions(QuizArchive quizArchive, String path) throws IOException, InvalidQuizException {
+
+
+        BufferedReader br = new BufferedReader(new FileReader(path));
+
+        while (true) {
+
+            String quizName = br.readLine();
+
+            if (quizName == null) {
+                br.close();
+                return;
+            }
+
+
+            String temp = quizName;
+
+            if (quizName.substring(quizName.length() - 1).equals("-")) {
+                quizName = quizName.substring(0, quizName.length() - 1);
+                if (quizName.substring(quizName.length() - 1).equals("-"))
+                    quizName = quizName.substring(0, quizName.length() - 1);
+            }
+
+            Quiz quiz = new Quiz(quizName.substring(0, quizName.indexOf("-")));
+            quiz.assignCourse(quizName.substring(quizName.indexOf("-") + 1));
+
+
+            /*if (temp.indexOf("--") != -1) {
+
+                quiz.toggleTaken();
+
+            }*/
+
+            ArrayList<String> allQuizQuestions = new ArrayList<>();
+            ArrayList<String[]> allQuizOptions = new ArrayList<>();
+
+            while (true) {
+
+                String quizQuestion = br.readLine();
+                if (quizQuestion == null) {
+                    break;
+                }
+                if (quizQuestion.equals("Correct answers:"))
+                    break;
+
+                String[] options = new String[4];
+
+                for (int i = 0; i < 4; i++) {
+
+                    options[i] = br.readLine() + "\n";
+
+                }
+
+                allQuizQuestions.add(quizQuestion);
+                allQuizOptions.add(options);
+
+
+            }
+
+            ArrayList<Integer> allCorrectAnswers = new ArrayList<>();
+
+            String lastLine = br.readLine();
+
+
+            if (!(lastLine.substring(lastLine.length() - 1).equals(" "))) {
+                lastLine += " ";
+            }
+
+            while (true) {
+                if (lastLine == null) {
+                    break;
+                }
+
+
+                if ((lastLine.indexOf(":") + 3) > lastLine.length())
+                    break;
+
+                String answer = lastLine.substring(lastLine.indexOf(":") + 1, lastLine.indexOf(":") + 2);
+
+
+                lastLine = lastLine.substring(lastLine.indexOf(":") + 3);
+
+                allCorrectAnswers.add(Integer.valueOf(answer));
+
+            }
+
+            for (int i = 0; i < allQuizQuestions.size(); i++) {
+
+                quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1), allQuizOptions.get(i), allCorrectAnswers.get(i));
+
+            }
+
+            lastLine = br.readLine();
+
+            ArrayList<Integer> pointValues = new ArrayList<>();
+
+            if (lastLine.indexOf(",") == -1)
+                pointValues.add(Integer.valueOf(lastLine));
+            else {
+                while (true) {
+
+                    if (lastLine.indexOf(",") == -1)
+                        break;
+
+                    String onePointValue = lastLine.substring(0, lastLine.indexOf(","));
+                    lastLine = lastLine.substring(lastLine.indexOf(",") + 1);
+                    pointValues.add(Integer.valueOf(onePointValue));
+
+                }
+
+            }
+
+            int[] p = new int[pointValues.size()];
+            for (int i = 0; i < p.length; i++)
+                p[i] = pointValues.get(i);
+            quiz.initializePointValues(p);
+
+
 
             quizArchive.addQuizzes(quiz);
         }

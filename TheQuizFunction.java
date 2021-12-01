@@ -1,12 +1,9 @@
+import java.io.*;
 import java.nio.charset.CoderResult;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * TheQuizFunction
@@ -45,16 +42,23 @@ public class TheQuizFunction {
             System.out.println("Select the action you want:");
             System.out.println("1. Create a quiz");
             System.out.println("2. Modify a quiz");
-            System.out.println("3. Launch a quiz");
-            System.out.println("4. Randomize a quiz");
-            System.out.println("5. View Student Quiz Submissions");
-            System.out.println("6. Exit");
-            String temp = "Select the action you want:\n1. Create a quiz\n2. Modify a quiz\n3. Launch a quiz\n" +
-                    "4. Randomize a quiz\n5. View Student Quiz Submissions\n6. Exit"; //Collects the whole menu.
+            //System.out.println("3. Launch a quiz");
+            System.out.println("3. Randomize a quiz");
+            System.out.println("4. View Student Quiz Submissions");
+            System.out.println("5. List available quizzes");
+            System.out.println("6. Delete a quiz");
+            System.out.println("7. Import a quiz");
+            System.out.println("8. Exit");
+            String temp = "Select the action you want:\n1. Create a quiz\n2. Modify a quiz\n" +
+                    "3. Randomize a quiz\n4. View Student Quiz Submissions\n" +
+                    "5. List available quizzes\n6. Delete a quiz\n7. Import a quiz\n" +
+                    "8. Exit"; //Collects the whole menu.
 
-            String[] options = {"1", "2", "3", "4", "5", "6"}; // Used for inputChecker method. To check the valid options.
+            String[] options = {"1", "2", "3", "4", "5", "6", "7", "8"};
+            // Used for inputChecker method. To check the valid options.
 
-            answer = inputChecker(scanner, options, temp, "Invalid input."); //Assigns the valid input to "answer" variable
+            answer = inputChecker(scanner, options, temp, "Invalid input.");
+            //Assigns the valid input to "answer" variable
 
             if (answer.equals("1")) {
                 //Creates a new Quiz object and saves it in QuizArchive
@@ -64,27 +68,107 @@ public class TheQuizFunction {
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 //Modifies a Quiz based on its title/name. Modifies the options, question, or name of the quiz.
-                modifyAQuiz(scanner, answer, quizArchive);
+                modifyAQuiz(scanner, answer, quizArchive, courseTitle);
                 PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("3")) {
-                System.out.println("What's the quiz title?");
-                answer = scanner.nextLine();
-                //Teacher launches a quiz to make it available for students.
-                launchAQuiz(answer, quizArchive);
-                PrintInformation.writeQuizQuestions(quizArchive);
-            } else if (answer.equals("4")) {
 
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
+                boolean check = true;
+                for (Quiz q : quizArchive.getQuizzes()) {
+                    if (q.getName().equals(answer)) {
+                        if (!(q.getCourse().equals(courseTitle))) {
+                            System.out.println("This quiz is unavailable for this course.");
+                            check = false;
+                        }
+
+                    }
+                }
                 //Randomize options and questions for a given title of a quiz.
-                randomizeQuestions(answer, quizArchive);
+                if (check) {
+                    for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
+                        Quiz quiz = quizArchive.getQuizzes().get(i);
+                        if (quiz.getName().equals(answer)) {
+                            if (quiz.getRandomize()) {
+                                String question = "Questions are already randomized, do you want to toggle it off? (y/n)";
+                                System.out.println(question);
+                                answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"},
+                                        question, "Invalid input.");
+                                if (answer.equals("Yes") || answer.equals("yes")) {
+                                    quiz.toggleRandomization();
+                                    System.out.println("Quiz will be randomized for students in each attempt!");
+                                }
+                            } else {
+                                quiz.toggleRandomization();
+                                System.out.println("Quiz will be randomized for students in each attempt!");
+                            }
+                        }
+                    }
+                }
+                //randomizeQuestions(answer, quizArchive);
 
-                PrintInformation.writeQuizQuestions(quizArchive);
-            } else if (answer.equals("5")) {
+                //PrintInformation.writeQuizQuestions(quizArchive);
+            } else if (answer.equals("4")) {
                 //Anushka's method. It lists the student answers for their quiz.
-                viewStudentSubmissions(scanner, quizArchive);
+                viewStudentSubmissions(scanner, quizArchive, courseTitle);
 
-            } else if (answer.equals("6"))
+            } else if (answer.equals("5")) {
+                int x = 0;
+                for (Quiz quiz : quizArchive.getQuizzes()) {
+                    if (quiz.getCourse().equals(courseTitle))
+                        System.out.println((++x) + ". " + quiz.getName());
+                }
+            } else if (answer.equals("6")) {
+                System.out.println("Quiz you want to delete:");
+                int x = 0;
+                ArrayList<Quiz> quizzesToBeDeleted = new ArrayList<>();
+                for (Quiz q : quizArchive.getQuizzes()) {
+                    if (q.getCourse().equals(courseTitle)) {
+                        System.out.println((++x) + ". " + q.getName());
+                        quizzesToBeDeleted.add(q);
+                    }
+                }
+                String[] choices = new String[quizzesToBeDeleted.size()];
+                for (int i = 0; i < choices.length; i++) {
+                    choices[i] = "" + (i + 1);
+                }
+                answer = inputChecker(scanner, choices, "Quiz you want to delete:", "Invalid input");
+
+                Quiz quiz = quizzesToBeDeleted.get(Integer.valueOf(answer) - 1);
+
+                for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
+                    Quiz q = quizArchive.getQuizzes().get(i);
+                    if (q.getName().equals(quiz.getName())) {
+                        quizArchive.getQuizzes().remove(i);
+                        break;
+                    }
+                }
+
+                System.out.println("Quiz removed!");
+
+            } else if (answer.equals("7")) {
+
+                System.out.println("The file should have the following format:");
+                System.out.println("Quiz-Course\n1. Question:\n" +
+                                   "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
+                                   "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
+                                   "[pointValue1],[pointValue2]");
+
+                System.out.println("\nFile path?");
+                answer = scanner.nextLine();
+
+                try {
+
+                    PrintInformation.readQuizQuestions(quizArchive, answer);
+
+                } catch (FileNotFoundException e) {
+                    System.out.println("Couldn't find file.");
+                } catch (IOException e) {
+                    System.out.println("File was written in a wrong format.");
+                }
+
+
+            } else if (answer.equals("8"))
                 break;
 
         } while (true);
@@ -157,7 +241,7 @@ public class TheQuizFunction {
      * @return true if the modification was done successfully. Otherwise, false.
      * @throws InvalidQuizException if the quiz is not found, or the newOptions/newQuestion to be modified is not valid.
      */
-    public static boolean modifyAQuiz(Scanner scanner, String title, QuizArchive quizArchive) throws InvalidQuizException {
+    public static boolean modifyAQuiz(Scanner scanner, String title, QuizArchive quizArchive, String courseTitle) throws InvalidQuizException {
 
         String answer; // user answers
         var quizzes = quizArchive.getQuizzes(); //all quizzes
@@ -172,8 +256,15 @@ public class TheQuizFunction {
             }
         }
 
-        if (check)
+        if (check) {
+            System.out.println("Unavailable quiz.");
             return false;
+        }
+
+        if (!(quiz.getCourse().equals(courseTitle))) {
+            System.out.println("This quiz is not in this course.");
+            return false;
+        }
 
         System.out.println("Do you want to change the quizz's title? (yes/no)");
         answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
@@ -328,24 +419,62 @@ public class TheQuizFunction {
 
     }
 
+
+
     //Anushka's method
-    public static void viewStudentSubmissions(Scanner scanner, QuizArchive quizArchive) throws FileNotFoundException {
+    public static void viewStudentSubmission(Scanner scanner, QuizArchive quizArchive) throws FileNotFoundException {
         String answer;
         System.out.println("Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)");
         String temp = "Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)";
         String[] options = {"1", "2"};
         answer = inputChecker(scanner, options, temp, "Invalid input.");
-        if (answer.equals("1")) {
+        if (answer.equals("2")) {
             System.out.println("What is the first name of the student? ");
             String firstName = scanner.nextLine();
             System.out.println("What is the last name of the student? ");
             String lastName = scanner.nextLine();
             readQuizByStudentName(firstName, lastName);
-        } else if (answer.equals("2")) {
+        } else if (answer.equals("1")) {
             System.out.println("What is the name of the quiz? ");
             String quizName = scanner.nextLine();
             readQuizByQuizName(quizName);
         }
+
+    }
+
+    //Zuhair's version
+    public static void viewStudentSubmissions(Scanner scanner, QuizArchive quizArchive, String course) throws FileNotFoundException {
+
+        boolean check = true;
+
+        for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
+
+            Quiz quiz = quizArchive.getQuizzes().get(i);
+            if (quiz.getCourse().equals(course)) {
+
+                if (quiz.isTaken()) {
+                    System.out.println("Quiz name: " + quiz.getName());
+                    check = false;
+
+                    int counter = 0;
+
+                    for (int j = 0; j < quiz.getStudentAnswers().size(); j++) {
+
+                        int ans = quiz.getStudentAnswers().get(j);
+                        System.out.println("Question " + (++counter) + " answer: " + ans);
+
+                    }
+                    System.out.println("Raw Score: " + quiz.getRawScore());
+                    System.out.println("Modified Score: " + quiz.getModifiedScore());
+                    System.out.println("Timestamp: " + quiz.getTimeStamp());
+                }
+
+            }
+
+        }
+        if (check)
+            System.out.println("No submissions.");
+
 
     }
 
