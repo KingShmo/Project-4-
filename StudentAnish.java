@@ -60,11 +60,15 @@ public class StudentAnish {
         }
 
         while (true) {
+
+            String menu = "Which course would you like to access?";
+
             System.out.println("Welcome! Which course would you like to access?");
             int z;
 
             for (z = 0; z < enrolledCourses.size(); z++) {
 
+                menu += (z + 1) + ". " + enrolledCourses.get(z).getName();
                 System.out.println((z + 1) + ". " + enrolledCourses.get(z).getName());
 
             }
@@ -73,12 +77,13 @@ public class StudentAnish {
                 return;
             }
             System.out.println((++z) + ". Exit");
+            menu += z + ". Exit";
 
             String[] options = new String[enrolledCourses.size() + 1];
             for (int i = 0; i < options.length; i++)
                 options[i] = "" + (i + 1);
 
-            String answer = inputChecker(scanner, options, "Which course would you like to access?",
+            String answer = inputChecker(scanner, options, menu,
                     "Invalid input.");
             int choice = Integer.valueOf(answer);
             if (choice == z) {
@@ -92,83 +97,89 @@ public class StudentAnish {
 
 
 
+                do {
 
-                String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
-                        "3. Exit the course";
-                System.out.println(prompt);
+                    String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
+                            "3. Exit the course";
+                    System.out.println(prompt);
 
-                answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
+                    answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
 
-                if (answer.equals("1")) {
+                    if (answer.equals("1")) {
 
-                    System.out.println("Choose a quiz:");
+                        System.out.println("Choose a quiz:");
 
-                    var allQuizzes = chosenCourse.getQuizzes();
-                    if (allQuizzes.size() == 0) {
-                        System.out.println("There are no quizzes.");
+                        var allQuizzes = chosenCourse.getQuizzes();
+                        if (allQuizzes.size() == 0) {
+                            System.out.println("There are no quizzes.");
+                            continue;
+                        }
+                        String[] checkInput = new String[allQuizzes.size()];
+
+                        for (int i = 0; i < allQuizzes.size(); i++) {
+                            System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
+                            checkInput[i] = "" + (i + 1);
+                        }
+
+                        answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
+
+                        Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
+
+                        if (chosenQuiz.isTaken()) {
+                            System.out.println("Quiz already taken.");
+                        } else if (chosenQuiz.getStudentAnswers() != null) {
+                            System.out.println("Quiz already taken.");
+                        } else {
+                            if (chosenQuiz.getRandomize()) {
+                                TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive);
+                            }
+                            String question = "Do you want to attach a file for this quiz? (yes/no)";
+                            System.out.println(question);
+                            answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, question,
+                                    "Invalid input.");
+                            if (answer.equals("Yes") || answer.equals("yes")) {
+
+                                int length = chosenQuiz.getQuestions().size();
+                                System.out.println("The file should have " + length + " answers, following this format:");
+                                System.out.println("[answerForQuestion1],[answerForQuestion2],3,4");
+
+                                System.out.println("File path?");
+                                answer = scanner.nextLine();
+
+                                String response = readAttachedFile(answer, chosenQuiz, quizArchive);
+                                if (response.equals("File was not found.")) {
+                                    System.out.println("File was not found. Therefore, the quiz will start.");
+                                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                                } else
+                                    System.out.println(response);
+
+
+                            } else
+                                startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                        }
+
+
+                    } else if (answer.equals("2")) {
+
+                        for (int i = 0; i < enrolledCourses.size(); i++) {
+
+                            Course c = enrolledCourses.get(i);
+                            var quizzes = c.getQuizzes();
+
+                            for (int j = 0; j < quizzes.size(); j++) {
+                                System.out.println("Quiz name: " + quizzes.get(j).getName());
+                                System.out.println("Raw score: " + quizzes.get(j).getRawScore());
+                                System.out.println("Score with point values: " + quizzes.get(j).getModifiedScore());
+                                System.out.println("Timestamp: " + quizzes.get(j).getTimeStamp());
+
+                            }
+
+                        }
+
+
+                    } else
                         break;
-                    }
-                    String[] checkInput = new String[allQuizzes.size()];
-
-                    for (int i = 0; i < allQuizzes.size(); i++) {
-                        System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
-                        checkInput[i] = "" + (i + 1);
-                    }
-
-                    answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
-
-                    Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
-
-                    if (chosenQuiz.isTaken()) {
-                        System.out.println("Quiz already taken.");
-                    } else if (chosenQuiz.getStudentAnswers() != null) {
-                        System.out.println("Quiz already taken.");
-                    }else {
-                        if (chosenQuiz.getRandomize()) {
-                            TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive);
-                        }
-                        String question = "Do you want to attach a file for this quiz? (yes/no)";
-                        System.out.println(question);
-                        answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, question,
-                                              "Invalid input.");
-                        if (answer.equals("Yes") || answer.equals("yes")) {
-
-                            int length = chosenQuiz.getQuestions().size();
-                            System.out.println("The file should have " + length + " answers, following this format:");
-                            System.out.println("[answerForQuestion1],[answerForQuestion2],3,4");
-
-                            System.out.println("File path?");
-                            answer = scanner.nextLine();
-
-                            System.out.println(readAttachedFile(answer, chosenQuiz, quizArchive));
-
-
-                        } else
-                            startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
-                    }
-
-
-                } else if (answer.equals("2")) {
-
-                    for (int i = 0; i < enrolledCourses.size(); i++) {
-
-                        Course c = enrolledCourses.get(i);
-                        var quizzes = c.getQuizzes();
-
-                        for (int j = 0; j < quizzes.size(); j++) {
-                            System.out.println("Quiz name: " + quizzes.get(j).getName());
-                            System.out.println("Raw score: " + StudentAnish.getScore(quizzes.get(j)));
-                            System.out.println("Score with point values: " +
-                                               StudentAnish.getModifiedScore(quizzes.get(j).getPointValues(),
-                                                       quizzes.get(j)));
-                            System.out.println("Timestamp: " + quizzes.get(j).getTimeStamp());
-
-                        }
-
-                    }
-
-
-                }
+                } while (true);
             }
         }
         //Finish
@@ -296,11 +307,17 @@ public class StudentAnish {
 
             int[] answers = new int[quiz.getQuestions().size()];
 
+            if (line == null)
+                return "File was not found.";
+
             int i = 0;
             if (line.indexOf(",") == -1)
                 answers[i] = Integer.valueOf(line);
             else {
                 while (true) {
+
+                    if (i + 1 > quiz.getQuestions().size())
+                        return "File was not found.";
 
                     if (line.indexOf(",") == -1)
                         break;
@@ -352,6 +369,9 @@ public class StudentAnish {
             String rawScore = getScore(quiz);
             String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
 
+            quiz.setRawScore(rawScore);
+            quiz.setModifiedScore(modifiedScore);
+            quiz.setTimeStamp(timeStamp);
             pw.println(quiz.getName() + ";" + getScore(quiz) + ";" + getModifiedScore(quiz.getPointValues(), quiz)
                        + "," + timeStamp);
 
@@ -425,6 +445,7 @@ public class StudentAnish {
 
 
                 q.setStudentAnswers(studentAnswers);
+
                 q.toggleTaken();
 
                 line = br.readLine();
@@ -573,7 +594,6 @@ public class StudentAnish {
                 String takeTimeStamp = yearMonthDaySpaceHoursMinutesSeconds.format(timestamp);
                 System.out.println("Quiz completed: " + takeTimeStamp);
 
-                quiz.toggleTaken();
                 quiz.setStudentAnswers(studentAnswers);
 
                 writeScores(quiz, takeTimeStamp);
@@ -619,13 +639,15 @@ public class StudentAnish {
                 check = false;
                 try {
                     points = scanner.nextInt();
+                    scanner.nextLine();
 
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     System.out.println("Enter a number.");
+                    scanner.nextLine();
                     check = true;
                 }
             } while (check);
-            scanner.nextLine();
+
             pointValues[i] = points;
         }
         return pointValues;

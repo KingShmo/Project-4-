@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 /**
@@ -43,8 +44,11 @@ public class PrintInformation {
      */
     public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
 
-        if (quizArchive.getQuizzes().size() == 0)
+        if (quizArchive.getQuizzes().size() == 0) {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt"));
+            bw.write("");
             return;
+        }
         var allQuizzes = quizArchive.getQuizzes();
 
         BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt"));
@@ -90,6 +94,59 @@ public class PrintInformation {
             bw.write("\n");
 
         }
+
+        bw.close();
+
+
+    }
+
+    /**
+     * Write questions and correct answers to a file
+     * @param quiz = quiz to be written
+     * @throws IOException = when an error occurs while writing or reading
+     */
+    public static void writeImportedQuizQuestions(Quiz quiz, String path) throws IOException {
+
+
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        if (br.readLine() != null) {
+            bw.write("\n");
+        }
+
+        var oneQuiz = quiz;
+
+        var correctAnswers = oneQuiz.getCorrectAnswers();
+        var quizName = oneQuiz.getName();
+
+        //Not taken '-', taken '--'
+        String taken = "-";
+        if (oneQuiz.isTaken())
+            taken = "--";
+
+        bw.write(quizName + "-" + oneQuiz.getCourse() + taken + "\n");
+        bw.write(oneQuiz.questionsPrinter());
+
+        bw.write("Correct answers:\n");
+        for (int j = 0; j < correctAnswers.size(); j++) {
+
+
+            bw.write("Question " + (j + 1) + ":" + correctAnswers.get(j) + " ");
+
+        }
+        bw.write("\n");
+
+        int[] temp = oneQuiz.getPointValues();
+
+        for (int j = 0; j < oneQuiz.getPointValues().length; j++) {
+
+
+            bw.write("" + temp[j] + ",");
+
+        }
+        bw.write("\n");
+
 
         bw.close();
 
@@ -226,10 +283,15 @@ public class PrintInformation {
 
     }
 
-    public static void readQuizQuestions(QuizArchive quizArchive, String path) throws IOException, InvalidQuizException {
+    public static boolean readQuizQuestions(QuizArchive quizArchive, String path) throws IOException, InvalidQuizException, InvalidCourseException {
 
-
-        BufferedReader br = new BufferedReader(new FileReader(path));
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(path));
+        } catch (FileNotFoundException e) {
+            FileOutputStream fot = new FileOutputStream(path);
+            return false;
+        }
 
         while (true) {
 
@@ -237,7 +299,7 @@ public class PrintInformation {
 
             if (quizName == null) {
                 br.close();
-                return;
+                return true;
             }
 
 
@@ -343,9 +405,19 @@ public class PrintInformation {
                 p[i] = pointValues.get(i);
             quiz.initializePointValues(p);
 
+            boolean check = true;
 
+            for (Course c : CourseArchive.allCourses) {
 
-            quizArchive.addQuizzes(quiz);
+                if (c.getName().equals(quiz.getCourse()))
+                    check = false;
+            }
+
+            if (check) {
+                System.out.println("This course is not available yet.");
+            } else
+                quizArchive.addQuizzes(quiz);
+
         }
 
 

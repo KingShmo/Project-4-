@@ -439,7 +439,8 @@ public class Student {
      */
     public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
+        File file = new File("TeacherAccounts.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
 
         String line = br.readLine();
 
@@ -665,6 +666,19 @@ public class Student {
     public String toString() {
 
         return "Name: " + firstName + " " + lastName + " Username: " + username + " Password: " + password;
+
+    }
+
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (!(o instanceof Student))
+            return false;
+
+        Student student = (Student) o;
+
+        return getName().equals(((Student) o).getName()) && getUsername().equals(((Student) o).getUsername());
 
     }
 

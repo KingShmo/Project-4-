@@ -50,7 +50,7 @@ public class CourseArchive {
         this();
         courses.add(course);
         allCourses.add(course);
-        Teacher.writeCourses(allCourses);
+
 
     }
     //adds a course to the courseArchive
@@ -73,7 +73,7 @@ public class CourseArchive {
 
         for (int i = 0; i < allCourses.size(); i++) {
 
-            if (courses.get(i).getName().equals(titleOfTheCourse)) {
+            if (allCourses.get(i).getName().equals(titleOfTheCourse)) {
                 allCourses.remove(i);
                 break;
             }

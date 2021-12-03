@@ -1,3 +1,4 @@
+import java.io.*;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
@@ -78,6 +79,17 @@ public class Application {
      */
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
+
+
+        String[] files = {"QuizQuestions.txt", "CourseDetails.txt", "TeacherAccounts.txt", "StudentAccounts.txt"
+                          , "StudentQuizzes.txt"};
+        for (int i = 0; i < files.length; i++) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(files[i]));
+            } catch (FileNotFoundException e) {
+                FileOutputStream fot = new FileOutputStream(files[i]);
+            }
+        }
 
 
         Student.readTeachers(teachers);

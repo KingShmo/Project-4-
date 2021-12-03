@@ -75,8 +75,10 @@ public class TheQuizFunction {
                 System.out.println("What's the quiz title?");
                 answer = scanner.nextLine();
                 boolean check = true;
+                boolean quizExists = true;
                 for (Quiz q : quizArchive.getQuizzes()) {
                     if (q.getName().equals(answer)) {
+                        quizExists = false;
                         if (!(q.getCourse().equals(courseTitle))) {
                             System.out.println("This quiz is unavailable for this course.");
                             check = false;
@@ -84,19 +86,23 @@ public class TheQuizFunction {
 
                     }
                 }
+                if (quizExists) {
+                    System.out.println("No such quiz with this name.");
+                }
                 //Randomize options and questions for a given title of a quiz.
                 if (check) {
                     for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
                         Quiz quiz = quizArchive.getQuizzes().get(i);
                         if (quiz.getName().equals(answer)) {
                             if (quiz.getRandomize()) {
-                                String question = "Questions are already randomized, do you want to toggle it off? (y/n)";
+                                String question = "Questions are already randomized, do you want to toggle it off?" +
+                                                  " (yes/no)";
                                 System.out.println(question);
                                 answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"},
                                         question, "Invalid input.");
                                 if (answer.equals("Yes") || answer.equals("yes")) {
                                     quiz.toggleRandomization();
-                                    System.out.println("Quiz will be randomized for students in each attempt!");
+                                    System.out.println("Quiz randomization is off.");
                                 }
                             } else {
                                 quiz.toggleRandomization();
@@ -118,6 +124,8 @@ public class TheQuizFunction {
                     if (quiz.getCourse().equals(courseTitle))
                         System.out.println((++x) + ". " + quiz.getName());
                 }
+                if (x == 0)
+                    System.out.println("There are no quizzes!");
             } else if (answer.equals("6")) {
                 System.out.println("Quiz you want to delete:");
                 int x = 0;
@@ -144,7 +152,26 @@ public class TheQuizFunction {
                     }
                 }
 
+                try {
+                    PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
+                    pw.print("");
+                } catch (IOException e) {
+                    System.out.println("Couldn't modify the quiz.");
+                }
+
+                var allQuizzes = quizArchive.getQuizzes();
+
+                for (int i = 0; i < allQuizzes.size(); i++) {
+
+                    if (!(allQuizzes.get(i).getRawScore().equals("NONE"))) {
+
+                        StudentAnish.writeScores(allQuizzes.get(i),allQuizzes.get(i).getTimeStamp());
+                    }
+
+                }
+
                 System.out.println("Quiz removed!");
+                PrintInformation.writeQuizQuestions(quizArchive);
 
             } else if (answer.equals("7")) {
 
@@ -159,12 +186,24 @@ public class TheQuizFunction {
 
                 try {
 
-                    PrintInformation.readQuizQuestions(quizArchive, answer);
+                    boolean imported = PrintInformation.readQuizQuestions(quizArchive, answer);
+                    if (!imported) {
+                        System.out.println("A file was created because the path was not found.");
+                        creatingAQuiz(scanner, quizArchive, courseTitle);
+                        PrintInformation.writeQuizQuestions(quizArchive);
+                        var allQuizzes = quizArchive.getQuizzes();
+                        PrintInformation.writeImportedQuizQuestions(allQuizzes.get(allQuizzes.size() - 1), answer);
+                    } else
+                        System.out.println("Quiz imported!");
 
                 } catch (FileNotFoundException e) {
                     System.out.println("Couldn't find file.");
                 } catch (IOException e) {
                     System.out.println("File was written in a wrong format.");
+                } catch (InvalidCourseException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println("Wrong format.");
                 }
 
 
@@ -273,6 +312,24 @@ public class TheQuizFunction {
             System.out.println("Type the new title:");
             answer = scanner.nextLine();
             quiz.setName(answer);
+            var allQuizzes = quizArchive.getQuizzes();
+
+            try {
+                PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
+                pw.print("");
+            } catch (IOException e) {
+                System.out.println("Couldn't modify the quiz.");
+            }
+
+
+            for (int i = 0; i < allQuizzes.size(); i++) {
+
+                if (!(allQuizzes.get(i).getRawScore().equals("NONE"))) {
+
+                    StudentAnish.writeScores(allQuizzes.get(i),allQuizzes.get(i).getTimeStamp());
+                }
+
+            }
             System.out.println("Quiz name modified!");
             return true;
         }
