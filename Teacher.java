@@ -145,7 +145,17 @@ public class Teacher {
 
                 int enrollment = Integer.valueOf(line.substring(line.indexOf(":") + 2));
 
-                Teacher teacher = new Teacher(firstName, lastName);
+                String username = "";
+                String password = "";
+                for (int i = 0; i < Teacher.teachers.size(); i++) {
+
+                    if (Teacher.teachers.get(i).getName().equals(firstName + " " + lastName)) {
+                        username = Teacher.teachers.get(i).getUsername();
+                        password = Teacher.teachers.get(i).getPassword();
+                        break;
+                    }
+                }
+                Teacher teacher = new Teacher(firstName, lastName, username, password);
 
                 line = br.readLine();
                 Course course;
@@ -537,6 +547,18 @@ public class Teacher {
             }
         }
         return specificQuiz;
+    }
+
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (!(o instanceof Teacher))
+            return false;
+        Teacher teacher = (Teacher) o;
+
+        return getUsername().equals(teacher.getUsername()) && getName().equals(teacher.getUsername());
+
     }
 
     public static void main(String username) throws InvalidCourseException, InvalidQuizException, IOException {

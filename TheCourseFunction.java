@@ -31,6 +31,15 @@ public class TheCourseFunction {
         CourseArchive courseArchive = new CourseArchive();
 
         do {
+            System.out.println("Available Courses:");
+            int x = 0;
+            for (Course course : CourseArchive.allCourses) {
+                System.out.println((++x) + ". " + course.getName());
+            }
+
+            if (x == 0)
+                System.out.println("None.");
+
             System.out.println("Select the action you want:");
             System.out.println("1. Create a course");
             System.out.println("2. Use quiz options for a course");
@@ -60,48 +69,6 @@ public class TheCourseFunction {
                     System.out.println("This course already exists!\n");
                     break;
                 }
-                /*
-                int countSpaces;
-                String teacherName = null;
-                do {
-                    countSpaces = 0;
-                    System.out.println("What's the full name of the course's assigned teacher? (Firstname Lastname)");
-                    teacherName = scanner.nextLine();
-                    String teacherNameCopy = teacherName;
-                    while (teacherNameCopy.indexOf(" ") != -1) {
-                        teacherNameCopy = teacherNameCopy.substring(teacherNameCopy.indexOf(" ") + 1);
-                        countSpaces++;
-                    }
-                    if (countSpaces != 1)
-                        System.out.println("There should be a space between the first and last names.");
-
-                } while (countSpaces != 1);
-
-
-
-                Teacher assignedTeacher = new Teacher(teacherName.substring(0, teacherName.indexOf(" ")),
-                        teacherName.substring(teacherName.indexOf(" ") + 1));
-                var allTeachers = Teacher.getTeachers();
-                Teacher teacher = null;
-                boolean found = false;
-                if (allTeachers.size() == 0) {
-                    System.out.println("No teachers available to be assigned! Please make sure teachers are " +
-                            "available and then try again.\n");
-                    break;
-                } else {
-                    for (int i = 0; i < allTeachers.size(); i++) {
-                        if (allTeachers.get(i).getName().equals(teacherName)) {
-                            found = true;
-                            teacher = allTeachers.get(i);
-                            break;
-                        }
-                    }
-                }
-                if (!found) {
-                    System.out.println("The teacher entered does not exist in the database!\n");
-                    break;
-                }
-                */
 
                 Teacher assignedTeacher = null;
 
@@ -118,13 +85,14 @@ public class TheCourseFunction {
                     System.out.println("What's the course's enrollment capacity?");
                     try {
                         enrollmentCapacity = scanner.nextInt();
+                        scanner.nextLine();
                         break;
                     } catch (InputMismatchException e) {
                         System.out.println("Invalid input!");
+                        scanner.nextLine();
                     }
                 } while (true);
 
-                //QuizArchive quizArchive = new QuizArchive();
                 System.out.println("Course created!");
 
                 Course course = new Course(answer, assignedTeacher, enrollmentCapacity);
@@ -133,7 +101,6 @@ public class TheCourseFunction {
 
                 Teacher.writeCourses(CourseArchive.allCourses);
 
-                //creatingACourse(answer, assignedTeacher, enrollmentCapacity);
 
             } else if (answer.equals("2")) {
                 boolean courseExists = false;
@@ -146,7 +113,10 @@ public class TheCourseFunction {
                     if (courses.get(i).getName().equals(answer)) {
                         courseExists = true;
                         Course course = courses.get(i);
-                        course.callTheQuizFunction(answer);
+                        if (!(courses.get(i).getCourseTeacher().getUsername().equals(username)))
+                            System.out.println("This course belongs to another teacher.");
+                        else
+                            course.callTheQuizFunction(answer);
                         break;
                     }
                 }
@@ -162,12 +132,29 @@ public class TheCourseFunction {
                 Course course = null;
                 ArrayList<Course> courses = courseArchive.getCourses();
                 boolean courseExists = false;
+                Teacher tempTeacher = null;
+                for (int i = 0; i < Teacher.teachers.size(); i++) {
+                    Teacher teacherToBeCompared = Teacher.teachers.get(i);
+                    if (teacherToBeCompared.getUsername().equals(username)) {
+                        tempTeacher = Teacher.teachers.get(i);
+                        break;
+                    }
+
+                }
+                boolean notAssignedTeacher = true;
                 for (int i = 0; i < courses.size(); i++) {
                     if (courses.get(i).getName().equals(answer)) {
                         courseExists = true;
-                        course = courses.get(i);
-                        break;
+                        if (courses.get(i).getCourseTeacher().getUsername().equals(username)) {
+                            notAssignedTeacher = false;
+                            course = courses.get(i);
+                            break;
+                        }
                     }
+                }
+                if (notAssignedTeacher) {
+                    System.out.println("You're not the assigned teacher for this course!");
+                    break;
                 }
                 if (!courseExists) {
                     System.out.println("This course does not exist!\n");
@@ -202,24 +189,31 @@ public class TheCourseFunction {
                 } while (check);
 
                 Student student = allStudents.get(Integer.valueOf(studentNumber) - 1);
-                /*System.out.println("What's the full name of the student you want to add? (Firstname Lastname)");
-                String studentName = scanner.nextLine();
 
-                Student student = null;
-                if (allStudents.size() == 0) {
-                    System.out.println("No students available to be added to course! Please make sure students are " +
-                            "available and then try again.\n");
-                    break;
-                } else {
-                    for (int i = 0; i < allStudents.size(); i++) {
-                        if (allStudents.get(i).getName().equals(studentName)) {
-                            student = allStudents.get(i);
-                            break;
+                boolean checkDuplicateStudents = true;
+
+                for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+                    Course tempCourse = CourseArchive.allCourses.get(i);
+                    if (tempCourse.getName().equals(answer)) {
+
+                        var students = tempCourse.getStudentsInThisCourse();
+
+                        for (int j = 0; j < students.size(); j++) {
+                            if (students.get(j).equals(student)) {
+
+                                System.out.println("This student is already added to the course!");
+                                checkDuplicateStudents = false;
+                                break;
+                            }
                         }
                     }
-                }*/
-                course.addAStudentToTheCourse(student);
-                Teacher.writeCourses(CourseArchive.allCourses);
+                }
+
+                if (checkDuplicateStudents) {
+                    course.addAStudentToTheCourse(student);
+                    Teacher.writeCourses(CourseArchive.allCourses);
+                    System.out.println("Student added!");
+                }
 
             } else if (answer.equals("4")) {
                 boolean courseExists = false;
@@ -227,6 +221,7 @@ public class TheCourseFunction {
                 answer = scanner.nextLine();
                 Course course = null;
                 ArrayList<Course> courses = courseArchive.getCourses();
+
 
                 for (int i = 0; i < courses.size(); i++) {
                     if (courses.get(i).getName().equals(answer)) {
@@ -240,51 +235,65 @@ public class TheCourseFunction {
                     break;
                 }
 
-                System.out.println("Select the action you want:");
-                System.out.println("1. Modify course name");
-                System.out.println("2. Change course teacher");
-                System.out.println("3. Modify course enrollment capacity");
-                System.out.println("4. Exit");
-                temp = "Select the action you want:\n1. Modify course name\n2. Change course teacher\n3. " +
-                        "Modify course enrollment capacity\n4. Exit";
-                String[] options2 = {"1", "2", "3", "4"};
-                answer = inputChecker(scanner, options2, temp, "Invalid input.");
+                do {
 
-                if (answer.equals("1")) {
-                    System.out.println("What's the new course title?");
-                    answer2 = scanner.nextLine();
-                    course.setName(answer2);
-                    System.out.println("Course name modified!");
-                    Teacher.writeCourses(CourseArchive.allCourses);
-                } else if (answer.equals("2")) {
-                    System.out.println("What's the new course teacher's full name?");
-                    String teacherName = scanner.nextLine();
-                    var allTeachers = Teacher.getTeachers();
-                    Teacher teacher = null;
-                    boolean found = false;
-                    for (int i = 0; i < allTeachers.size(); i++) {
-                        if (allTeachers.get(i).getName().equals(teacherName)) {
-                            found = true;
-                            teacher = allTeachers.get(i);
+
+                    System.out.println("Select the action you want:");
+                    System.out.println("1. Modify course name");
+                    System.out.println("2. Change course teacher");
+                    System.out.println("3. Modify course enrollment capacity");
+                    System.out.println("4. Exit");
+                    temp = "Select the action you want:\n1. Modify course name\n2. Change course teacher\n3. " +
+                            "Modify course enrollment capacity\n4. Exit";
+                    String[] options2 = {"1", "2", "3", "4"};
+                    String teacherAssignedCourse = answer;
+                    answer = inputChecker(scanner, options2, temp, "Invalid input.");
+
+
+                    if (answer.equals("1")) {
+                        boolean checkAssignedTeacher = assignedTeacherChecker(courses, course.getName(), username);
+                        if (checkAssignedTeacher) {
+                            System.out.println("What's the new course title?");
+                            answer2 = scanner.nextLine();
+                            course.setName(answer2);
+                            System.out.println("Course name modified!");
+                            Teacher.writeCourses(CourseArchive.allCourses);
+                        }
+                    } else if (answer.equals("2")) {
+                        System.out.println("What's the new course teacher's full name?");
+                        String teacherName = scanner.nextLine();
+                        var allTeachers = Teacher.getTeachers();
+                        Teacher teacher = null;
+                        boolean found = false;
+                        for (int i = 0; i < allTeachers.size(); i++) {
+                            if (allTeachers.get(i).getName().equals(teacherName)) {
+                                found = true;
+                                teacher = allTeachers.get(i);
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            System.out.println("The teacher entered does not exist in the database!\n");
                             break;
                         }
-                    }
-                    if (!found) {
-                        System.out.println("The teacher entered does not exist in the database!\n");
+                        course.setCourseTeacher(teacher);
+                        System.out.println("Course teacher changed!");
+                        Teacher.writeCourses(CourseArchive.allCourses);
+                    } else if (answer.equals("3")) {
+                        boolean checkAssignedTeacher = assignedTeacherChecker(courses, course.getName(), username);
+                        if (checkAssignedTeacher) {
+
+                            System.out.println("What's the new course enrollment capacity?");
+                            answer2 = scanner.nextLine();
+                            course.setEnrollmentCapacity(Integer.parseInt(answer2));
+                            System.out.println("Course enrollment capacity modified!");
+                            Teacher.writeCourses(CourseArchive.allCourses);
+                        }
+                    } else if (answer.equals("4")) {
                         break;
                     }
-                    course.setCourseTeacher(teacher);
-                    System.out.println("Course teacher changed!");
-                    Teacher.writeCourses(CourseArchive.allCourses);
-                } else if (answer.equals("3")) {
-                    System.out.println("What's the new course enrollment capacity?");
-                    answer2 = scanner.nextLine();
-                    course.setEnrollmentCapacity(Integer.parseInt(answer2));
-                    System.out.println("Course enrollment capacity modified!");
-                    Teacher.writeCourses(CourseArchive.allCourses);
-                } else if (answer.equals("4")) {
-                    break;
-                }
+
+                } while (true);
 
 
             } else if (answer.equals("5")) {
@@ -294,10 +303,47 @@ public class TheCourseFunction {
 
                 ArrayList<Course> courses = courseArchive.getCourses();
 
+
+
                 for (int i = 0; i < courses.size(); i++) {
                     if (courses.get(i).getName().equals(answer)) {
                         courseExists = true;
+
+                        boolean checkAssignedTeacher = assignedTeacherChecker(courses, answer, username);
+                        if (!checkAssignedTeacher) {
+                            break;
+                        }
+
+                        var allCourseQuizzes = new QuizArchive().getQuizzes();
+                        for (int j = 0; j < allCourseQuizzes.size(); j++) {
+                            if (allCourseQuizzes.get(j).getCourse().equals(courses.get(i).getName())) {
+                                allCourseQuizzes.remove(j);
+                                j--;
+                            }
+                        }
+
                         courseArchive.deleteACourse(answer);
+                        PrintInformation.writeQuizQuestions(new QuizArchive());
+
+                        try {
+                            PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
+                            pw.print("");
+                        } catch (IOException e) {
+                            System.out.println("Couldn't modify the quiz.");
+                        }
+
+                        var allQuizzes = new QuizArchive().getQuizzes();
+
+                        for (int j = 0; j < allQuizzes.size(); j++) {
+
+                            if (!(allQuizzes.get(j).getRawScore().equals("NONE"))) {
+
+                                StudentAnish.writeScores(allQuizzes.get(j),allQuizzes.get(j).getTimeStamp());
+                            }
+
+                        }
+
+
                         System.out.println("Course deleted!");
                         Teacher.writeCourses(CourseArchive.allCourses);
                         break;
@@ -308,8 +354,9 @@ public class TheCourseFunction {
                     break;
                 }
 
-            } else if (answer.equals("6"))
+            } else if (answer.equals("6")) {
                 return false;
+            }
         } while (true);
         return true;
     }
@@ -323,6 +370,27 @@ public class TheCourseFunction {
 
     }
 
+    public static boolean assignedTeacherChecker(ArrayList<Course> courses, String answer, String username) {
+
+        Teacher tempTeacher = null;
+        boolean notAssignedTeacher = true;
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i).getName().equals(answer)) {
+                if (courses.get(i).getCourseTeacher().getUsername().equals(username)) {
+                    notAssignedTeacher = false;
+
+                    break;
+                }
+            }
+        }
+        if (notAssignedTeacher) {
+            System.out.println("You're not the assigned teacher for this course!");
+            return false;
+        }
+
+        return true;
+
+    }
 
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
@@ -335,10 +403,9 @@ public class TheCourseFunction {
                     if (input.equals(choices[i]))
                         return input;
                 }
-            } else {
-                System.out.println(errorMessage);
-                System.out.println(question);
             }
+            System.out.println(errorMessage);
+            System.out.println(question);
 
 
         } while (true);

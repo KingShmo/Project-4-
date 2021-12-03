@@ -1,4 +1,5 @@
 import javax.xml.stream.events.Characters;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class StudentAnish {
     }
 
 
-    public static void main(String username) throws InvalidCourseException {
+    public static void main(String username) throws InvalidCourseException, IOException {
 
         CourseArchive listOfCourses = new CourseArchive();
 
@@ -59,11 +60,15 @@ public class StudentAnish {
         }
 
         while (true) {
+
+            String menu = "Which course would you like to access?";
+
             System.out.println("Welcome! Which course would you like to access?");
             int z;
 
             for (z = 0; z < enrolledCourses.size(); z++) {
 
+                menu += (z + 1) + ". " + enrolledCourses.get(z).getName();
                 System.out.println((z + 1) + ". " + enrolledCourses.get(z).getName());
 
             }
@@ -72,12 +77,13 @@ public class StudentAnish {
                 return;
             }
             System.out.println((++z) + ". Exit");
+            menu += z + ". Exit";
 
             String[] options = new String[enrolledCourses.size() + 1];
             for (int i = 0; i < options.length; i++)
                 options[i] = "" + (i + 1);
 
-            String answer = inputChecker(scanner, options, "Which course would you like to access?",
+            String answer = inputChecker(scanner, options, menu,
                     "Invalid input.");
             int choice = Integer.valueOf(answer);
             if (choice == z) {
@@ -91,59 +97,89 @@ public class StudentAnish {
 
 
 
+                do {
 
-                String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
-                        "3. Exit the course";
-                System.out.println(prompt);
+                    String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
+                            "3. Exit the course";
+                    System.out.println(prompt);
 
-                answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
+                    answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
 
-                if (answer.equals("1")) {
+                    if (answer.equals("1")) {
 
-                    System.out.println("Choose a quiz:");
+                        System.out.println("Choose a quiz:");
 
-                    var allQuizzes = chosenCourse.getQuizzes();
-                    if (allQuizzes.size() == 0) {
-                        System.out.println("There are no quizzes.");
-                        break;
-                    }
-                    String[] checkInput = new String[allQuizzes.size()];
+                        var allQuizzes = chosenCourse.getQuizzes();
+                        if (allQuizzes.size() == 0) {
+                            System.out.println("There are no quizzes.");
+                            continue;
+                        }
+                        String[] checkInput = new String[allQuizzes.size()];
 
-                    for (int i = 0; i < allQuizzes.size(); i++) {
-                        System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
-                        checkInput[i] = "" + (i + 1);
-                    }
+                        for (int i = 0; i < allQuizzes.size(); i++) {
+                            System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
+                            checkInput[i] = "" + (i + 1);
+                        }
 
-                    answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
+                        answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
 
-                    Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
+                        Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
 
-                    if (chosenQuiz.getStudentAnswers() != null)
-                        System.out.println("Quiz already taken.");
-                    else
-                        startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                        if (chosenQuiz.isTaken()) {
+                            System.out.println("Quiz already taken.");
+                        } else if (chosenQuiz.getStudentAnswers() != null) {
+                            System.out.println("Quiz already taken.");
+                        } else {
+                            if (chosenQuiz.getRandomize()) {
+                                TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive);
+                            }
+                            String question = "Do you want to attach a file for this quiz? (yes/no)";
+                            System.out.println(question);
+                            answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, question,
+                                    "Invalid input.");
+                            if (answer.equals("Yes") || answer.equals("yes")) {
+
+                                int length = chosenQuiz.getQuestions().size();
+                                System.out.println("The file should have " + length + " answers, following this format:");
+                                System.out.println("[answerForQuestion1],[answerForQuestion2],3,4");
+
+                                System.out.println("File path?");
+                                answer = scanner.nextLine();
+
+                                String response = readAttachedFile(answer, chosenQuiz, quizArchive);
+                                if (response.equals("File was not found.")) {
+                                    System.out.println("File was not found. Therefore, the quiz will start.");
+                                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                                } else
+                                    System.out.println(response);
 
 
-                } else if (answer.equals("2")) {
+                            } else
+                                startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                        }
 
-                    for (int i = 0; i < enrolledCourses.size(); i++) {
 
-                        Course c = enrolledCourses.get(i);
-                        var quizzes = c.getQuizzes();
+                    } else if (answer.equals("2")) {
 
-                        for (int j = 0; j < quizzes.size(); j++) {
-                            System.out.println("Quiz name: " + quizzes.get(j).getName());
-                            System.out.println("Raw score: " + StudentAnish.getScore(quizzes.get(j)));
-                            System.out.println("Score with point values: " +
-                                               StudentAnish.getModifiedScore(quizzes.get(j).getPointValues(),
-                                                       quizzes.get(j)));
+                        for (int i = 0; i < enrolledCourses.size(); i++) {
+
+                            Course c = enrolledCourses.get(i);
+                            var quizzes = c.getQuizzes();
+
+                            for (int j = 0; j < quizzes.size(); j++) {
+                                System.out.println("Quiz name: " + quizzes.get(j).getName());
+                                System.out.println("Raw score: " + quizzes.get(j).getRawScore());
+                                System.out.println("Score with point values: " + quizzes.get(j).getModifiedScore());
+                                System.out.println("Timestamp: " + quizzes.get(j).getTimeStamp());
+
+                            }
 
                         }
 
-                    }
 
-
-                }
+                    } else
+                        break;
+                } while (true);
             }
         }
         //Finish
@@ -261,6 +297,173 @@ public class StudentAnish {
     }
 
     //method that checks for input in a multiple choice question to make it more streamlined and efficient
+
+    //Zuhair's method to read file imports
+    public static String readAttachedFile(String path, Quiz quiz, QuizArchive quizArchive) {
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))){
+
+            String line = br.readLine();
+
+            int[] answers = new int[quiz.getQuestions().size()];
+
+            if (line == null)
+                return "File was not found.";
+
+            int i = 0;
+            if (line.indexOf(",") == -1)
+                answers[i] = Integer.valueOf(line);
+            else {
+                while (true) {
+
+                    if (i + 1 > quiz.getQuestions().size())
+                        return "File was not found.";
+
+                    if (line.indexOf(",") == -1)
+                        break;
+
+                    String oneAnswer = line.substring(0, line.indexOf(","));
+                    line = line.substring(line.indexOf(",") + 1);
+                    answers[i++] = Integer.valueOf(oneAnswer);
+
+                }
+
+            }
+            ArrayList<Integer> studentAnswers = new ArrayList<>();
+
+            for (int j = 0; j < answers.length; j++) {
+                studentAnswers.add(answers[j]);
+            }
+            quiz.setStudentAnswers(studentAnswers);
+
+            String rawScore = getScore(quiz);
+            String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
+
+            SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            String takeTimeStamp = yearMonthDaySpaceHoursMinutesSeconds.format(timestamp);
+
+
+
+            writeScores(quiz, takeTimeStamp);
+            PrintInformation.writeQuizQuestions(quizArchive);
+
+            return "File attached!";
+
+
+        } catch (FileNotFoundException e) {
+            return "File was not found.";
+        } catch (IOException e) {
+            return "File was written in a wrong format.";
+        }
+
+
+    }
+
+    //Zuhair's method to write student scores
+    public static void writeScores(Quiz quiz, String timeStamp) {
+
+        try(PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt", true))) {
+
+            String rawScore = getScore(quiz);
+            String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
+
+            quiz.setRawScore(rawScore);
+            quiz.setModifiedScore(modifiedScore);
+            quiz.setTimeStamp(timeStamp);
+            pw.println(quiz.getName() + ";" + getScore(quiz) + ";" + getModifiedScore(quiz.getPointValues(), quiz)
+                       + "," + timeStamp);
+
+            for (int i = 0; i < quiz.getQuestions().size(); i++) {
+                if (i + 1 == quiz.getStudentAnswers().size())
+                    pw.print("" + quiz.getStudentAnswers().get(i) + ",");
+            }
+            quiz.toggleTaken();
+            pw.println();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void readStudentSubmissions(QuizArchive quizArchive) {
+
+        var allQuizzes = quizArchive.getQuizzes();
+
+        try(BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+
+            String line = br.readLine();
+
+            if (line == null)
+                return;
+
+            while (true) {
+
+                String quizName = line.substring(0, line.indexOf(";"));
+                line = line.substring(line.indexOf(";") + 1);
+                String rawScore = line.substring(0, line.indexOf(";"));
+                line = line.substring(line.indexOf(";") + 1);
+                String modifiedScore = line.substring(0, line.indexOf(","));
+                line = line.substring(line.indexOf(","));
+                String timeStamp = line.substring(1);
+
+                Quiz q = null;
+
+                for (Quiz quiz : allQuizzes) {
+
+                    if (quiz.getName().equals(quizName)) {
+
+                        q = quiz;
+                        quiz.setRawScore(rawScore);
+                        quiz.setModifiedScore(modifiedScore);
+                        quiz.setTimeStamp(timeStamp);
+                        break;
+                    }
+
+                }
+
+                line = br.readLine();
+
+
+                ArrayList<Integer> studentAnswers = new ArrayList<>();
+
+
+
+                while (true) {
+
+                    if (line.indexOf(",") == -1)
+                        break;
+
+                    String oneAnswer = line.substring(0, line.indexOf(","));
+                    line = line.substring(line.indexOf(",") + 1);
+                    studentAnswers.add(Integer.valueOf(oneAnswer));
+
+                }
+
+
+
+                q.setStudentAnswers(studentAnswers);
+
+                q.toggleTaken();
+
+                line = br.readLine();
+
+                if (line == null)
+                    break;
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
@@ -331,7 +534,7 @@ public class StudentAnish {
         } while (loop == 1);
     }
     //method implemented when a student wants to take a quiz in a specific course
-    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
+    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) throws IOException {
 
         var quizzes = quizArchive.getQuizzes();
         boolean check = false;
@@ -343,10 +546,7 @@ public class StudentAnish {
 
             if (quizzes.get(i).getName().equals(title)) {
 
-                if (!quizzes.get(i).isQuizIsReady()) {
-                    System.out.println("Don't forget to launch the quiz");
 
-                }
 
                 check = true;
 
@@ -391,7 +591,13 @@ public class StudentAnish {
                 SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
+                String takeTimeStamp = yearMonthDaySpaceHoursMinutesSeconds.format(timestamp);
+                System.out.println("Quiz completed: " + takeTimeStamp);
+
+                quiz.setStudentAnswers(studentAnswers);
+
+                writeScores(quiz, takeTimeStamp);
+                PrintInformation.writeQuizQuestions(quizArchive);
                 //Anish's code that prints a timestamp only when a student has COMPLETED a quiz which a student sees and which the teacher can access if needed.
 
             }
@@ -414,6 +620,7 @@ public class StudentAnish {
     public static void getStudentAnswers(Quiz answers) {
         answers.getStudentAnswers();
     }
+
     //method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when
     // assigning a quiz!
     public static int[] assignPointValues(Quiz temp, Scanner scanner) {
@@ -432,13 +639,15 @@ public class StudentAnish {
                 check = false;
                 try {
                     points = scanner.nextInt();
+                    scanner.nextLine();
 
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     System.out.println("Enter a number.");
+                    scanner.nextLine();
                     check = true;
                 }
             } while (check);
-            scanner.nextLine();
+
             pointValues[i] = points;
         }
         return pointValues;
