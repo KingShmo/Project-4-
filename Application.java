@@ -100,7 +100,7 @@ public class Application {
         do {
             String choiceSignInOrRegister = signInOrRegisterInputDialog();
             //quit program if user presses the exit button on GUI
-            if (quitProgram == 1) {
+            if (quitProgram == 1 || choiceSignInOrRegister == null) {
                 return;
             }
 
@@ -157,7 +157,7 @@ public class Application {
 
             String choiceTeacherOrStudent = signInInputDialog();
             //get out of method if user presses the exit button on GUI
-            if (quitProgram == 1) {
+            if (quitProgram == 1 || choiceTeacherOrStudent == null) {
                 return;
             }
 
@@ -603,6 +603,7 @@ public class Application {
         if (option == null) {
             JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
                     "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
+            quitProgram = 1;
             return null;
         } else {
             return option;
