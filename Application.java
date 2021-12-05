@@ -13,8 +13,8 @@ import java.util.*;
 
 public class Application {
 
-    private static String welcomeMessage = "Welcome to the quiz app!";
-    private static String signInOrRegister = "If you want to Sign In - enter [1], If you want to Register - enter [2]";
+    private static String welcomeMessage = "Welcome to ClassroomClient!";
+    private static String signInOrRegister = "Do you want to Sign-in or Register?";
     private static String incorrectAnswer = "Sorry, you entered an incorrect answer. Please try again.";
     private static String enterFirstName = "Enter your first name.";
     private static String enterLastName = "Enter your last name.";
@@ -33,14 +33,12 @@ public class Application {
             "Are you sure that you want to delete your account?\n" +
                     "Press [1] for yes, or [2] for no";
     private static String teacherOrStudentSignIn =
-            "Do you want to sign in as a teacher or as a student?\n" +
-                    "Pick [1] for teacher or [2] for student.";
+            "Do you want to sign in as a Teacher or as a Student?";
     /**
      * Choose to sign in either as a teacher, or as a student
      */
     private static String teacherOrStudentRegister =
-            "Do you want to register as a teacher or as a student?\n" +
-                    "Pick [1] for teacher or [2] for student.";
+            "Do you want to register as a Teacher or as a Student?";
     /**
      * Choose to register either as a teacher, or as a student
      */
@@ -96,7 +94,7 @@ public class Application {
         teachers = Teacher.teachers;
         students = Student.students;
 
-        JOptionPane.showMessageDialog(null, welcomeMessage, "Quiz Application",
+        JOptionPane.showMessageDialog(null, welcomeMessage, "ClassroomClient",
                 JOptionPane.INFORMATION_MESSAGE);
 
         do {
@@ -106,13 +104,13 @@ public class Application {
                 return;
             }
 
-            if (choiceSignInOrRegister.equals("1")) {
+            if (choiceSignInOrRegister.equals("Sign-In")) {
                 signIn(scanner);
                 //quit program if user presses the exit button on GUI
                 if (quitProgram == 1) {
                     return;
                 }
-            } else if (choiceSignInOrRegister.equals("2")) {
+            } else if (choiceSignInOrRegister.equals("Register")) {
                 register(scanner);
                 //quit program if user presses the exit button on GUI
                 if (quitProgram == 1) {
@@ -164,7 +162,7 @@ public class Application {
             }
 
 
-            if (choiceTeacherOrStudent.equals("1")) {
+            if (choiceTeacherOrStudent.equals("Teacher")) {
 
                 String username = enterUsernameDialog("Sign In");
                 //get out of method if user presses the exit button on GUI
@@ -199,7 +197,7 @@ public class Application {
                             "Sign In", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
-            } else if (choiceTeacherOrStudent.equals("2")) {
+            } else if (choiceTeacherOrStudent.equals("Student")) {
 
                 String username = enterUsernameDialog("Sign In");
                 //get out of method if user presses the exit button on GUI
@@ -261,7 +259,7 @@ public class Application {
             }
 
 
-            if (choiceTeacherOrStudent.equals("1")) {
+            if (choiceTeacherOrStudent.equals("Teacher")) {
                 String firstName = enterFirstNameDialog();
                 //get out of method if user presses the exit button on GUI
                 if (quitProgram == 1) {
@@ -304,7 +302,7 @@ public class Application {
                     //signIn(scanner);
                 }
                 break;
-            } else if (choiceTeacherOrStudent.equals("2")) {
+            } else if (choiceTeacherOrStudent.equals("Student")) {
                 String firstName = enterFirstNameDialog();
                 //get out of method if user presses the exit button on GUI
                 if (quitProgram == 1) {
@@ -582,12 +580,13 @@ public class Application {
     //sign in or register dialog for options
     public static String signInOrRegisterInputDialog() {
         String option;
-        String[] optionList = {"1", "2"};
+        String[] optionList = {"Sign-In", "Register"};
         option = (String) JOptionPane.showInputDialog(null, signInOrRegister,
-                "Fantasy Football", JOptionPane.QUESTION_MESSAGE, null, optionList,
+                "ClassroomClient", JOptionPane.QUESTION_MESSAGE, null, optionList,
                 optionList[0]);
         if (option == null) {
-            quitProgram = 1;
+            JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                    "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
             return null;
         } else {
             return option;
@@ -597,12 +596,13 @@ public class Application {
     //sign in dialog for options
     public static String signInInputDialog() {
         String option;
-        String[] optionList = {"1", "2"};
+        String[] optionList = {"Teacher", "Student"};
         option = (String) JOptionPane.showInputDialog(null, teacherOrStudentSignIn,
                 "Sign In", JOptionPane.QUESTION_MESSAGE, null, optionList,
                 optionList[0]);
         if (option == null) {
-            quitProgram = 1;
+            JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                    "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
             return null;
         } else {
             return option;
@@ -612,55 +612,56 @@ public class Application {
     //Prompts for username
     public static String enterUsernameDialog(String title) {
         String username;
-        boolean enterUser = false;
+        int loop = 0;
         do {
+            loop = 0;
             username = JOptionPane.showInputDialog(null, enterUsername,
                     title, JOptionPane.QUESTION_MESSAGE);
             //if user wants to exit the program
             if (username == null) {
-                enterUser = true;
+                JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                        "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
                 quitProgram = 1;
             } else if (username.isBlank()) {
                 JOptionPane.showMessageDialog(null, "Username cannot be empty!",
                         title, JOptionPane.ERROR_MESSAGE);
-                enterUser = false;
-            } else {
-                enterUser = true;
+                loop = 1;
             }
-        } while (!enterUser);
+        } while (loop == 1);
         return username;
     }
 
     //Prompts for password
     public static String enterPasswordDialog(String title) {
         String password;
-        boolean enterPass = false;
+        int loop = 0;
         do {
             password = JOptionPane.showInputDialog(null, enterPassword,
                     title, JOptionPane.QUESTION_MESSAGE);
             //if user wants to exit the program
             if (password == null) {
-                enterPass = true;
+                JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                        "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
                 quitProgram = 1;
             } else if (password.isBlank()) {
                 JOptionPane.showMessageDialog(null, "Password cannot be empty!",
                         title, JOptionPane.ERROR_MESSAGE);
-                enterPass = false;
-            } else {
-                enterPass = true;
+                loop = 1;
             }
-        } while (!enterPass);
+        } while (loop == 1);
         return password;
     }
 
     //sign in dialog for options
     public static String registerInputDialog() {
         String option;
-        String[] optionList = {"1", "2"};
+        String[] optionList = {"Teacher", "Student"};
         option = (String) JOptionPane.showInputDialog(null, teacherOrStudentRegister,
                 "Register", JOptionPane.QUESTION_MESSAGE, null, optionList,
                 optionList[0]);
         if (option == null) {
+            JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                    "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
             quitProgram = 1;
             return null;
         } else {
@@ -671,47 +672,44 @@ public class Application {
     //Prompts for firstname
     public static String enterFirstNameDialog() {
         String firstName;
-        boolean enterFirstName = false;
+        int loop = 0;
         do {
-            firstName = JOptionPane.showInputDialog(null, enterUsername,
+            loop = 0;
+            firstName = JOptionPane.showInputDialog(null, enterFirstName,
                     "Register", JOptionPane.QUESTION_MESSAGE);
             //if user wants to exit the program
             if (firstName == null) {
-                enterFirstName = true;
+                JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                        "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
                 quitProgram = 1;
             } else if (firstName.isBlank()) {
-                JOptionPane.showMessageDialog(null, "Username cannot be empty!",
+                JOptionPane.showMessageDialog(null, "First name cannot be empty!",
                         "Register", JOptionPane.ERROR_MESSAGE);
-                enterFirstName = false;
-            } else {
-                enterFirstName = true;
+                loop = 1;
             }
-        } while (!enterFirstName);
+        } while (loop == 1);
         return firstName;
     }
 
     //Prompts for lastname
     public static String enterLastNameDialog() {
         String lastName;
-        boolean enterLastName = false;
+        int loop = 0;
         do {
-            lastName = JOptionPane.showInputDialog(null, enterUsername,
+            loop = 0;
+            lastName = JOptionPane.showInputDialog(null, enterLastName,
                     "Register", JOptionPane.QUESTION_MESSAGE);
             //if user wants to exit the program
             if (lastName == null) {
-                enterLastName = true;
+                JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
+                        "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
                 quitProgram = 1;
             } else if (lastName.isBlank()) {
-                JOptionPane.showMessageDialog(null, "Username cannot be empty!",
+                JOptionPane.showMessageDialog(null, "Last name cannot be empty!",
                         "Register", JOptionPane.ERROR_MESSAGE);
-                enterLastName = false;
-            } else {
-                enterLastName = true;
+                loop = 1;
             }
-        } while (!enterLastName);
+        } while (loop == 1);
         return lastName;
     }
-
-
-
 }
