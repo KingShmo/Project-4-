@@ -23,7 +23,7 @@ public class Application {
     private static String takenUsername = "Sorry, this username is already taken. Please enter a different username";
     private static String usernameDoesntExist = "Sorry, there is no user with this username. Please try again or Register.";
     private static String passwordDoesntMatch = "Sorry, the password you entered doesn't match the username";
-    private static String enterNewPassword = "Please, enter the new password";
+    private static String enterNewPassword = "Please enter the new password";
     private static String signInAgain = "Please Sign In again to confirm your password change";
     private static String thankYouMessage = "Thank you for using Quiz app!";
     /**
@@ -68,7 +68,7 @@ public class Application {
     static int check3 = 0;
 
     //If ever equal to 1, quit the program
-    private static int quitProgram = 0;
+    public static int quitProgram = 0;
 
     /**
      * Runs the program from the beginning
@@ -581,7 +581,11 @@ public class Application {
                     break;
                 } else if (choice.equals("4")) {
                     StudentAnish.main(username);
-                    break;
+                    if (StudentAnish.courseChoice == null || StudentAnish.courseOption == null ||
+                            StudentAnish.quizChoice == null) {
+                        quitProgram = 1;
+                        break;
+                    }
                 }
             }
         } catch (Exception e) {
