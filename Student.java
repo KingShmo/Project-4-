@@ -688,5 +688,9 @@ public class Student {
             System.out.println(usersAndPass.get(i));
         }
     }
+    public static Student findStudent(String username) {
+       return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse
+               (null);
+    }
 
 }
