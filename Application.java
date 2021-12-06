@@ -13,7 +13,7 @@ import java.util.*;
  *
  */
 
-public class Application {
+public class Application extends MultiApps {
 
     private static String welcomeMessage = "Welcome to the quiz app!";
     private static String signInOrRegister = "If you want to Sign In - enter [1], If you want to Register - enter [2]";
@@ -77,7 +77,7 @@ public class Application {
      *
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
+    public static void main() throws Exception {
         Scanner scanner = new Scanner(System.in);
 
 
@@ -111,12 +111,18 @@ public class Application {
         System.out.println(welcomeMessage);
         do {
             System.out.println(signInOrRegister);
+            System.out.println("If you want to add a client - enter [3]");
+            System.out.println("If you want to view current clients - enter [4]");
             String choiceSignInOrRegister = scanner.nextLine();
 
             if (choiceSignInOrRegister.equals("1")) {
                 signIn(scanner);
             } else if (choiceSignInOrRegister.equals("2")) {
                 register(scanner);
+            } else if (choiceSignInOrRegister.equals("3")) {
+                MultiApps.server();
+            } else if (choiceSignInOrRegister.equals("4")) {
+                MultiApps.viewClients();
             } else {
                 System.out.println(incorrectAnswer);
             }
