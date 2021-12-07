@@ -439,6 +439,447 @@ public class Student {
      */
     public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
 
+        File file = new File("TeacherAccounts.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        String line = br.readLine();
+
+        if (line == null)
+            return;
+        while (line != null) {
+
+            //get the information needed to create a teacher object
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            //create a new teacher and add the teacher to an arraylist
+
+            Teacher teacher = new Teacher(firstName, lastName, username, password);
+            Teacher.addATeacher(teacher);
+
+
+
+            line = br.readLine();
+
+        }
+        br.close();
+
+    }
+
+
+    /**
+     * Reads the quizzes from a file
+     * @param quizArchive = store the quizzes in quizeArchive
+     * @throws IOException = When an error occurs while reading
+     * @throws InvalidQuizException = if the quiz is invalid
+     */
+    public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
+
+
+        BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
+
+
+        String quizName = br.readLine();
+
+        Quiz quiz = new Quiz(quizName);
+
+        ArrayList<String> allQuizQuestions = new ArrayList<>();
+        ArrayList<String[]> allQuizOptions = new ArrayList<>();
+
+        while (true) {
+
+            String quizQuestion = br.readLine();
+
+            if (quizQuestion.equals("Correct answers:"))
+                break;
+
+            String[] options = new String[4];
+
+            for (int i = 0; i < 4; i++) {
+
+                options[i] = br.readLine() + "\n";
+
+            }
+
+            allQuizQuestions.add(quizQuestion);
+            allQuizOptions.add(options);
+
+
+        }
+
+        ArrayList<Integer> allCorrectAnswers = new ArrayList<>();
+
+        String lastLine = br.readLine();
+        br.close();
+
+        while (true) {
+
+
+            if ((lastLine.indexOf(":") + 3) > lastLine.length())
+                break;
+
+            String answer = lastLine.substring(lastLine.indexOf(":") + 1, lastLine.indexOf(":") + 2);
+
+            lastLine = lastLine.substring(lastLine.indexOf(":") + 3);
+
+            allCorrectAnswers.add(Integer.valueOf(answer));
+
+        }
+
+        for (int i = 0; i < allQuizQuestions.size(); i++) {
+
+            quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1), allQuizOptions.get(i), allCorrectAnswers.get(i));
+
+        }
+
+        quizArchive.addQuizzes(quiz);
+
+    }
+
+    /**
+     * Write questions and correct answers to a file
+     * @param quizArchive = retrieve quizzes
+     * @throws IOException = when an error occurs while writing or reading
+     */
+    public static void writeQuizQuestions(QuizArchive quizArchive) throws IOException {
+
+        var allQuizzes = quizArchive.getQuizzes();
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter("QuizQuestions.txt", true));
+        BufferedReader br = new BufferedReader(new FileReader("QuizQuestions.txt"));
+        if (br.readLine() != null) {
+            bw.write("\n");
+        }
+
+        for (int i = 0; i < allQuizzes.size(); i++) {
+
+
+            var oneQuiz = allQuizzes.get(i);
+
+            var correctAnswers = oneQuiz.getCorrectAnswers();
+            var quizName = oneQuiz.getName();
+
+
+            bw.write(quizName + "\n");
+            bw.write(oneQuiz.questionsPrinter());
+
+            bw.write("Correct answers:\n");
+            for (int j = 0; j < correctAnswers.size(); j++) {
+
+
+                bw.write("Question " + (j + 1) + ":" + correctAnswers.get(j) + " ");
+
+            }
+
+        }
+
+        bw.close();
+
+
+    }
+
+    /**
+     * Write finished answers to a file
+     * @param firstName = student first name
+     * @param lastName = student last name
+     * @param course = their assigned course
+     * @param quizArchive = retrieve the quizzes
+     * @throws FileNotFoundException = thrown when the file is not found
+     */
+    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course, QuizArchive quizArchive)
+            throws FileNotFoundException {
+
+
+        FileOutputStream fos = new FileOutputStream("StudentQuizzes.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+
+        var allQuizzes = quizArchive.getQuizzes();
+
+        for (int j = 0; j < allQuizzes.size(); j++) {
+
+            String quizName = allQuizzes.get(j).getName();
+            var answersQuiz = allQuizzes.get(j).getStudentAnswers();
+            var grade = allQuizzes.get(j).getScore();
+
+            pw.println("Name: " + firstName + " " + lastName);
+            pw.println("Answers for " + course + " quiz: " + quizName);
+            for (int i = 0; i < answersQuiz.size() - 1; i++) {
+                pw.print(answersQuiz.get(i) + ";");
+            }
+            pw.println(answersQuiz.get(answersQuiz.size() - 1));
+            pw.println("Score: " + grade);
+            pw.println();
+            pw.flush();
+        }
+        pw.close();
+    }
+
+    /**
+     * Writes student answers to a file
+     * @param firstName = student first name
+     * @param lastName = student last name
+     * @param course = their assigned course
+     * @param quizArchive = retrieve the quizzes
+     * @throws FileNotFoundException = if the file is not found
+     */
+    public static void writeUnfinishedQuizAnswersToFile(String firstName, String lastName,
+                                                        String course, QuizArchive quizArchive)
+            throws FileNotFoundException {
+
+        FileOutputStream fos = new FileOutputStream("StudentQuizzes.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+
+        var allQuizzes = quizArchive.getQuizzes();
+
+        for (int j = 0; j < allQuizzes.size(); j++) {
+
+            String quizName = allQuizzes.get(j).getName();
+
+            var answersQuiz = allQuizzes.get(j).getStudentAnswers();
+
+            pw.println("Name: " + firstName + " " + lastName);
+            pw.println("Answers for " + course + " quiz: " + quizName);
+
+            for (int i = 0; i < answersQuiz.size() - 1; i++) {
+                pw.print(answersQuiz.get(i) + ";");
+            }
+
+            pw.println(answersQuiz.get(answersQuiz.size() - 1));
+            pw.println("Unfinished Quiz...Score: N/A");
+            pw.println();
+            pw.flush();
+
+        }
+        pw.close();
+
+    }
+
+    public String toString() {
+
+        return "Name: " + firstName + " " + lastName + " Username: " + username + " Password: " + password;
+
+    }
+
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (!(o instanceof Student))
+            return false;
+
+        Student student = (Student) o;
+
+        return getName().equals(((Student) o).getName()) && getUsername().equals(((Student) o).getUsername());
+
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> usersAndPass = getAllUsernamesAndPasswords();
+        for (int i = 0; i < usersAndPass.size(); i++) {
+            System.out.println(usersAndPass.get(i));
+        }
+    }
+    public static Student findStudent(String username) {
+        return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse
+                (null);
+    }
+
+}
+ static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
+        //will be updated to show if username exists
+        int usernameExist = 0;
+        //updated to show if old password is correct
+        int oldPasswordExist = 0;
+        //create string buffer
+        StringBuffer buffer = new StringBuffer();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                //add line to string buffer
+                buffer.append(line + " \n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String fileContents = buffer.toString();
+        //if the txt file was empty
+        if (buffer.isEmpty()) {
+            return "No student accounts have been created.";
+        } else {
+            for (int i = 0; i < fileContents.length(); i++) {
+                if (fileContents.contains(username)) {
+                    //show that username exists and if it exists try look for old password
+                    usernameExist = 1;
+                    if (fileContents.contains("Password: " + oldPassword)) {
+                        //now, if the old password exists, replace it with the new password
+                        fileContents = fileContents.replace("Password: " + oldPassword, "Password: " + newPassword);
+                        //show that the old password exists
+                        oldPasswordExist = 1;
+                    }
+                }
+            }
+            //if old password not found
+            if (oldPasswordExist != 1) {
+                return "This is not your current password. Please enter your current password correctly.";
+            }
+            //if username is not found
+            if (usernameExist != 1) {
+                return "Your current username does not exist.";
+            }
+            String[] splitContents = fileContents.split("\n");
+            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < splitContents.length; i++) {
+                //write the updated contents into a txt file
+                pw.println(splitContents[i]);
+            }
+            pw.flush();
+        }
+        return "Your password has been changed!";
+    }
+
+    //if program has error, run function to save answers
+    public static void writeUnfinishedQuizAnswersToFile(String firstName, String lastName, String course,
+                                                        String quizName, ArrayList<Character> answersQuiz)
+            throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream("StudentQuizzes.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+        //write the name of student
+        pw.println("Name: " + firstName + " " + lastName);
+        //write the quiz name and course
+        pw.println("Answers for " + course + " quiz: " + quizName);
+        //write the answers of the quizzes
+        for (int i = 0; i < answersQuiz.size() - 1; i++) {
+            pw.print(answersQuiz.get(i) + ";");
+        }
+        pw.println(answersQuiz.get(answersQuiz.size() - 1));
+        //write that the quiz is unfinished and no score can be used
+        pw.println("Unfinished Quiz...Score: N/A");
+        pw.println();
+        pw.flush();
+    }
+
+    //if user completes quiz and does not have any errors
+    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course, String quizName,
+                                                      ArrayList<Character> answersQuiz, int grade)
+            throws FileNotFoundException {
+        FileOutputStream fos = new FileOutputStream("StudentQuizzes.txt", true);
+        PrintWriter pw = new PrintWriter(fos);
+        //write the name of student
+        pw.println("Name: " + firstName + " " + lastName);
+        //write the quiz name and course
+        pw.println("Answers for " + course + " quiz: " + quizName);
+        //write the answers of the quizzes
+        for (int i = 0; i < answersQuiz.size() - 1; i++) {
+            pw.print(answersQuiz.get(i) + ";");
+        }
+        pw.println(answersQuiz.get(answersQuiz.size() - 1));
+        //write the score of the quiz
+        pw.println("Score: " + grade + "/100");
+        pw.println();
+        pw.flush();
+    }
+
+    /**
+     * reads students from a file
+     * @throws IOException = when an error occurs while reading
+     */
+    public static void readStudents() throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader("StudentAccounts.txt"));
+
+        String line = br.readLine();
+
+        if (line == null)
+            return;
+        while (line != null) {
+
+            String wholeName = line.substring(line.indexOf(":") + 2);
+            String firstName = wholeName.substring(0, wholeName.indexOf(" "));
+            String lastName = wholeName.substring(wholeName.indexOf(" ") + 1);
+
+            line = br.readLine();
+
+            String username = line.substring(line.indexOf(":") + 2);
+
+            line = br.readLine();
+
+            String password = line.substring(line.indexOf(":") + 2);
+
+            Student student = new Student(firstName, lastName, username, password);
+
+            student.addAStudent(student);
+
+            line = br.readLine();
+
+        }
+
+        br.close();
+
+    }
+
+    /**
+     * read scores
+     */
+    public static void readStudentsScores() {
+
+        try(BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+
+            String line = br.readLine();
+
+            ArrayList<String> rawScores = new ArrayList<>();
+            ArrayList<String> modifiedScores = new ArrayList<>();
+            ArrayList<String> quizzes = new ArrayList<>();
+
+            while (line != null) {
+
+                rawScores.add(line.substring(0, line.indexOf(",")));
+                line = line.substring(line.indexOf(",") + 1);
+                modifiedScores.add(line.substring(0, line.indexOf(",")));
+                line = line.substring(line.indexOf(",") + 1);
+                quizzes.add(line);
+
+                line = br.readLine();
+
+            }
+
+            var allCourses = CourseArchive.allCourses;
+
+            for (int i = 0; i < allCourses.size(); i++) {
+
+                var allQuizzes =allCourses.get(i).getQuizzes();
+
+
+
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+
+    /**
+     * read teachers from a file
+     * @param teachers = store the teachers
+     * @throws IOException = when an error occurs while reading
+     */
+    public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {
+
         BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
 
         String line = br.readLine();
