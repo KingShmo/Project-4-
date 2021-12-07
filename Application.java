@@ -78,7 +78,7 @@ public class Application {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+
 
         Student.readTeachers(teachers);
         Student.readStudents();
@@ -106,13 +106,13 @@ public class Application {
             }
 
             if (choiceSignInOrRegister.equals("Sign-In")) {
-                signIn(scanner);
+                signIn();
                 //quit program if user presses the exit button on GUI
                 if (quitProgram == 1) {
                     return;
                 }
             } else if (choiceSignInOrRegister.equals("Register")) {
-                register(scanner);
+                register();
                 //quit program if user presses the exit button on GUI
                 if (quitProgram == 1) {
                     return;
@@ -147,10 +147,10 @@ public class Application {
     /**
      * Allows either student or teacher to sign in with their username and password
      *
-     * @param scanner = object of an imported class Scanner
+     * @param  = object of an imported class 
      * @throws Exception
      */
-    public static void signIn(Scanner scanner) throws Exception { // Sign in method either for teachers or students
+    public static void signIn( ) throws Exception { // Sign in method either for teachers or students
 
         int check1 = 0;
         int check2 = 0;
@@ -184,7 +184,7 @@ public class Application {
 
                             JOptionPane.showMessageDialog(null, "Success!",
                                     "Sign In", JOptionPane.INFORMATION_MESSAGE);
-                            menuTeacher(username, scanner);
+                            menuTeacher(username);
 
                         } else {
                             JOptionPane.showMessageDialog(null, passwordDoesntMatch,
@@ -219,7 +219,7 @@ public class Application {
 
                             JOptionPane.showMessageDialog(null, "Success!",
                                     "Sign In", JOptionPane.INFORMATION_MESSAGE);
-                            menuStudent(username, scanner);
+                            menuStudent(username);
 
                         } else {
                             JOptionPane.showMessageDialog(null, passwordDoesntMatch,
@@ -245,10 +245,10 @@ public class Application {
     /**
      * Allows either student or teacher to register with their first name, last name, username and password
      *
-     * @param scanner = object of an imported class Scanner
+     * @param  = object of an imported class 
      * @throws Exception
      */
-    public static void register(Scanner scanner) throws Exception { // Allows user to register and then Sign In
+    public static void register( ) throws Exception { // Allows user to register and then Sign In
 
 
         while (true) {
@@ -302,7 +302,7 @@ public class Application {
                     JOptionPane.showMessageDialog(null, "Success!",
                             "Register", JOptionPane.INFORMATION_MESSAGE);
                     //teacher.createAccount(firstName, lastName, username, password);
-                    //signIn(scanner);
+                    //signIn();
                 }
                 break;
             } else if (choiceTeacherOrStudent.equals("Student")) {
@@ -346,7 +346,7 @@ public class Application {
                     JOptionPane.showMessageDialog(null, "Success!",
                             "Register", JOptionPane.INFORMATION_MESSAGE);
                     //student.createAccount(firstName, lastName, username, password);
-                    //signIn(scanner);
+                    //signIn();
 
 
                 }
@@ -362,11 +362,11 @@ public class Application {
     /**
      * Allows teachers to change their passwords
      *
-     * @param scanner  = object of an imported class Scanner
-     * @param username = A unique username of the particular teacher
+     * @param   = object of an imported class 
+     * @param //username = A unique username of the particular teacher
      * @throws Exception
      */
-    public static void changePasswordTeacher(String username, Scanner scanner) throws Exception {
+    public static void changePasswordTeacher() throws Exception {
         for (Teacher item : teachers) {
             String newPassword = enterNewPasswordDialog();
             if (newPassword == null) {
@@ -384,7 +384,7 @@ public class Application {
             Teacher.createAccount();
             JOptionPane.showMessageDialog(null, "Success!",
                     "Change Password", JOptionPane.INFORMATION_MESSAGE);
-            signIn(scanner);
+            signIn();
             break;
         }
     }
@@ -392,11 +392,11 @@ public class Application {
     /**
      * Allows students to change their passwords
      *
-     * @param scanner  = object of an imported class Scanner
+     * @param   = object of an imported class 
      * @param username = A unique username of the particular student
      * @throws Exception
      */
-    public static void changePasswordStudent(String username, Scanner scanner) throws Exception {
+    public static void changePasswordStudent(String username) throws Exception {
         for (Student item : students) {
             if (username.equals(item.getUsername())) {
                 String newPassword = enterNewPasswordDialog();
@@ -411,7 +411,7 @@ public class Application {
                 Student.createAccount();
                 JOptionPane.showMessageDialog(null, "Success!",
                         "Change Password", JOptionPane.INFORMATION_MESSAGE);
-                signIn(scanner);
+                signIn();
                 break;
             }
         }
@@ -420,11 +420,11 @@ public class Application {
     /**
      * Allows teachers to delete their accounts
      *
-     * @param scanner  = object of an imported class Scanner
+     * @param   = object of an imported class 
      * @param username = A unique username of the particular teacher
      * @throws Exception
      */
-    public static void deleteAccountTeacher(String username, Scanner scanner) throws Exception {
+    public static void deleteAccountTeacher(String username) throws Exception {
         try {
             for (Teacher item : teachers) {
                 if (username.equals(item.getUsername())) {
@@ -447,13 +447,13 @@ public class Application {
                             return;
                         }
                         if (choice.equals("Sign-In")) {
-                            signIn(scanner);
+                            signIn();
                         } else if (choice.equals("Register")) {
-                            register(scanner);
+                            register();
                         }
 
                     } else if (confirmation.equals("No")) {
-                        menuTeacher(username, scanner);
+                        menuTeacher(username);
                     }
                     break;
                 }
@@ -466,11 +466,11 @@ public class Application {
     /**
      * Allows students to delete their accounts
      *
-     * @param scanner  = object of an imported class Scanner
+     * @param   = object of an imported class 
      * @param username = A unique username of the particular student
      * @throws Exception
      */
-    public static void deleteAccountStudent(String username, Scanner scanner) throws Exception {
+    public static void deleteAccountStudent(String username) throws Exception {
         try {
             for (Student item : students) {
                 if (username.equals(item.getUsername())) {
@@ -493,15 +493,15 @@ public class Application {
                                 return;
                             }
                             if (choice.equals("Sign-In")) {
-                                signIn(scanner);
+                                signIn();
                                 break;
                             } else if (choice.equals("Register")) {
-                                register(scanner);
+                                register();
                                 break;
                             }
                         } while (true);
                     } else if (confirmation.equals("No")) {
-                        menuStudent(username, scanner);
+                        menuStudent(username);
                     }
                     break;
                 }
@@ -513,11 +513,11 @@ public class Application {
     /**
      * Shows the menu with all the things a teacher can do
      *
-     * @param scanner  = object of an imported class Scanner
+     * @param   = object of an imported class 
      * @param username = A unique username of the particular teacher
      * @throws Exception
      */
-    public static void menuTeacher(String username, Scanner scanner) throws Exception {
+    public static void menuTeacher(String username) throws Exception {
         try {
             while (true) {
                 String choice;
@@ -531,13 +531,13 @@ public class Application {
                     return;
                 }
                 else if (choice.equals("1")) {
-                    changePasswordTeacher(username, scanner);
+                    changePasswordTeacher();
                     break;
                 } else if (choice.equals("2")) {
-                    deleteAccountTeacher(username, scanner);
+                    deleteAccountTeacher(username);
                     break;
                 } else if (choice.equals("3")) {
-                    signOutTeacher(scanner);
+                    signOutTeacher();
                     break;
                 } else if (choice.equals("4")) {
                     Teacher.main(username);
@@ -552,11 +552,11 @@ public class Application {
     /**
      * Shows the menu with all the things a student can do
      *
-     * @param scanner  = object of an imported class Scanner
+     * @param   = object of an imported class 
      * @param username = A unique username of the particular student
      * @throws Exception
      */
-    public static void menuStudent(String username, Scanner scanner) throws Exception {
+    public static void menuStudent(String username) throws Exception {
         try {
             while (true) {
                 String choice;
@@ -571,13 +571,13 @@ public class Application {
                     return;
                 }
                 else if (choice.equals("1")) {
-                    changePasswordStudent(username, scanner);
+                    changePasswordStudent(username);
                     break;
                 } else if (choice.equals("2")) {
-                    deleteAccountStudent(username, scanner);
+                    deleteAccountStudent(username);
                     break;
                 } else if (choice.equals("3")) {
-                    signOut(scanner);
+                    signOut();
                     break;
                 } else if (choice.equals("4")) {
                     StudentAnish.main(username);
@@ -597,15 +597,15 @@ public class Application {
     /**
      * Allows either student or teacher to Sign Out from their accounts
      *
-     * @param scanner = object of an imported class Scanner
+     * @param  = object of an imported class 
      */
 
 
-    public static void signOut(Scanner scanner) {
+    public static void signOut( ) {
         JOptionPane.showMessageDialog(null, "Thank you for using the Student Portal!",
                 "Student Portal", JOptionPane.INFORMATION_MESSAGE);
     }
-    public static void signOutTeacher(Scanner scanner) {
+    public static void signOutTeacher( ) {
         JOptionPane.showMessageDialog(null, "Thank you for using the Teacher Portal!",
                 "Teacher Portal", JOptionPane.INFORMATION_MESSAGE);
     }
