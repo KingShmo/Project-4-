@@ -93,7 +93,7 @@ public class Teacher {
     //write courses to a file with info including course name, teacher name, enrollment capacity, and students enrolled
     public static void writeCourses(ArrayList<Course> courses)
             throws FileNotFoundException {
-        FileOutputStream fos = new FileOutputStream("CourseDetails.txt");
+        FileOutputStream fos = new FileOutputStream("src/CourseDetails.txt");
         PrintWriter pw = new PrintWriter(fos);
         for (int i = 0; i < courses.size(); i++) {
             ArrayList<String> listStudents = new ArrayList<>();
@@ -127,7 +127,7 @@ public class Teacher {
 
 
 
-        try(BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+        try(BufferedReader br = new BufferedReader(new FileReader("src/CourseDetails.txt"))) {
 
             String line = br.readLine();
 
@@ -145,7 +145,17 @@ public class Teacher {
 
                 int enrollment = Integer.valueOf(line.substring(line.indexOf(":") + 2));
 
-                Teacher teacher = new Teacher(firstName, lastName);
+                String username = "";
+                String password = "";
+                for (int i = 0; i < Teacher.teachers.size(); i++) {
+
+                    if (Teacher.teachers.get(i).getName().equals(firstName + " " + lastName)) {
+                        username = Teacher.teachers.get(i).getUsername();
+                        password = Teacher.teachers.get(i).getPassword();
+                        break;
+                    }
+                }
+                Teacher teacher = new Teacher(firstName, lastName, username, password);
 
                 line = br.readLine();
                 Course course;
@@ -212,7 +222,7 @@ public class Teacher {
     public static ArrayList<Course> readAllCoursess() throws InvalidCourseException, FileNotFoundException {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<Course> allInfo = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/CourseDetails.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 fileContents.add(line);
@@ -250,9 +260,9 @@ public class Teacher {
     //save a teacher account to the txt file
     public static void createAccount() throws IOException {
 
-        FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt");
+        FileOutputStream fos = new FileOutputStream("src/TeacherAccounts.txt");
         StringBuilder courses = new StringBuilder();
-        BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("src/TeacherAccounts.txt"));
         String line = br.readLine();
         PrintWriter pw = new PrintWriter(fos);
 
@@ -304,7 +314,7 @@ public class Teacher {
     public static String deleteAccount(String username) throws FileNotFoundException {
         int deleteAcc = 0;
         StringBuffer buffer = new StringBuffer();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/TeacherAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 buffer.append(line + " \n");
@@ -343,7 +353,7 @@ public class Teacher {
                     i--;
                 }
             }
-            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
+            FileOutputStream fos = new FileOutputStream("src/TeacherAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < stringArrayList.size(); i++) {
                 pw.println(stringArrayList.get(i));
@@ -357,7 +367,7 @@ public class Teacher {
     public static ArrayList<String> getAllUsernamesAndPasswords() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allInfo = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/TeacherAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 fileContents.add(line);
@@ -383,7 +393,7 @@ public class Teacher {
     public static ArrayList<String> getAllTeacherNames() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allInfo = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/TeacherAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 fileContents.add(line);
@@ -408,7 +418,7 @@ public class Teacher {
     public static String getSpecificPassword(String inputUsername) {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/StudentAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 fileContents.add(line);
@@ -434,7 +444,7 @@ public class Teacher {
         int usernameExist = 0;
         int oldPasswordExist = 0;
         StringBuffer buffer = new StringBuffer();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("TeacherAccounts.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/TeacherAccounts.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 buffer.append(line + " \n");
@@ -462,7 +472,7 @@ public class Teacher {
                 return "Your current username does not exist.";
             }
             String[] splitContents = fileContents.split("\n");
-            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
+            FileOutputStream fos = new FileOutputStream("src/TeacherAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
                 //System.out.println(splitContents[i]);
@@ -477,7 +487,7 @@ public class Teacher {
     public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/StudentQuizzes.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 allQuizInfo.add(line);
@@ -510,7 +520,7 @@ public class Teacher {
     public static ArrayList<String> readQuizByQuizName(String quizName) throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/StudentQuizzes.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 allQuizInfo.add(line);
@@ -539,11 +549,23 @@ public class Teacher {
         return specificQuiz;
     }
 
-    public static void main(String username) throws InvalidCourseException, InvalidQuizException, IOException {
+    public boolean equals(Object o) {
+
+        if (this == o)
+            return true;
+        if (!(o instanceof Teacher))
+            return false;
+        Teacher teacher = (Teacher) o;
+
+        return getUsername().equals(teacher.getUsername()) && getName().equals(teacher.getUsername());
+
+    }
+
+    public static void main(String username) throws Exception {
         Scanner scanner = new Scanner(System.in);
         boolean check;
         do {
-            check = TheCourseFunction.courseFunctionMenu(username, scanner);
+            check = TheCourseFunction.courseFunctionMenu(username);
         } while (check);
 
     }
