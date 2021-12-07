@@ -17,11 +17,11 @@ import java.util.Scanner;
  */
 
 public class StudentAnish {
-    public static String quizSelection;
-    public static String quizName;
+    public static String quizSelection = "";
+    public static String quizName = "";
     public static String quizChoice = "";
     public static String fileName = "";
-    public static int fileAnswer;
+    public static int fileAnswer = 0;
     int option;
     private static String firstName;
     private static String lastName;
