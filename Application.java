@@ -670,6 +670,7 @@ public class Application {
         String password;
         int loop = 0;
         do {
+            loop = 0;
             password = JOptionPane.showInputDialog(null, enterPassword,
                     title, JOptionPane.QUESTION_MESSAGE);
             //if user wants to exit the program
@@ -758,7 +759,6 @@ public class Application {
                 JOptionPane.showMessageDialog(null, "Thank you for using Classroom Client!",
                         "Classroom Client", JOptionPane.INFORMATION_MESSAGE);
                 quitProgram = 1;
-                return null;
             } else if (password.isBlank()) {
                 JOptionPane.showMessageDialog(null, "Your new password cannot be empty!",
                         "Change Password", JOptionPane.ERROR_MESSAGE);
@@ -787,4 +787,9 @@ public class Application {
     }
 
 }
+
+
+
+
+
 
