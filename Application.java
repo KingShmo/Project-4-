@@ -378,16 +378,16 @@ public class Application {
             //teacher.changePassword(username, oldPassword, newPassword);
             item.setPassword(newPassword);
             Teacher.createAccount();
-                //Teacher teacher = new Teacher(null, null, username, oldPassword);
-                //teacher.changePassword(username, oldPassword, newPassword);
-                item.setPassword(newPassword);
-                Teacher.createAccount();
+            //Teacher teacher = new Teacher(null, null, username, oldPassword);
+            //teacher.changePassword(username, oldPassword, newPassword);
+            item.setPassword(newPassword);
+            Teacher.createAccount();
             JOptionPane.showMessageDialog(null, "Success!",
                     "Change Password", JOptionPane.INFORMATION_MESSAGE);
             signIn(scanner);
             break;
-            }
         }
+    }
 
     /**
      * Allows students to change their passwords
@@ -582,7 +582,8 @@ public class Application {
                 } else if (choice.equals("4")) {
                     StudentAnish.main(username);
                     if (StudentAnish.courseChoice == null || StudentAnish.courseOption == null ||
-                            StudentAnish.quizChoice == null) {
+                            StudentAnish.quizChoice == null || StudentAnish.fileName == null || StudentAnish.fileAnswer
+                            == JOptionPane.CLOSED_OPTION || StudentAnish.quizSelection == null) {
                         quitProgram = 1;
                         break;
                     }
