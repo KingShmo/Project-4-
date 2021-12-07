@@ -434,7 +434,6 @@ public class Student {
 
     /**
      * read teachers from a file
-     * @param teachers = store the teachers
      * @throws IOException = when an error occurs while reading
      */
     public static void readTeachers(ArrayList<Teacher> teachers) throws IOException {

@@ -29,7 +29,8 @@ public class StudentAnish {
     }
 
 
-    public static void main(String username) throws InvalidCourseException, IOException {
+    public static void main(String username, BufferedReader br,
+                            PrintWriter pw) throws InvalidCourseException, IOException {
 
         CourseArchive listOfCourses = new CourseArchive();
 
@@ -61,32 +62,44 @@ public class StudentAnish {
 
         while (true) {
 
-            String menu = "Which course would you like to access?";
+            String menu = "Which course would you like to access?\n";
 
             System.out.println("Welcome! Which course would you like to access?");
+            pw.println(menu);
+            pw.flush();
+
             int z;
 
             for (z = 0; z < enrolledCourses.size(); z++) {
 
-                menu += (z + 1) + ". " + enrolledCourses.get(z).getName();
+                menu += (z + 1) + ". " + enrolledCourses.get(z).getName() + "\n";
                 System.out.println((z + 1) + ". " + enrolledCourses.get(z).getName());
+                pw.println("" + (z + 1) + ". " + enrolledCourses.get(z).getName());
+                pw.flush();
 
             }
             if (z == 0) {
                 System.out.println("No enrolled courses.");
+                pw.println("No enrolled courses.");
+                pw.flush();
                 return;
             }
             System.out.println((++z) + ". Exit");
-            menu += z + ". Exit";
+            pw.println("" + (z) + ". Exit");
+            pw.flush();
+
+            menu += z + ". Exit\n";
 
             String[] options = new String[enrolledCourses.size() + 1];
             for (int i = 0; i < options.length; i++)
                 options[i] = "" + (i + 1);
 
             String answer = inputChecker(scanner, options, menu,
-                    "Invalid input.");
+                    "Invalid input.", br, pw);
             int choice = Integer.valueOf(answer);
             if (choice == z) {
+                pw.println("Thank you for using the student portal.");
+                pw.flush();
                 System.out.println("Thank you for using the student portal.");
                 return;
             } else {
@@ -102,60 +115,90 @@ public class StudentAnish {
                     String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
                             "3. Exit the course";
                     System.out.println(prompt);
+                    pw.println(prompt);
+                    pw.flush();
 
-                    answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.");
+                    answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.",
+                                          br, pw);
 
                     if (answer.equals("1")) {
 
                         System.out.println("Choose a quiz:");
+                        pw.println("Choose a quiz:");
+                        pw.flush();
 
                         var allQuizzes = chosenCourse.getQuizzes();
                         if (allQuizzes.size() == 0) {
                             System.out.println("There are no quizzes.");
+                            pw.println("There are no quizzes.");
+                            pw.flush();
                             continue;
                         }
                         String[] checkInput = new String[allQuizzes.size()];
 
                         for (int i = 0; i < allQuizzes.size(); i++) {
                             System.out.println((i + 1) + ". " + allQuizzes.get(i).getName());
+                            pw.println("" + (i + 1) + ". " + allQuizzes.get(i).getName());
+                            pw.flush();
                             checkInput[i] = "" + (i + 1);
                         }
 
-                        answer = inputChecker(scanner, checkInput, "Choose a quiz:", "Invalid input.");
+                        answer = inputChecker(scanner, checkInput, "Choose a quiz:",
+                                  "Invalid input.", br, pw);
 
                         Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
 
                         if (chosenQuiz.isTaken()) {
                             System.out.println("Quiz already taken.");
+                            pw.println("Quiz already taken.");
+                            pw.flush();
                         } else if (chosenQuiz.getStudentAnswers() != null) {
                             System.out.println("Quiz already taken.");
+                            pw.println("Quiz already taken.");
+                            pw.flush();
                         } else {
                             if (chosenQuiz.getRandomize()) {
                                 TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive);
                             }
                             String question = "Do you want to attach a file for this quiz? (yes/no)";
+                            pw.println(question);
+                            pw.flush();
                             System.out.println(question);
                             answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, question,
-                                    "Invalid input.");
+                                    "Invalid input.", br, pw);
+
                             if (answer.equals("Yes") || answer.equals("yes")) {
 
                                 int length = chosenQuiz.getQuestions().size();
-                                System.out.println("The file should have " + length + " answers, following this format:");
+                                System.out.println("The file should have " + length +
+                                                   " answers, following this format:");
+                                pw.println("The file should have " + length +
+                                        " answers, following this format:");
+                                pw.flush();
                                 System.out.println("[answerForQuestion1],[answerForQuestion2],3,4");
+                                pw.println("[answerForQuestion1],[answerForQuestion2],3,4");
+                                pw.flush();
 
                                 System.out.println("File path?");
-                                answer = scanner.nextLine();
+                                pw.println("File path?");
+                                pw.flush();
+                                answer = br.readLine();
 
                                 String response = readAttachedFile(answer, chosenQuiz, quizArchive);
                                 if (response.equals("File was not found.")) {
                                     System.out.println("File was not found. Therefore, the quiz will start.");
-                                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
-                                } else
+                                    pw.println("File was not found. Therefore, the quiz will start.");
+                                    pw.flush();
+                                    startAQuiz(scanner, chosenQuiz.getName(), quizArchive, br, pw);
+                                } else {
                                     System.out.println(response);
+                                    pw.println(response);
+                                    pw.flush();
+                                }
 
 
                             } else
-                                startAQuiz(scanner, chosenQuiz.getName(), quizArchive);
+                                startAQuiz(scanner, chosenQuiz.getName(), quizArchive, br, pw);
                         }
 
 
@@ -171,6 +214,11 @@ public class StudentAnish {
                                 System.out.println("Raw score: " + quizzes.get(j).getRawScore());
                                 System.out.println("Score with point values: " + quizzes.get(j).getModifiedScore());
                                 System.out.println("Timestamp: " + quizzes.get(j).getTimeStamp());
+                                pw.println("Quiz name: " + quizzes.get(j).getName());
+                                pw.println("Raw score: " + quizzes.get(j).getRawScore());
+                                pw.println("Score with point values: " + quizzes.get(j).getModifiedScore());
+                                pw.println("Timestamp: " + quizzes.get(j).getTimeStamp());
+                                pw.flush();
 
                             }
 
@@ -464,22 +512,35 @@ public class StudentAnish {
 
     }
 
-    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
+    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage,
+                                      BufferedReader br, PrintWriter pw) {
 
-        do {
+        try {
 
-            String input = scanner.nextLine();
+            do {
+                pw.println("esc");
+                pw.flush();
+                String input = br.readLine();
 
-            if (input != null) {
-                for (int i = 0; i < choices.length; i++) {
-                    if (input.equals(choices[i]))
-                        return input;
+                if (input != null) {
+                    for (int i = 0; i < choices.length; i++) {
+                        if (input.equals(choices[i]))
+                            return input;
+                    }
                 }
-            }
-            System.out.println(errorMessage);
-            System.out.println(question);
+                System.out.println(errorMessage);
+                pw.println(errorMessage);
+                pw.flush();
+                pw.println(question);
+                pw.flush();
+                System.out.println(question);
 
-        } while (true);
+            } while (true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
 
     }
 
@@ -534,7 +595,8 @@ public class StudentAnish {
         } while (loop == 1);
     }
     //method implemented when a student wants to take a quiz in a specific course
-    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) throws IOException {
+    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive,
+                                  BufferedReader br, PrintWriter pw) throws IOException {
 
         var quizzes = quizArchive.getQuizzes();
         boolean check = false;
@@ -577,11 +639,19 @@ public class StudentAnish {
                     String option4 = wholeQuestion;
 
                     System.out.println((questionNum++) + question.substring(1) + ":");
-                    System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1));
-
+                    pw.println("" + (questionNum++) + question.substring(1) + ":");
+                    pw.flush();
+                    System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" +
+                                     option3.substring(1) + "4" + option4.substring(1));
+                    pw.println("1" + option1.substring(1) + "2" + option2.substring(1) + "3" +
+                            option3.substring(1) + "4" + option4.substring(1));
+                    pw.flush();
                     System.out.print("Your answer: ");
+                    pw.println("Your answer: ");
+                    pw.flush();
                     String[] options = {"1", "2", "3", "4"};
-                    answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
+                    answer = inputChecker(scanner, options, "Your answer: ",
+                               "Answer should be from 1 to 4.", br, pw);
 
                     studentAnswers.add(Integer.valueOf(answer));
 
@@ -593,6 +663,8 @@ public class StudentAnish {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 String takeTimeStamp = yearMonthDaySpaceHoursMinutesSeconds.format(timestamp);
                 System.out.println("Quiz completed: " + takeTimeStamp);
+                pw.println("Quiz completed: " + takeTimeStamp);
+                pw.flush();
 
                 quiz.setStudentAnswers(studentAnswers);
 
@@ -609,6 +681,8 @@ public class StudentAnish {
 
         if (!check) {
             System.out.println("Couldn't start the quiz.");
+            pw.println("Couldn't start the quiz.");
+            pw.flush();
 
         }
 
@@ -623,27 +697,32 @@ public class StudentAnish {
 
     //method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when
     // assigning a quiz!
-    public static int[] assignPointValues(Quiz temp, Scanner scanner) {
+    public static int[] assignPointValues(Quiz temp, Scanner scanner, BufferedReader br, PrintWriter pw) {
 
         if (temp.getQuestions().size() == 0) {
             System.out.println("The quiz has zero questions.");
+            pw.println("The quiz has zero questions.");
+            pw.flush();
             return null;
         }
 
         int[] pointValues = new int[temp.getSizeOfQuiz()];
         for (int i = 0; i < temp.getSizeOfQuiz(); i++) {
             System.out.println("How many points is question " + (i + 1) + " worth?");
+            pw.println("How many points is question " + (i + 1) + " worth?");
+            pw.flush();
             boolean check;
             int points = 0;
             do {
                 check = false;
                 try {
-                    points = scanner.nextInt();
-                    scanner.nextLine();
+                    String response = br.readLine();
+                    points = Integer.valueOf(response);
 
                 } catch (Exception e) {
                     System.out.println("Enter a number.");
-                    scanner.nextLine();
+                    pw.println("Enter a number.");
+                    pw.flush();
                     check = true;
                 }
             } while (check);

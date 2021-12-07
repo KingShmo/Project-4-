@@ -1,4 +1,6 @@
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
@@ -70,6 +72,11 @@ public class Application extends MultiApps {
 
     static int check3 = 0;
 
+    private static ServerSocket serverSocket;
+
+    //If ever equal to 1, quit the program TT
+    public static int quitProgram = 0;
+
     /**
      * Runs the program from the beginning
      * Checks if user wants to Sign In or Register
@@ -80,39 +87,53 @@ public class Application extends MultiApps {
     public static void main() throws Exception {
         Scanner scanner = new Scanner(System.in);
 
-
-        String[] files = {"QuizQuestions.txt", "CourseDetails.txt", "TeacherAccounts.txt", "StudentAccounts.txt"
-                          , "StudentQuizzes.txt"};
-        for (int i = 0; i < files.length; i++) {
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(files[i]));
-            } catch (FileNotFoundException e) {
-                FileOutputStream fot = new FileOutputStream(files[i]);
+        if (MultiApps.initialLaunch) {
+            MultiApps.initialLaunch = false;
+            String[] files = {"QuizQuestions.txt", "CourseDetails.txt", "TeacherAccounts.txt", "StudentAccounts.txt"
+                    , "StudentQuizzes.txt"};
+            for (int i = 0; i < files.length; i++) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(files[i]));
+                } catch (FileNotFoundException e) {
+                    FileOutputStream fot = new FileOutputStream(files[i]);
+                }
             }
+
+
+            Student.readTeachers(teachers);
+            Student.readStudents();
+
+            quizArchive = new QuizArchive();
+            PrintInformation.readQuizQuestions(quizArchive);
+
+            Teacher.readAllCourses();
+
+            StudentAnish.readStudentSubmissions(quizArchive);
+
+            teachers = Teacher.teachers;
+            students = Student.students;
+
+
+            serverSocket = new ServerSocket(1234);
         }
 
+        System.out.println("Waiting for a client to connect...");
 
-        Student.readTeachers(teachers);
-        Student.readStudents();
+        Socket socket = serverSocket.accept();
 
-        quizArchive = new QuizArchive();
-        PrintInformation.readQuizQuestions(quizArchive);
+        System.out.println("Connected!");
 
-        Teacher.readAllCourses();
-
-        StudentAnish.readStudentSubmissions(quizArchive);
-
-        //Student.readStudentsScores();
-
-        teachers = Teacher.teachers;
-        students = Student.students;
-
+        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+        pw.println("You are connected!");
+        pw.flush();
 
         System.out.println(welcomeMessage);
+        pw.println(welcomeMessage);
         do {
             System.out.println(signInOrRegister);
-            System.out.println("If you want to add a client - enter [3]");
-            System.out.println("If you want to view current clients - enter [4]");
+            pw.println(signInOrRegister + "\n3. View connected clients\n4. Exit the app");
+            System.out.println("3. View connected clients");
+            System.out.println("4. Exit the app");
             String choiceSignInOrRegister = scanner.nextLine();
 
             if (choiceSignInOrRegister.equals("1")) {
@@ -120,11 +141,12 @@ public class Application extends MultiApps {
             } else if (choiceSignInOrRegister.equals("2")) {
                 register(scanner);
             } else if (choiceSignInOrRegister.equals("3")) {
-                MultiApps.server();
-            } else if (choiceSignInOrRegister.equals("4")) {
                 MultiApps.viewClients();
-            } else {
-                System.out.println(incorrectAnswer);
+            } else if (choiceSignInOrRegister.equals("4")) {
+                break;
+            }
+            else {
+                    System.out.println(incorrectAnswer);
             }
         } while (check3 == 0);
 
@@ -507,7 +529,7 @@ public class Application extends MultiApps {
                     signOut(scanner);
                     break;
                 } else if (choice.equals("4")) {
-                    StudentAnish.main(username);
+                    //StudentAnish.main(username, br, pw); the onlyyyy
                     break;
                 } else {
                     System.out.println(incorrectAnswer);

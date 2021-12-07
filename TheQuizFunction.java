@@ -787,7 +787,7 @@ public class TheQuizFunction {
 
                     }
 
-                    q1.initializePointValues(StudentAnish.assignPointValues(temp, scanner));
+                    //q1.initializePointValues(StudentAnish.assignPointValues(temp, scanner); the onlyyyyy
                                             // Anish's method that asks a teacher the specific
                                             // value for each question when they create a quiz
 
