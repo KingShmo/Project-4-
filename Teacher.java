@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.nio.charset.CoderResult;
 import java.util.ArrayList;
@@ -582,18 +583,15 @@ public class Teacher {
     public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
         do {
-
-            String input = scanner.nextLine();
-
-            if (input != null) {
-                for (int i = 0; i < choices.length; i++) {
-                    if (input.equals(choices[i]))
-                        return input;
-                }
+            String input;
+            input = (String) JOptionPane.showInputDialog(null, question,
+                    "Courses", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+            if (input == null) {
+                Application.quitProgram = 1;
+                return null;
+            } else {
+                return input;
             }
-            System.out.println(errorMessage);
-            System.out.println(question);
-
         } while (true);
 
     }
