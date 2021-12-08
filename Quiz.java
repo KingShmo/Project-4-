@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -34,8 +35,24 @@ public class Quiz {
      */
     private ArrayList<String> scores;
     /**
+     * student raw score
+     */
+    private String rawScore;
+    /**
+     * student modified score
+     */
+    private String modifiedScore;
+    /**
+     * timestamp
+     */
+    private String timeStamp;
+    /**
      * Students who took the quiz
      */
+    /**
+     * if the quiz is taken or not
+     */
+    private boolean taken;
     private ArrayList<Student> students;
     /**
      * Students answers
@@ -80,6 +97,10 @@ public class Quiz {
     private int questionNum;
 
     /**
+     * True if the questions should be randomized in each attempt, otherwise false.
+     */
+    private boolean randomize;
+    /**
      * Allocates a new quiz object with its title.
      * Used in-case the teacher doesn't have questions to put, or
      * is not sure how many questions to put.
@@ -99,6 +120,11 @@ public class Quiz {
         quizIsReady = false;
         sizeOfQuiz = 0;
         questionNum = 1;
+        randomize = false;
+        taken = false;
+        rawScore = "NONE";
+        modifiedScore = "NONE";
+        timeStamp = "NONE";
 
     }
 
@@ -171,12 +197,75 @@ public class Quiz {
     }
 
     /**
+     *
+     * @return rawScore
+     */
+    public String getRawScore() {
+        return rawScore;
+    }
+
+    /**
+     *
+     * @param r = new raw score
+     */
+    public void setRawScore(String r) {
+        this.rawScore = r;
+    }
+
+    /**
+     *
+     * @param t = new timestamp
+     */
+    public void setTimeStamp(String t) {
+        this.timeStamp = t;
+    }
+
+    /**
+     *
+     * @param m = new modified score
+     */
+    public void setModifiedScore(String m) {
+        this.modifiedScore = m;
+    }
+
+    /**
+     *
+     * @return modifiedScore
+     */
+    public String getModifiedScore() {
+        return modifiedScore;
+    }
+
+    /**
+     *
+     * @return timestamp
+     */
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    /**
      * A get method
      *
      * @return = returns a quiz object
      */
     public Quiz createQuiz() {
         return this;
+    }
+
+    /**
+     * changes taken status
+     */
+    public void toggleTaken() {
+        taken = !taken;
+    }
+
+    /**
+     *
+     * @return taken
+     */
+    public boolean isTaken() {
+        return taken;
     }
 
     /**
@@ -207,8 +296,10 @@ public class Quiz {
 
         if (questionNumber < 1)
             throw new InvalidQuizException("Question numbers should be greater than 1.");
-        if (newQuestion == null || newQuestion.isBlank() || newQuestion.isEmpty())
-            throw new InvalidQuizException("Question not found.");
+        if (newQuestion == null || newQuestion.isBlank() || newQuestion.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Question cannot be blank!", "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
+        }
 
         for (int i = 0; i < questions.size(); i++) {
 
@@ -277,7 +368,7 @@ public class Quiz {
      * @param question = the question's options to be randomized
      * @return a String containing the questions with the randomized options
      */
-    public String randomizeOptions(String question) {
+    public String randomizeOptions(String question, int correctAnswer, int index) {
 
         Random random = new Random();
 
@@ -332,6 +423,9 @@ public class Quiz {
 
         for (int i = 0; i < options.length; i++) {
 
+            if (num[i] == correctAnswer) {
+                this.correctAnswers.set(index, i + 1);
+            }
             collectQuestionParts += options[num[i] - 1];
 
         }
@@ -350,6 +444,8 @@ public class Quiz {
      * @return a string indicating if the process of randomizing was completed
      */
     public String randomizeQuestions(Quiz quiz) {
+
+        ArrayList<Integer> correctAnswers = new ArrayList<Integer>();
 
         Random random = new Random();
 
@@ -378,7 +474,7 @@ public class Quiz {
                     checkRepetitive.add(temp);
                     if (temp != 0) {
                         questionsNumbers[i] = temp;
-
+                        correctAnswers.add(this.getCorrectAnswers().get(temp - 1));
                         exit = false;
                     }
                 }
@@ -389,12 +485,16 @@ public class Quiz {
 
         }
 
+        this.correctAnswers = correctAnswers;
+
         ArrayList<String> newQuestions = new ArrayList<>();
+
+
 
         for (int i = 1; i < questionsNumbers.length; i++) {
 
             String oneQuestion = oldQuestions.get(questionsNumbers[i] - 1);
-            String modifiedOptions = randomizeOptions(oneQuestion);
+            String modifiedOptions = randomizeOptions(oneQuestion, this.correctAnswers.get(i - 1), i - 1);
             newQuestions.add(modifiedOptions);
 
         }
@@ -534,6 +634,20 @@ public class Quiz {
         this.questions = questions;
     }
 
+    /**
+     * set randomize to true
+     */
+    public void toggleRandomization() {
+        randomize = !randomize;
+    }
+
+    /**
+     *
+     * @return randomize
+     */
+    public boolean getRandomize() {
+        return randomize;
+    }
     /**
      * get point values for the questions
      * @return pointValues
