@@ -206,7 +206,7 @@ public class StudentAnish {
                                 int length = chosenQuiz.getQuestions().size();
                                 String fileInstruction = "The file should have " + length + " answers, " +
                                         "following this format:\n" +
-                                "[answerForQuestion1], [answerForQuestion2], 3, 4\n" + "What is the file path?\n";
+                                        "[answerForQuestion1], [answerForQuestion2], 3, 4\n" + "What is the file path?\n";
 
                                 fileName = JOptionPane.showInputDialog(null, fileInstruction,
                                         quizName,
@@ -246,12 +246,12 @@ public class StudentAnish {
 
                             for (int j = 0; j < quizzes.size(); j++) {
                                 String nameOfQuiz = "Quiz name: " + quizzes.get(j).getName() + "\n";
-                               String questionsCorrect = "Questions correct: " + quizzes.get(j).getRawScore() + "\n";
+                                String questionsCorrect = "Questions correct: " + quizzes.get(j).getRawScore() + "\n";
                                 String score = "Score: " + quizzes.get(j).getModifiedScore() + "\n";
                                 String timeStamp = "Timestamp: " + quizzes.get(j).getTimeStamp() + "\n";
                                 JOptionPane.showMessageDialog(null, nameOfQuiz +
-                                        questionsCorrect + score + timeStamp, Student.
-                                        findStudent(username).getFirstName() + "'s Quiz Grades",
+                                                questionsCorrect + score + timeStamp, Student.
+                                                findStudent(username).getFirstName() + "'s Quiz Grades",
                                         JOptionPane.INFORMATION_MESSAGE);
 
                             }
@@ -279,14 +279,11 @@ public class StudentAnish {
                     }
                 }
                 System.out.println(CourseArchive.allCourses.size() + 1 + ". Exit");
-
                 String[] options = new String[CourseArchive.allCourses.size() + 1];
                 for (int i = 0; i < options.length; i++)
                     options[i] = "" + (i + 1);
                 course = inputChecker(scanner, options, "Which course would you like to access?",
                                              "Invalid input.");
-
-
                 if (Integer.valueOf(course) == (listOfCourses.getCourses().size() + 1)) {
                     System.out.println("Thank you for using the student portal!");
                     return;
@@ -296,17 +293,12 @@ public class StudentAnish {
                 }
             } while (check);
             int initialLoop;
-
-
             for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
                 if (CourseArchive.allCourses.get(i).getName().equals(course)) {
                     accessedCourse = CourseArchive.allCourses.get(i);
                     break;
                 }
             }
-
-
-
             do {
                 initialLoop = 0;
                 System.out.println("Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
@@ -446,7 +438,7 @@ public class StudentAnish {
     //Zuhair's method to write student scores
     public static void writeScores(Quiz quiz, String timeStamp) {
 
-        try(PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt", true))) {
+        try(PrintWriter pw = new PrintWriter(new FileWriter("src/StudentQuizzes.txt", true))) {
 
             String rawScore = getScore(quiz);
             String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
@@ -700,7 +692,8 @@ public class StudentAnish {
         }
 
         if (!check) {
-            System.out.println("Couldn't start the quiz.");
+            JOptionPane.showMessageDialog(null, "Couldn't start the quiz!", "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
 
         }
 
@@ -715,27 +708,31 @@ public class StudentAnish {
 
     //method implemented in Zuhair's class to allow a teacher to assign specific point values for each question when
     // assigning a quiz!
-    public static int[] assignPointValues(Quiz temp, Scanner scanner) {
+    public static int[] assignPointValues(Quiz temp) {
 
         if (temp.getQuestions().size() == 0) {
-            System.out.println("The quiz has zero questions.");
+            String noQuestions = "The quiz has zero questions.";
+            JOptionPane.showMessageDialog(null, noQuestions, "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
         int[] pointValues = new int[temp.getSizeOfQuiz()];
         for (int i = 0; i < temp.getSizeOfQuiz(); i++) {
-            System.out.println("How many points is question " + (i + 1) + " worth?");
+            String howMany = "How many points is question " + (i + 1) + " worth?";
             boolean check;
             int points = 0;
             do {
                 check = false;
                 try {
-                    points = scanner.nextInt();
-                    scanner.nextLine();
+                    points = Integer.parseInt(JOptionPane.showInputDialog(null, howMany, "Quiz Portal",
+                            JOptionPane.QUESTION_MESSAGE));
 
-                } catch (Exception e) {
-                    System.out.println("Enter a number.");
-                    scanner.nextLine();
+                } catch (NumberFormatException e) {
+                    String enterNumber = "Enter a number.";
+                    points = Integer.parseInt(JOptionPane.showInputDialog(null, enterNumber,
+                            "Quiz Portal",
+                            JOptionPane.QUESTION_MESSAGE));
                     check = true;
                 }
             } while (check);
