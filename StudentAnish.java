@@ -206,7 +206,7 @@ public class StudentAnish {
                                 int length = chosenQuiz.getQuestions().size();
                                 String fileInstruction = "The file should have " + length + " answers, " +
                                         "following this format:\n" +
-                                        "[answerForQuestion1], [answerForQuestion2], 3, 4\n" + "What is the file path?\n";
+                                "[answerForQuestion1], [answerForQuestion2], 3, 4\n" + "What is the file path?\n";
 
                                 fileName = JOptionPane.showInputDialog(null, fileInstruction,
                                         quizName,
@@ -243,15 +243,24 @@ public class StudentAnish {
 
                             Course c = enrolledCourses.get(i);
                             var quizzes = c.getQuizzes();
+                            var allQuizzes = chosenCourse.getQuizzes();
+                            int q = allQuizzes.size();
+                            if (q == 0) {
+                                JOptionPane.showMessageDialog(null, "No quiz grades available " +
+                                                "as there are no quizzes in this course yet!", "Quiz Portal",
+                                        JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
+
 
                             for (int j = 0; j < quizzes.size(); j++) {
                                 String nameOfQuiz = "Quiz name: " + quizzes.get(j).getName() + "\n";
-                                String questionsCorrect = "Questions correct: " + quizzes.get(j).getRawScore() + "\n";
+                               String questionsCorrect = "Questions correct: " + quizzes.get(j).getRawScore() + "\n";
                                 String score = "Score: " + quizzes.get(j).getModifiedScore() + "\n";
                                 String timeStamp = "Timestamp: " + quizzes.get(j).getTimeStamp() + "\n";
                                 JOptionPane.showMessageDialog(null, nameOfQuiz +
-                                                questionsCorrect + score + timeStamp, Student.
-                                                findStudent(username).getFirstName() + "'s Quiz Grades",
+                                        questionsCorrect + score + timeStamp, Student.
+                                        findStudent(username).getFirstName() + "'s Quiz Grades",
                                         JOptionPane.INFORMATION_MESSAGE);
 
                             }
@@ -279,11 +288,14 @@ public class StudentAnish {
                     }
                 }
                 System.out.println(CourseArchive.allCourses.size() + 1 + ". Exit");
+
                 String[] options = new String[CourseArchive.allCourses.size() + 1];
                 for (int i = 0; i < options.length; i++)
                     options[i] = "" + (i + 1);
                 course = inputChecker(scanner, options, "Which course would you like to access?",
                                              "Invalid input.");
+
+
                 if (Integer.valueOf(course) == (listOfCourses.getCourses().size() + 1)) {
                     System.out.println("Thank you for using the student portal!");
                     return;
@@ -293,12 +305,17 @@ public class StudentAnish {
                 }
             } while (check);
             int initialLoop;
+
+
             for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
                 if (CourseArchive.allCourses.get(i).getName().equals(course)) {
                     accessedCourse = CourseArchive.allCourses.get(i);
                     break;
                 }
             }
+
+
+
             do {
                 initialLoop = 0;
                 System.out.println("Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
@@ -438,7 +455,7 @@ public class StudentAnish {
     //Zuhair's method to write student scores
     public static void writeScores(Quiz quiz, String timeStamp) {
 
-        try(PrintWriter pw = new PrintWriter(new FileWriter("src/StudentQuizzes.txt", true))) {
+        try(PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt", true))) {
 
             String rawScore = getScore(quiz);
             String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
@@ -692,8 +709,7 @@ public class StudentAnish {
         }
 
         if (!check) {
-            JOptionPane.showMessageDialog(null, "Couldn't start the quiz!", "Quiz Portal",
-                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Couldn't start the quiz.");
 
         }
 
