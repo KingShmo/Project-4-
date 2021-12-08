@@ -126,7 +126,8 @@ public class TheQuizFunction {
                             } else {
                                 quiz.toggleRandomization();
                                 JOptionPane.showMessageDialog(null,
-                                        "Quiz will be randomized for students in each attempt!", "Quiz Portal",
+                                        "Quiz will be randomized for students in each attempt!",
+                                        "Quiz Portal",
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
@@ -158,7 +159,7 @@ public class TheQuizFunction {
                     if (q.getCourse().equals(courseTitle)) {
                         JOptionPane.showMessageDialog(null, (++x) + ". " + q.getName(),
                                 "All Quizzes",
-                        JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.INFORMATION_MESSAGE);
                         quizzesToBeDeleted.add(q);
                     }
                 }
@@ -214,9 +215,9 @@ public class TheQuizFunction {
 
                 fileAnswer = JOptionPane.showInputDialog(null,
                         "The file should have the following format:\n Quiz-Course\n1. Question:\n" +
-                        "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
-                        "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
-                        "[pointValue1],[pointValue2]\nFile path?", "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
+                                "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
+                                "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
+                                "[pointValue1],[pointValue2]\nFile path?", "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
                 if (fileAnswer == null) {
                     return;
                 }
@@ -286,10 +287,10 @@ public class TheQuizFunction {
 
         }
         if (quiz != null)
-           quiz.randomizeQuestions(quiz); //Randomizes the quiz
+            quiz.randomizeQuestions(quiz); //Randomizes the quiz
         else
-           JOptionPane.showMessageDialog(null, "No questions found!", "Quiz Portal",
-                   JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No questions found!", "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
 
     }
 
@@ -327,9 +328,9 @@ public class TheQuizFunction {
         }
 
         if (check) {
-           String unavailableQuiz = "Unavailable quiz.";
-           JOptionPane.showMessageDialog(null, unavailableQuiz, "Quiz Portal",
-                   JOptionPane.ERROR_MESSAGE);
+            String unavailableQuiz = "Unavailable quiz.";
+            JOptionPane.showMessageDialog(null, unavailableQuiz, "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -478,9 +479,9 @@ public class TheQuizFunction {
             if (quiz.getCourse().equals(course)) {
 
                 if (quiz.isTaken()) {
-                   String allQuizzes = "Quiz name: " + quiz.getName();
-                   JOptionPane.showMessageDialog(null, allQuizzes, "Quiz Portal",
-                           JOptionPane.INFORMATION_MESSAGE);
+                    String allQuizzes = "Quiz name: " + quiz.getName();
+                    JOptionPane.showMessageDialog(null, allQuizzes, "Quiz Portal",
+                            JOptionPane.INFORMATION_MESSAGE);
                     check = false;
 
                     int counter = 0;
@@ -659,10 +660,10 @@ public class TheQuizFunction {
                         while (true) {
                             do {
 
-                            answer = JOptionPane.showInputDialog(null, "Question " +
-                                            (++numOfQuestions) + ":",
-                                    "Quiz Portal",
-                                    JOptionPane.QUESTION_MESSAGE);
+                                answer = JOptionPane.showInputDialog(null, "Question " +
+                                                (++numOfQuestions) + ":",
+                                        "Quiz Portal",
+                                        JOptionPane.QUESTION_MESSAGE);
 
                                 if (answer.isBlank() || answer.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, "Type the question " +
@@ -711,7 +712,7 @@ public class TheQuizFunction {
 
                         String quizTitle = "What's the quiz's title?";
                         answer = JOptionPane.showInputDialog(null, quizTitle, "Quiz Portal"
-                        , JOptionPane.QUESTION_MESSAGE);
+                                , JOptionPane.QUESTION_MESSAGE);
                         if (answer == null) {
                             return;
                         }
