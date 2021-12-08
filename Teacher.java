@@ -5,14 +5,12 @@ import java.util.Scanner;
 
 /**
  * Teacher class
- *
+ * <p>
  * Creates a representation for teacher. It assigns courses, name of the teacher
  * , and writes and reads from/to notepad files.
  *
  * @author Troy, Anushka, and Artemii
- *
  * @version November 15, 2021
- *
  */
 
 
@@ -126,8 +124,7 @@ public class Teacher {
     public static void readAllCourses() throws InvalidCourseException {
 
 
-
-        try(BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
 
             String line = br.readLine();
 
@@ -212,8 +209,6 @@ public class Teacher {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
 
 
     }
@@ -561,11 +556,11 @@ public class Teacher {
 
     }
 
-    public static void main(String username) throws InvalidCourseException, InvalidQuizException, IOException {
+    public static void main(String username, BufferedReader br, PrintWriter pw) throws InvalidCourseException, InvalidQuizException, IOException {
         Scanner scanner = new Scanner(System.in);
         boolean check;
         do {
-            check = TheCourseFunction.courseFunctionMenu(username, scanner);
+            check = TheCourseFunction.courseFunctionMenu(username, scanner, br, pw);
         } while (check);
 
     }
@@ -579,22 +574,35 @@ public class Teacher {
      * @param errorMessage = prints the given error message if the input was invalid.
      * @return a String that includes a valid option chosen by the user.
      */
-    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
+    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage,
+                                      BufferedReader br, PrintWriter pw) {
 
-        do {
+        try {
 
-            String input = scanner.nextLine();
+            do {
+                pw.println("esc");
+                pw.flush();
+                String input = br.readLine();
 
-            if (input != null) {
-                for (int i = 0; i < choices.length; i++) {
-                    if (input.equals(choices[i]))
-                        return input;
+                if (input != null) {
+                    for (int i = 0; i < choices.length; i++) {
+                        if (input.equals(choices[i]))
+                            return input;
+                    }
                 }
-            }
-            System.out.println(errorMessage);
-            System.out.println(question);
+                System.out.println(errorMessage);
+                pw.println(errorMessage);
+                pw.flush();
+                pw.println(question);
+                pw.flush();
+                System.out.println(question);
 
-        } while (true);
+            } while (true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
 
     }
 }
