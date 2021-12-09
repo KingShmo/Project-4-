@@ -8,13 +8,11 @@ import java.util.*;
 
 /**
  * Application class
- *
+ * <p>
  * This class starts the program and asks a user to sign in or register
  *
  * @author Artemii, Zuhair Almansouri, Anish Ketha
- *
- * @version November 15, 2021
- *
+ * @version December 08, 2021
  */
 
 public class ToCompare extends MultiApps {
@@ -159,8 +157,7 @@ public class ToCompare extends MultiApps {
                 MultiApps.viewClients();
             } else if (choiceSignInOrRegister.equals("4")) {
                 break;
-            }
-            else {
+            } else {
                 pw.println(incorrectAnswer);
                 pw.flush();
                 System.out.println(incorrectAnswer);
@@ -462,7 +459,7 @@ public class ToCompare extends MultiApps {
     /**
      * Allows teachers to change their passwords
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular teacher
      * @throws Exception
      */
@@ -494,7 +491,7 @@ public class ToCompare extends MultiApps {
     /**
      * Allows students to change their passwords
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular student
      * @throws Exception
      */
@@ -525,7 +522,7 @@ public class ToCompare extends MultiApps {
     /**
      * Allows teachers to delete their accounts
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular teacher
      * @throws Exception
      */
@@ -586,7 +583,7 @@ public class ToCompare extends MultiApps {
     /**
      * Allows students to delete their accounts
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular student
      * @throws Exception
      */
@@ -654,7 +651,7 @@ public class ToCompare extends MultiApps {
     /**
      * Shows the menu with all the things a teacher can do
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular teacher
      * @throws Exception
      */
@@ -686,7 +683,7 @@ public class ToCompare extends MultiApps {
                     break;
                 } else if (choice.equals("4")) {
                     try {
-                        Teacher.main(username);
+                        Teacher.main(username, br, pw);
                     } catch (Exception e) {
                         throw new SocketException();
                     }
@@ -703,7 +700,7 @@ public class ToCompare extends MultiApps {
     /**
      * Shows the menu with all the things a student can do
      *
-     * @param scanner = object of an imported class Scanner
+     * @param scanner  = object of an imported class Scanner
      * @param username = A unique username of the particular student
      * @throws Exception
      */
