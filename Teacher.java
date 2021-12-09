@@ -10,7 +10,7 @@ import java.util.Scanner;
  * , and writes and reads from/to notepad files.
  *
  * @author Troy, Anushka, and Artemii
- * @version November 15, 2021
+ * @version December 08, 2021
  */
 
 
@@ -140,7 +140,7 @@ public class Teacher {
 
                 line = br.readLine();
 
-                int enrollment = Integer.valueOf(line.substring(line.indexOf(":") + 2));
+                String enrollment = line.substring(line.indexOf(":") + 2);
 
                 String username = "";
                 String password = "";
@@ -236,7 +236,7 @@ public class Teacher {
                 String teacherFirstName = splitTeacherName[0];
                 String teacherLastName = splitTeacherName[1];
                 Teacher teacher = new Teacher(teacherFirstName, teacherLastName);
-                int enrollmentCapacity = Integer.parseInt(fileContents.get(2 + 5 * i));
+                String enrollmentCapacity = fileContents.get(2 + 5 * i);
                 String[] students = fileContents.get(3 + 5 * i).split(",");
                 ArrayList<Student> studentsList = new ArrayList<>();
                 for (int j = 0; j < students.length; j++) {
