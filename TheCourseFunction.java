@@ -35,14 +35,14 @@ public class TheCourseFunction {
             pw.flush();
             int x = 0;
             for (Course course : CourseArchive.allCourses) {
-                pw.println((++x) + ". " + course.getName());
                 System.out.println((++x) + ". " + course.getName());
+                pw.println("" + x + ". " + course.getName());
             }
 
-            if (x == 0)
+            if (x == 0) {
                 pw.println("None.");
                 System.out.println("None.");
-
+            }
             pw.flush();
 
             pw.println("Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. " +
@@ -65,6 +65,8 @@ public class TheCourseFunction {
             if (answer.equals("1")) {
                 System.out.println("What's the course's title?");
                 pw.println("What's the course's title?");
+                pw.flush();
+                pw.println("esc");
                 pw.flush();
                 answer = br.readLine();
 
@@ -92,19 +94,22 @@ public class TheCourseFunction {
                     }
                 }
 
-                int enrollmentCapacity = 0;
+                String enrollmentCapacity = "0";
                 do {
 
                     System.out.println("What's the course's enrollment capacity?");
                     pw.println("What's the course's enrollment capacity?");
                     pw.flush();
                     try {
-                        enrollmentCapacity = br.read();
-                        br.readLine();
+                        pw.println("esc");
+                        pw.flush();
+                        enrollmentCapacity = br.readLine();
                         break;
                     } catch (InputMismatchException e) {
-                        System.out.println("Invalid input!");
-                        pw.println("Invalid input!");
+                        System.out.println("Invalid input! Please re-enter enrollment capacity.");
+                        pw.println("Invalid input! Please re-enter enrollment capacity.");
+                        pw.flush();
+                        pw.println("esc");
                         pw.flush();
                         br.readLine();
                     }
@@ -125,6 +130,8 @@ public class TheCourseFunction {
                 System.out.println("What's the course's title?");
                 pw.println("What's the course's title?");
                 pw.flush();
+                pw.println("esc");
+                pw.flush();
                 answer = br.readLine();
 
                 ArrayList<Course> courses = courseArchive.getCourses();
@@ -138,7 +145,7 @@ public class TheCourseFunction {
                             pw.println("This course belongs to another teacher.");
                             pw.flush();
                         } else {
-                            course.callTheQuizFunction(answer);
+                            course.callTheQuizFunction(answer, br, pw);
                         }
                         break;
                     }
@@ -154,6 +161,8 @@ public class TheCourseFunction {
             } else if (answer.equals("3")) {
                 System.out.println("What's the title of the course to which you want to add the student?");
                 pw.println("What's the title of the course to which you want to add the student?");
+                pw.flush();
+                pw.println("esc");
                 pw.flush();
                 answer = br.readLine();
                 Course course = null;
@@ -216,6 +225,8 @@ public class TheCourseFunction {
                 boolean check = false;
                 do {
                     check = false;
+                    pw.println("esc");
+                    pw.flush();
                     studentNumber = br.readLine();
                     try {
                         int num = Integer.parseInt(studentNumber);
@@ -262,6 +273,8 @@ public class TheCourseFunction {
                 System.out.println("What's the title of the course whose details you want to modify?");
                 pw.println("What's the title of the course whose details you want to modify?");
                 pw.flush();
+                pw.println("esc");
+                pw.flush();
                 answer = br.readLine();
                 Course course = null;
                 ArrayList<Course> courses = courseArchive.getCourses();
@@ -305,6 +318,8 @@ public class TheCourseFunction {
                             System.out.println("What's the new course title?");
                             pw.println("What's the new course title?");
                             pw.flush();
+                            pw.println("esc");
+                            pw.flush();
                             answer2 = br.readLine();
                             course.setName(answer2);
                             System.out.println("Course name modified!");
@@ -315,6 +330,8 @@ public class TheCourseFunction {
                     } else if (answer.equals("2")) {
                         System.out.println("What's the new course teacher's full name?");
                         pw.println("What's the new course teacher's full name?");
+                        pw.flush();
+                        pw.println("esc");
                         pw.flush();
                         String teacherName = br.readLine();
                         var allTeachers = Teacher.getTeachers();
@@ -345,8 +362,10 @@ public class TheCourseFunction {
                             System.out.println("What's the new course enrollment capacity?");
                             pw.println("What's the new course enrollment capacity?");
                             pw.flush();
+                            pw.println("esc");
+                            pw.flush();
                             answer2 = br.readLine();
-                            course.setEnrollmentCapacity(Integer.parseInt(answer2));
+                            course.setEnrollmentCapacity(answer2);
                             System.out.println("Course enrollment capacity modified!");
                             pw.println("Course enrollment capacity modified!");
                             pw.flush();
@@ -363,6 +382,8 @@ public class TheCourseFunction {
                 boolean courseExists = false;
                 System.out.println("What's the course's title?");
                 pw.println("What's the course's title?");
+                pw.flush();
+                pw.println("esc");
                 pw.flush();
                 answer = br.readLine();
 
@@ -434,7 +455,7 @@ public class TheCourseFunction {
     //method for a person that is logged in as a teacher to create their own course to store quizzes
     // in which students access
     public static void creatingACourse(String answer, Teacher teacher,
-                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+                                       String enrollmentCapacity) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         CourseArchive courseArchive = new CourseArchive();
         Course course = new Course(answer, teacher, enrollmentCapacity);
         courseArchive.addCourses(course);
