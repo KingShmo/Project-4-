@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -26,7 +28,7 @@ public class Course {
     /**
      * Enrollment capacity of the course
      */
-    private int enrollmentCapacity;
+    private String enrollmentCapacity;
     /**
      * students enrolled
      */
@@ -68,6 +70,7 @@ public class Course {
 
     /**
      * sets students
+     *
      * @param studentsInThisCourse = students to be set
      */
     public void setStudentsInThisCourse(ArrayList<Student> studentsInThisCourse) {
@@ -77,34 +80,34 @@ public class Course {
     /**
      * Allocates a new course object with its title, assigned teacher and enrollment count.
      *
-     * @param name = course title.
+     * @param name               = course title.
      * @param enrollmentCapacity = Enrollment capacity of the course
-     * @param teacher = teacher to be assigned
+     * @param teacher            = teacher to be assigned
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, FileNotFoundException {
+    public Course(String name, Teacher teacher, String enrollmentCapacity) throws InvalidCourseException, FileNotFoundException {
         this.name = name;
         this.courseTeacher = teacher;
         this.enrollmentCapacity = enrollmentCapacity;
         studentsInThisCourse = new ArrayList<>();
         quizzes = new ArrayList<>();
-        if (enrollmentCapacity < 1)
+        if (Integer.parseInt(enrollmentCapacity) < 1)
             throw new InvalidCourseException("A course should have a minimum student enrollment of 1!");
     }
 
     /**
      * Allocates a new course object with its title, assigned teacher and enrollment count.
      *
-     * @param name = course title.
-     * @param enrollmentCapacity = Enrollment capacity of the course
-     * @param teacher = teacher to be assigned
+     * @param name                 = course title.
+     * @param enrollmentCapacity   = Enrollment capacity of the course
+     * @param teacher              = teacher to be assigned
      * @param studentsInThisCourse = students to be added for the course
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity, ArrayList<Student> studentsInThisCourse) throws InvalidCourseException, FileNotFoundException {
+    public Course(String name, Teacher teacher, String enrollmentCapacity, ArrayList<Student> studentsInThisCourse) throws InvalidCourseException, FileNotFoundException {
         this(name, teacher, enrollmentCapacity);
         this.studentsInThisCourse = studentsInThisCourse;
-        if (enrollmentCapacity < 1)
+        if (Integer.parseInt(enrollmentCapacity) < 1)
             throw new InvalidCourseException("A course should have a minimum student enrollment capacity of 1!");
         quizzes = new ArrayList<>();
     }
@@ -119,6 +122,7 @@ public class Course {
 
     /**
      * adds a student
+     *
      * @param student = student to be added
      */
     public void addAStudentToTheCourse(Student student) {
@@ -127,6 +131,7 @@ public class Course {
 
     /**
      * get name
+     *
      * @return name
      */
     public String getName() {
@@ -135,6 +140,7 @@ public class Course {
 
     /**
      * get courseTeacher
+     *
      * @return courseTeacher
      */
     public Teacher getCourseTeacher() {
@@ -143,14 +149,16 @@ public class Course {
 
     /**
      * get enrollmentCapacity
+     *
      * @return enrollmentCapacity
      */
-    public int getEnrollmentCapacity() {
+    public String getEnrollmentCapacity() {
         return this.enrollmentCapacity;
     }
 
     /**
      * sets courseTeacher
+     *
      * @param newCourseTeacher = new teacher
      */
     public void setCourseTeacher(Teacher newCourseTeacher) {
@@ -159,14 +167,16 @@ public class Course {
 
     /**
      * sets enrollmentCapacity
+     *
      * @param newEnrollmentCapacity = new enrollmentCapacity
      */
-    public void setEnrollmentCapacity(int newEnrollmentCapacity) {
+    public void setEnrollmentCapacity(String newEnrollmentCapacity) {
         this.enrollmentCapacity = newEnrollmentCapacity;
     }
 
     /**
      * sets name
+     *
      * @param newName = new name
      */
     public void setName(String newName) {
@@ -175,6 +185,7 @@ public class Course {
 
     /**
      * get quizArchive
+     *
      * @return quizArchive
      */
     public static QuizArchive getQuizArchive() {
@@ -183,12 +194,13 @@ public class Course {
 
     /**
      * calls the quiz menu
-     * @throws InvalidQuizException = thrown when appropriate
+     *
+     * @throws InvalidQuizException  = thrown when appropriate
      * @throws FileNotFoundException = thrown when appropriate
      */
-    public void callTheQuizFunction(String courseTitle) throws InvalidQuizException, IOException {
+    public void callTheQuizFunction(String courseTitle, BufferedReader br, PrintWriter pw) throws InvalidQuizException, IOException {
         quizArchive = Application.quizArchive;
-        TheQuizFunction.main(quizArchive, courseTitle);
+        TheQuizFunction.main(quizArchive, courseTitle, br, pw);
 
     }
 }
