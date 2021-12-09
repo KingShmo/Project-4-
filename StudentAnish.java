@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 /**
  * Student class
  * <p>
@@ -109,7 +110,6 @@ public class StudentAnish {
                 Course chosenCourse = enrolledCourses.get(choice);
 
 
-
                 do {
 
                     String prompt = "Select the action you want:\n1. Take a quiz\n2. View Grades\n" +
@@ -119,7 +119,7 @@ public class StudentAnish {
                     pw.flush();
 
                     answer = inputChecker(scanner, new String[]{"1", "2", "3"}, prompt, "Invalid input.",
-                                          br, pw);
+                            br, pw);
 
                     if (answer.equals("1")) {
 
@@ -144,7 +144,7 @@ public class StudentAnish {
                         }
 
                         answer = inputChecker(scanner, checkInput, "Choose a quiz:",
-                                  "Invalid input.", br, pw);
+                                "Invalid input.", br, pw);
 
                         Quiz chosenQuiz = allQuizzes.get(Integer.valueOf(answer) - 1);
 
@@ -158,7 +158,7 @@ public class StudentAnish {
                             pw.flush();
                         } else {
                             if (chosenQuiz.getRandomize()) {
-                                TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive);
+                                TheQuizFunction.randomizeQuestions(chosenQuiz.getName(), quizArchive, pw);
                             }
                             String question = "Do you want to attach a file for this quiz? (yes/no)";
                             pw.println(question);
@@ -171,7 +171,7 @@ public class StudentAnish {
 
                                 int length = chosenQuiz.getQuestions().size();
                                 System.out.println("The file should have " + length +
-                                                   " answers, following this format:");
+                                        " answers, following this format:");
                                 pw.println("The file should have " + length +
                                         " answers, following this format:");
                                 pw.flush();
@@ -349,7 +349,7 @@ public class StudentAnish {
     //Zuhair's method to read file imports
     public static String readAttachedFile(String path, Quiz quiz, QuizArchive quizArchive) {
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))){
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
             String line = br.readLine();
 
@@ -393,7 +393,6 @@ public class StudentAnish {
             String takeTimeStamp = yearMonthDaySpaceHoursMinutesSeconds.format(timestamp);
 
 
-
             writeScores(quiz, takeTimeStamp);
             PrintInformation.writeQuizQuestions(quizArchive);
 
@@ -412,7 +411,7 @@ public class StudentAnish {
     //Zuhair's method to write student scores
     public static void writeScores(Quiz quiz, String timeStamp) {
 
-        try(PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt", true))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt", true))) {
 
             String rawScore = getScore(quiz);
             String modifiedScore = getModifiedScore(quiz.getPointValues(), quiz);
@@ -421,7 +420,7 @@ public class StudentAnish {
             quiz.setModifiedScore(modifiedScore);
             quiz.setTimeStamp(timeStamp);
             pw.println(quiz.getName() + ";" + getScore(quiz) + ";" + getModifiedScore(quiz.getPointValues(), quiz)
-                       + "," + timeStamp);
+                    + "," + timeStamp);
 
             for (int i = 0; i < quiz.getQuestions().size(); i++) {
                 if (i + 1 == quiz.getStudentAnswers().size())
@@ -440,7 +439,7 @@ public class StudentAnish {
 
         var allQuizzes = quizArchive.getQuizzes();
 
-        try(BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
 
             String line = br.readLine();
 
@@ -478,7 +477,6 @@ public class StudentAnish {
                 ArrayList<Integer> studentAnswers = new ArrayList<>();
 
 
-
                 while (true) {
 
                     if (line.indexOf(",") == -1)
@@ -489,7 +487,6 @@ public class StudentAnish {
                     studentAnswers.add(Integer.valueOf(oneAnswer));
 
                 }
-
 
 
                 q.setStudentAnswers(studentAnswers);
@@ -507,7 +504,6 @@ public class StudentAnish {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
     }
@@ -560,6 +556,7 @@ public class StudentAnish {
     public String getPassword() { //Returns the password of a student
         return password;
     }
+
     //this is what the student uses if they want to see the grade for a quiz in a specific course
     public static void viewQuiz(Scanner scanner, String firstName, String lastName, String course, String quizName,
                                 ArrayList<Character> answersQuiz, QuizArchive q, Quiz newStudent, int[] score) {
@@ -594,6 +591,7 @@ public class StudentAnish {
             } while (option != 1 && option != 2);
         } while (loop == 1);
     }
+
     //method implemented when a student wants to take a quiz in a specific course
     public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive,
                                   BufferedReader br, PrintWriter pw) throws IOException {
@@ -607,7 +605,6 @@ public class StudentAnish {
         for (int i = 0; i < quizzes.size(); i++) {
 
             if (quizzes.get(i).getName().equals(title)) {
-
 
 
                 check = true;
@@ -642,7 +639,7 @@ public class StudentAnish {
                     pw.println("" + (questionNum++) + question.substring(1) + ":");
                     pw.flush();
                     System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" +
-                                     option3.substring(1) + "4" + option4.substring(1));
+                            option3.substring(1) + "4" + option4.substring(1));
                     pw.println("1" + option1.substring(1) + "2" + option2.substring(1) + "3" +
                             option3.substring(1) + "4" + option4.substring(1));
                     pw.flush();
@@ -651,7 +648,7 @@ public class StudentAnish {
                     pw.flush();
                     String[] options = {"1", "2", "3", "4"};
                     answer = inputChecker(scanner, options, "Your answer: ",
-                               "Answer should be from 1 to 4.", br, pw);
+                            "Answer should be from 1 to 4.", br, pw);
 
                     studentAnswers.add(Integer.valueOf(answer));
 
@@ -690,6 +687,7 @@ public class StudentAnish {
             quiz.setStudentAnswers(studentAnswers);
 
     }
+
     //method for student and teacher to recall their answers and view the point values for each question
     public static void getStudentAnswers(Quiz answers) {
         answers.getStudentAnswers();
@@ -731,6 +729,7 @@ public class StudentAnish {
         }
         return pointValues;
     }
+
     //this method shows the score the student got based on the point values assigned for each Question by the teacher
     public static String getModifiedScore(int[] pointValue, Quiz q) {
 
@@ -752,6 +751,7 @@ public class StudentAnish {
         return "" + count + "/" + sum;
 
     }
+
     //method for the teacher and student to get the number of questions correct out of total questions in a specific quiz in a specific course!
     public static String getScore(Quiz q) {
 
