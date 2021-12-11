@@ -1,7 +1,7 @@
 import java.io.*;
 import java.nio.charset.CoderResult;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
  * Teacher class
@@ -9,10 +9,8 @@ import java.util.Scanner;
  * Creates a representation for teacher. It assigns courses, name of the teacher
  * , and writes and reads from/to notepad files.
  *
- * @author Troy, Anushka, and Artemii
- *
- * @version November 15, 2021
- *
+ * @author Troy, Anushka, Zuhair, and Artemii
+ * @version December 11, 2021
  */
 
 
@@ -24,6 +22,11 @@ public class Teacher {
     ArrayList<Course> courses = new ArrayList<Course>();
     static ArrayList<Teacher> teachers = new ArrayList<Teacher>();
     private static CourseArchive courseArchive;
+
+    /**
+     * sync threads
+     */
+    private static Object sync = new Object();
 
     public Teacher(String firstName, String lastName) {
         this.firstName = firstName;
@@ -40,7 +43,9 @@ public class Teacher {
     }
 
     public static void addATeacher(Teacher teacher) {
-        teachers.add(teacher);
+        synchronized (sync) {
+            teachers.add(teacher);
+        }
     }
 
     public static ArrayList<Teacher> getTeachers() {
@@ -91,43 +96,45 @@ public class Teacher {
     }
 
     //write courses to a file with info including course name, teacher name, enrollment capacity, and students enrolled
+    //Zuhair's method
     public static void writeCourses(ArrayList<Course> courses)
             throws FileNotFoundException {
-        FileOutputStream fos = new FileOutputStream("CourseDetails.txt");
-        PrintWriter pw = new PrintWriter(fos);
-        for (int i = 0; i < courses.size(); i++) {
-            ArrayList<String> listStudents = new ArrayList<>();
+        synchronized (sync) {
+            FileOutputStream fos = new FileOutputStream("CourseDetails.txt");
+            PrintWriter pw = new PrintWriter(fos);
+            for (int i = 0; i < courses.size(); i++) {
+                ArrayList<String> listStudents = new ArrayList<>();
 
-            pw.println("Course name: " + courses.get(i).getName());
-            pw.println("Teacher name: " + courses.get(i).getCourseTeacher().getName());
-            pw.println("Enrollment capacity: " + courses.get(i).getEnrollmentCapacity());
-            for (int j = 0; j < courses.get(i).getStudentsInThisCourse().size(); j++) {
-                //String studentFirstName = courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
-                //String studentLastName = courses.get(i).getStudentsInThisCourse().get(j).getLastName();
-                String name = courses.get(i).getStudentsInThisCourse().get(j).getName();
-                listStudents.add(name);
-            }
-            String allStudents = "";
-            for (int j = 0; j < listStudents.size(); j++) {
-                if (j + 1 == listStudents.size())
-                    allStudents += listStudents.get(j);
-                else
-                    allStudents += listStudents.get(j) + ",";
-            }
-            pw.println("Students in course: " + allStudents);
+                pw.println("Course name: " + courses.get(i).getName());
+                pw.println("Teacher name: " + courses.get(i).getCourseTeacher().getName());
+                pw.println("Enrollment capacity: " + courses.get(i).getEnrollmentCapacity());
+                for (int j = 0; j < courses.get(i).getStudentsInThisCourse().size(); j++) {
+                    //String studentFirstName = courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
+                    //String studentLastName = courses.get(i).getStudentsInThisCourse().get(j).getLastName();
+                    String name = courses.get(i).getStudentsInThisCourse().get(j).getName();
+                    listStudents.add(name);
+                }
+                String allStudents = "";
+                for (int j = 0; j < listStudents.size(); j++) {
+                    if (j + 1 == listStudents.size())
+                        allStudents += listStudents.get(j);
+                    else
+                        allStudents += listStudents.get(j) + ",";
+                }
+                pw.println("Students in course: " + allStudents);
 
+            }
+            pw.flush();
+            pw.close();
         }
-        pw.flush();
-        pw.close();
     }
 
     //reads a file that will get the course name, teacher name, enrollment capcity, and the students
-
+    //Zuhair's method
     public static void readAllCourses() throws InvalidCourseException {
 
 
-
-        try(BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("CourseDetails.txt"))) {
 
             String line = br.readLine();
 
@@ -214,12 +221,10 @@ public class Teacher {
         }
 
 
-
-
     }
 
 
-    public static ArrayList<Course> readAllCoursess() throws InvalidCourseException, FileNotFoundException {
+    public static ArrayList<Course> readAllCoursesss() throws InvalidCourseException, FileNotFoundException {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<Course> allInfo = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("CourseDetails.txt"))) {
@@ -260,27 +265,29 @@ public class Teacher {
     //save a teacher account to the txt file
     public static void createAccount() throws IOException {
 
-        FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt");
-        StringBuilder courses = new StringBuilder();
-        BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
-        String line = br.readLine();
-        PrintWriter pw = new PrintWriter(fos);
+        synchronized (sync) {
+            FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt");
+            StringBuilder courses = new StringBuilder();
+            BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
+            String line = br.readLine();
+            PrintWriter pw = new PrintWriter(fos);
 
 
-        for (int i = 0; i < teachers.size(); i++) {
+            for (int i = 0; i < teachers.size(); i++) {
 
-            String firstName = teachers.get(i).getFirstName();
-            String lastName = teachers.get(i).getLastName();
-            String username = teachers.get(i).getUsername();
-            String password = teachers.get(i).getPassword();
+                String firstName = teachers.get(i).getFirstName();
+                String lastName = teachers.get(i).getLastName();
+                String username = teachers.get(i).getUsername();
+                String password = teachers.get(i).getPassword();
 
-            pw.println("Name: " + firstName + " " + lastName);
-            pw.println("Username: " + username);
-            pw.println("Password: " + password);
+                pw.println("Name: " + firstName + " " + lastName);
+                pw.println("Username: " + username);
+                pw.println("Password: " + password);
 
+            }
+            pw.flush();
+            pw.close();
         }
-        pw.flush();
-        pw.close();
 
     }
 
@@ -475,7 +482,7 @@ public class Teacher {
             FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt", false);
             PrintWriter pw = new PrintWriter(fos);
             for (int i = 0; i < splitContents.length; i++) {
-                //System.out.println(splitContents[i]);
+
                 pw.println(splitContents[i]);
             }
             pw.flush();
@@ -561,40 +568,14 @@ public class Teacher {
 
     }
 
-    public static void main(String username) throws InvalidCourseException, InvalidQuizException, IOException {
-        Scanner scanner = new Scanner(System.in);
+    public static void main(String username, int[] quitProgram) throws Exception {
+
         boolean check;
         do {
-            check = TheCourseFunction.courseFunctionMenu(username, scanner);
+            check = TheCourseFunction.courseFunctionMenu(username, quitProgram);
         } while (check);
 
     }
 
-    /**
-     * Checks for user input and make sure it's valid.
-     *
-     * @param scanner      = accepts user input
-     * @param choices      = the valid choices
-     * @param question     = reprints the question again in case the input was invalid.
-     * @param errorMessage = prints the given error message if the input was invalid.
-     * @return a String that includes a valid option chosen by the user.
-     */
-    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
 
-        do {
-
-            String input = scanner.nextLine();
-
-            if (input != null) {
-                for (int i = 0; i < choices.length; i++) {
-                    if (input.equals(choices[i]))
-                        return input;
-                }
-            }
-            System.out.println(errorMessage);
-            System.out.println(question);
-
-        } while (true);
-
-    }
 }

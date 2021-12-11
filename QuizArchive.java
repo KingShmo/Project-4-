@@ -6,12 +6,11 @@ import java.util.ArrayList;
  * Stores quizzes
  *
  * @author Zuhair Almansouri, Anish Ketha lab sec L16
- * @version November 15, 2021
+ * @version December 11, 2021
  */
 public class QuizArchive {
 
     private static ArrayList<Quiz> quizzes = new ArrayList<>(); //All quizzes
-
 
 
     /**

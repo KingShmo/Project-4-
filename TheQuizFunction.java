@@ -1,9 +1,10 @@
+import javax.swing.*;
 import java.io.*;
 import java.nio.charset.CoderResult;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
  * TheQuizFunction
@@ -13,11 +14,18 @@ import java.util.Scanner;
  * @author Zuhair Almansouri, lab sec L16, Troy Tamura
  * All code is done by Zuhair except for specific lines that
  * has a comment on them stating the author who wrote them.
- * @version November 15, 2021
+ * @version December 11, 2021
  */
 
 
 public class TheQuizFunction {
+    public static String answer = ""; // User's answers
+    public static String fileAnswer = "";
+
+    /**
+     * sync threads
+     */
+    private static Object sync = new Object();
 
     /**
      * Runs a menu for Teacher's use.
@@ -35,20 +43,8 @@ public class TheQuizFunction {
         //PrintInformation.readQuizQuestions(quizArchive);
 
 
-        Scanner scanner = new Scanner(System.in); // Scanner for input
-        String answer; // User's answers
-
         do {
-            System.out.println("Select the action you want:");
-            System.out.println("1. Create a quiz");
-            System.out.println("2. Modify a quiz");
-            //System.out.println("3. Launch a quiz");
-            System.out.println("3. Randomize a quiz");
-            System.out.println("4. View Student Quiz Submissions");
-            System.out.println("5. List available quizzes");
-            System.out.println("6. Delete a quiz");
-            System.out.println("7. Import a quiz");
-            System.out.println("8. Exit");
+
             String temp = "Select the action you want:\n1. Create a quiz\n2. Modify a quiz\n" +
                     "3. Randomize a quiz\n4. View Student Quiz Submissions\n" +
                     "5. List available quizzes\n6. Delete a quiz\n7. Import a quiz\n" +
@@ -57,92 +53,145 @@ public class TheQuizFunction {
             String[] options = {"1", "2", "3", "4", "5", "6", "7", "8"};
             // Used for inputChecker method. To check the valid options.
 
-            answer = inputChecker(scanner, options, temp, "Invalid input.");
+            String answer = (String) JOptionPane.showInputDialog(null, temp, "Quiz Portal",
+                    JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             //Assigns the valid input to "answer" variable
-
-            if (answer.equals("1")) {
+            if (answer == null) {
+                return;
+            } else if (answer.equals("1")) {
                 //Creates a new Quiz object and saves it in QuizArchive
-                creatingAQuiz(scanner, quizArchive, courseTitle);
+                creatingAQuiz(quizArchive, courseTitle);
                 PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("2")) {
-                System.out.println("What's the quiz title?");
-                answer = scanner.nextLine();
+                String quizTitle = (String) JOptionPane.showInputDialog(null,
+                        "What's the quiz title?",
+                        "Quiz Portal",
+                        JOptionPane.QUESTION_MESSAGE);
+                if (quizTitle == null) {
+                    return;
+                }
                 //Modifies a Quiz based on its title/name. Modifies the options, question, or name of the quiz.
-                modifyAQuiz(scanner, answer, quizArchive, courseTitle);
+                modifyAQuiz(quizTitle, quizArchive, courseTitle);
                 PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("3")) {
 
-                System.out.println("What's the quiz title?");
-                answer = scanner.nextLine();
+                String quizName = JOptionPane.showInputDialog(null, "What's the quiz title?",
+                        "Quiz Portal",
+                        JOptionPane.QUESTION_MESSAGE);
+                if (quizName == null) {
+                    return;
+                }
                 boolean check = true;
                 boolean quizExists = true;
                 for (Quiz q : quizArchive.getQuizzes()) {
-                    if (q.getName().equals(answer)) {
+                    if (q.getName().equals(quizName)) {
                         quizExists = false;
                         if (!(q.getCourse().equals(courseTitle))) {
-                            System.out.println("This quiz is unavailable for this course.");
+                            JOptionPane.showMessageDialog(null, "" +
+                                            "This quiz is unavailable for this " +
+                                            "course!", "Quiz Portal",
+                                    JOptionPane.ERROR_MESSAGE);
                             check = false;
                         }
 
                     }
                 }
                 if (quizExists) {
-                    System.out.println("No such quiz with this name.");
+                    JOptionPane.showMessageDialog(null, "" +
+                                    "No such quiz with this name!", "Quiz Portal",
+                            JOptionPane.ERROR_MESSAGE);
                 }
                 //Randomize options and questions for a given title of a quiz.
                 if (check) {
                     for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
                         Quiz quiz = quizArchive.getQuizzes().get(i);
-                        if (quiz.getName().equals(answer)) {
+                        if (quiz.getName().equals(quizName)) {
                             if (quiz.getRandomize()) {
-                                String question = "Questions are already randomized, do you want to toggle it off?" +
-                                                  " (yes/no)";
-                                System.out.println(question);
-                                answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"},
-                                        question, "Invalid input.");
-                                if (answer.equals("Yes") || answer.equals("yes")) {
+                                String question = "Questions are already randomized, do you want to toggle it off?";
+                                int questionAnswer = JOptionPane.showConfirmDialog(null, question,
+                                        "Quiz Portal",
+                                        JOptionPane.YES_NO_OPTION);
+
+                                if (questionAnswer == JOptionPane.CLOSED_OPTION ||
+                                        questionAnswer == JOptionPane.CANCEL_OPTION) {
+                                    return;
+                                } else if (questionAnswer == JOptionPane.YES_OPTION) {
                                     quiz.toggleRandomization();
-                                    System.out.println("Quiz randomization is off.");
+                                    JOptionPane.showMessageDialog(null, "Quiz randomization is " +
+                                            "off.", "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
                                 }
                             } else {
                                 quiz.toggleRandomization();
-                                System.out.println("Quiz will be randomized for students in each attempt!");
+                                JOptionPane.showMessageDialog(null,
+                                        "Quiz will be randomized for students in each attempt!",
+                                        "Quiz Portal",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
                     }
                 }
                 //randomizeQuestions(answer, quizArchive);
 
-                //PrintInformation.writeQuizQuestions(quizArchive);
+                PrintInformation.writeQuizQuestions(quizArchive);
             } else if (answer.equals("4")) {
                 //Anushka's method. It lists the student answers for their quiz.
-                viewStudentSubmissions(scanner, quizArchive, courseTitle);
+                viewStudentSubmissions(quizArchive, courseTitle);
 
             } else if (answer.equals("5")) {
                 int x = 0;
+                String allQuizzes = "";
                 for (Quiz quiz : quizArchive.getQuizzes()) {
                     if (quiz.getCourse().equals(courseTitle))
-                        System.out.println((++x) + ". " + quiz.getName());
+                        allQuizzes += "" + (++x) + ". " + quiz.getName() + "\n";
+
                 }
+
+                JOptionPane.showMessageDialog(null, allQuizzes,
+                        "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
+
                 if (x == 0)
-                    System.out.println("There are no quizzes!");
+                    JOptionPane.showMessageDialog(null, "There are no quizzes available!",
+                            "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
             } else if (answer.equals("6")) {
-                System.out.println("Quiz you want to delete:");
+                String quizDelete = "Which quiz do you want to delete?\n";
                 int x = 0;
                 ArrayList<Quiz> quizzesToBeDeleted = new ArrayList<>();
+
+
                 for (Quiz q : quizArchive.getQuizzes()) {
                     if (q.getCourse().equals(courseTitle)) {
-                        System.out.println((++x) + ". " + q.getName());
+                        quizDelete += "" + (++x) + ". " + q.getName() + "\n";
                         quizzesToBeDeleted.add(q);
                     }
                 }
+
+
                 String[] choices = new String[quizzesToBeDeleted.size()];
                 for (int i = 0; i < choices.length; i++) {
                     choices[i] = "" + (i + 1);
                 }
-                answer = inputChecker(scanner, choices, "Quiz you want to delete:", "Invalid input");
 
-                Quiz quiz = quizzesToBeDeleted.get(Integer.valueOf(answer) - 1);
+                String quizDeleted = (String) JOptionPane.showInputDialog(null, quizDelete,
+                        "Quiz Portal",
+                        JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+                if (quizDeleted == null) {
+                    return;
+
+                }
+
+                Quiz quiz = quizzesToBeDeleted.get(Integer.valueOf(quizDeleted) - 1);
+
+                for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+                    Course course = CourseArchive.allCourses.get(i);
+                    var courseQuizzes = course.getQuizzes();
+                    for (int j = 0; j < courseQuizzes.size(); j++) {
+                        if (courseQuizzes.get(j).getName().equals(quiz.getName())) {
+                            courseQuizzes.remove(j);
+                            i = CourseArchive.allCourses.size();
+                            break;
+                        }
+                    }
+                }
 
                 for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
                     Quiz q = quizArchive.getQuizzes().get(i);
@@ -156,54 +205,59 @@ public class TheQuizFunction {
                     PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
                     pw.print("");
                 } catch (IOException e) {
-                    System.out.println("Couldn't modify the quiz.");
+                    String noModify = "Couldn't modify the quiz.";
+                    JOptionPane.showMessageDialog(null, noModify, "Quiz Portal",
+                            JOptionPane.ERROR_MESSAGE);
                 }
 
                 var allQuizzes = quizArchive.getQuizzes();
 
-                for (int i = 0; i < allQuizzes.size(); i++) {
+                StudentAnish.writeScores(quizArchive);
 
-                    if (!(allQuizzes.get(i).getRawScore().equals("NONE"))) {
-
-                        StudentAnish.writeScores(allQuizzes.get(i),allQuizzes.get(i).getTimeStamp());
-                    }
-
-                }
-
-                System.out.println("Quiz removed!");
+                String quizRemoved = "Quiz removed!";
+                JOptionPane.showMessageDialog(null, quizRemoved, "Quiz Portal",
+                        JOptionPane.INFORMATION_MESSAGE);
                 PrintInformation.writeQuizQuestions(quizArchive);
 
             } else if (answer.equals("7")) {
 
-                System.out.println("The file should have the following format:");
-                System.out.println("Quiz-Course\n1. Question:\n" +
-                                   "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
-                                   "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
-                                   "[pointValue1],[pointValue2]");
+                String fileAnswer = JOptionPane.showInputDialog(null,
+                        "The file should have the following format:\n Quiz Name\n1. Question:\n" +
+                                "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
+                                "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
+                                "[pointValue1],[pointValue2]\nFile path?", "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
+                if (fileAnswer == null) {
+                    return;
+                }
 
-                System.out.println("\nFile path?");
-                answer = scanner.nextLine();
 
                 try {
 
-                    boolean imported = PrintInformation.readQuizQuestions(quizArchive, answer);
-                    if (!imported) {
-                        System.out.println("A file was created because the path was not found.");
-                        creatingAQuiz(scanner, quizArchive, courseTitle);
-                        PrintInformation.writeQuizQuestions(quizArchive);
-                        var allQuizzes = quizArchive.getQuizzes();
-                        PrintInformation.writeImportedQuizQuestions(allQuizzes.get(allQuizzes.size() - 1), answer);
-                    } else
-                        System.out.println("Quiz imported!");
+                    String imported = PrintInformation.readQuizQuestions(quizArchive, fileAnswer, courseTitle);
+                    if (imported.equals("FileNotFound")) {
+                        JOptionPane.showMessageDialog(null,
+                                "Couldn't find file.", "Quiz Portal",
+                                JOptionPane.INFORMATION_MESSAGE);
+
+                    } else if (imported.equals("WrongFormat")) {
+                        JOptionPane.showMessageDialog(null, "File was written in a wrong format.",
+                                "Quiz Portal", JOptionPane.ERROR_MESSAGE);
+                    } else if (imported.equals("Duplicate")) {
+                        JOptionPane.showMessageDialog(null, "This quiz name already exists.",
+                                "Quiz Portal", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Quiz Imported!", "Quiz Portal",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
 
                 } catch (FileNotFoundException e) {
-                    System.out.println("Couldn't find file.");
-                } catch (IOException e) {
-                    System.out.println("File was written in a wrong format.");
-                } catch (InvalidCourseException e) {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null,
+                            "Couldn't find file.", "Quiz Portal",
+                            JOptionPane.ERROR_MESSAGE);
                 } catch (Exception e) {
-                    System.out.println("Wrong format.");
+                    JOptionPane.showMessageDialog(null, "File was written in a wrong format.",
+                            "Quiz Portal", JOptionPane.ERROR_MESSAGE);
                 }
 
 
@@ -215,7 +269,6 @@ public class TheQuizFunction {
         //Prints the quiz information in a notepad to save it before terminating the quiz portal.
         PrintInformation.writeQuizQuestions(quizArchive);
 
-        System.out.println("Thank you for using our quiz portal!");
 
     }
 
@@ -240,47 +293,23 @@ public class TheQuizFunction {
             }
 
         }
-        if (quiz != null)
-            System.out.println(quiz.randomizeQuestions(quiz)); //Randomizes the quiz
-        else
-            System.out.println("No questions found.");
-
-    }
-
-
-    /**
-     * A teacher launches a quiz to make it available for students
-     *
-     * @param title       = the title of the quiz to be launched.
-     * @param quizArchive = extract a single Quiz from the QuizArchive
-     */
-    public static void launchAQuiz(String title, QuizArchive quizArchive) {
-
-        var quizzes = quizArchive.getQuizzes(); //all quizzes
-
-        for (int i = 0; i < quizzes.size(); i++) {
-
-            if (quizzes.get(i).getName().equals(title)) {
-                quizzes.get(i).launchQuiz(); //sets quizIsReady to true
-                System.out.println("Quiz launched!");
-                return;
-            }
-        }
-
-        System.out.println("Quiz not found.");
+        if (quiz != null) {
+            quiz.randomizeQuestions(quiz); //Randomizes the quiz
+        } else
+            JOptionPane.showMessageDialog(null, "No questions found!", "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
 
     }
 
     /**
      * Modifies a quiz question, options, or title
      *
-     * @param scanner     = accepted user input
      * @param title       = title of the quiz to be modified.
      * @param quizArchive = the archive that contains the quizzes.
      * @return true if the modification was done successfully. Otherwise, false.
      * @throws InvalidQuizException if the quiz is not found, or the newOptions/newQuestion to be modified is not valid.
      */
-    public static boolean modifyAQuiz(Scanner scanner, String title, QuizArchive quizArchive, String courseTitle) throws InvalidQuizException {
+    public static boolean modifyAQuiz(String title, QuizArchive quizArchive, String courseTitle) throws InvalidQuizException {
 
         String answer; // user answers
         var quizzes = quizArchive.getQuizzes(); //all quizzes
@@ -296,21 +325,30 @@ public class TheQuizFunction {
         }
 
         if (check) {
-            System.out.println("Unavailable quiz.");
+            String unavailableQuiz = "Unavailable quiz.";
+            JOptionPane.showMessageDialog(null, unavailableQuiz, "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (!(quiz.getCourse().equals(courseTitle))) {
-            System.out.println("This quiz is not in this course.");
+            String wrongCourse = "This quiz is not in this course.";
+            JOptionPane.showMessageDialog(null, wrongCourse, "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        System.out.println("Do you want to change the quizz's title? (yes/no)");
-        answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to change the quiz title?", "Invalid input.");
-        if (answer.equals("Yes") || answer.equals("yes")) {
+        String changeTitle = "Do you want to change the quiz's title? (yes/no)";
+        int yesOrNo = JOptionPane.showConfirmDialog(null, changeTitle, "Quiz Portal",
+                JOptionPane.YES_NO_OPTION);
+        if (yesOrNo == JOptionPane.CANCEL_OPTION) {
+            return false;
+        }
+        if (yesOrNo == JOptionPane.YES_OPTION) {
 
-            System.out.println("Type the new title:");
-            answer = scanner.nextLine();
+            String newTitle = "Type the new title";
+            answer = JOptionPane.showInputDialog(null, newTitle, "Quiz Portal",
+                    JOptionPane.QUESTION_MESSAGE);
             quiz.setName(answer);
             var allQuizzes = quizArchive.getQuizzes();
 
@@ -318,19 +356,15 @@ public class TheQuizFunction {
                 PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
                 pw.print("");
             } catch (IOException e) {
-                System.out.println("Couldn't modify the quiz.");
+                String noModify = "Couldn't modify the quiz.";
+                JOptionPane.showMessageDialog(null, noModify, "Quiz Portal",
+                        JOptionPane.ERROR_MESSAGE);
             }
 
 
-            for (int i = 0; i < allQuizzes.size(); i++) {
-
-                if (!(allQuizzes.get(i).getRawScore().equals("NONE"))) {
-
-                    StudentAnish.writeScores(allQuizzes.get(i),allQuizzes.get(i).getTimeStamp());
-                }
-
-            }
-            System.out.println("Quiz name modified!");
+            StudentAnish.writeScores(quizArchive);
+            JOptionPane.showMessageDialog(null, "Quiz name modified!", "Quiz Portal",
+                    JOptionPane.INFORMATION_MESSAGE);
             return true;
         }
 
@@ -338,7 +372,7 @@ public class TheQuizFunction {
         if (size == 0)
             return false;
 
-        System.out.println("Question number you want to modify?");
+        String questionNumberModify = "Question number you want to modify?";
 
 
         String[] options = new String[size];
@@ -347,39 +381,61 @@ public class TheQuizFunction {
             options[i - 1] = "" + i;
 
         }
-        answer = inputChecker(scanner, options, "Question number you want to modify?", "Invalid question number.");
+        answer = (String) JOptionPane.showInputDialog(null, questionNumberModify, "Quiz Portal",
+                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if (answer == null) {
+            return false;
+        }
 
         int questionNumber = Integer.valueOf(answer);
 
-        System.out.println("Which one do you want to modify: ");
-        System.out.println("1. The question.");
-        System.out.println("2. The options.");
-        String temp = "Which one do you want to modify: \n1. The question.\n2. The options.";
 
-        answer = inputChecker(scanner, new String[]{"1", "2"}, temp, "Invalid input.");
+        String temp = "Which one do you want to modify: \n1. The question.\n2. The options.";
+        String[] whatModify = {"1", "2"};
+        answer = (String) JOptionPane.showInputDialog(null, temp, "Quiz Portal",
+                JOptionPane.QUESTION_MESSAGE, null, whatModify, whatModify[0]);
+        if (answer == null) {
+            return false;
+        }
 
         if (answer.equals("1")) {
 
-            System.out.println("Type the new question: ");
-            answer = scanner.nextLine();
-            System.out.println(quiz.modifyAQuestion(questionNumber, answer));
+            String newQuestion = "Type the new question:";
+            answer = JOptionPane.showInputDialog(null, newQuestion, "Quiz Portal",
+                    JOptionPane.QUESTION_MESSAGE);
+            quiz.modifyAQuestion(questionNumber, answer);
 
         } else if (answer.equals("2")) {
 
             String[] newOptions = new String[4];
             for (int i = 0; i < newOptions.length; i++) {
 
-                System.out.println("Option " + (i + 1) + ":");
-                newOptions[i] = (i + 1) + ". " + scanner.nextLine() + "\n";
+                String optionNumber = "Option " + (i + 1) + ":";
+                String newOption = JOptionPane.showInputDialog(null, optionNumber, "Quiz Portal",
+                        JOptionPane.QUESTION_MESSAGE);
+                if (newOption == null) {
+                    return false;
+                } else if (newOption.isBlank() || newOption.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Question cannot be blank!",
+                            "Quiz Portal", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                newOptions[i] = (i + 1) + ". " + newOption + "\n";
             }
 
             String[] correctAnswerOptions = {"1", "2", "3", "4"};
 
-            System.out.println("What's the correct answer?");
-            String correct = inputChecker(scanner, correctAnswerOptions, "What's the correct answer?",
-                    "Correct answers should be from 1 to 4.");
+            String correctAnswer = "What's the correct answer?";
+            String correct = (String) JOptionPane.showInputDialog(null, correctAnswer, "Quiz" +
+                            "Portal", JOptionPane.QUESTION_MESSAGE, null, correctAnswerOptions,
+                    correctAnswerOptions[0]);
+            if (correct == null) {
+                return false;
+            }
 
-            System.out.println(quiz.modifyOptionsOfAQuestion(questionNumber, newOptions, Integer.valueOf(correct)));
+            quiz.modifyOptionsOfAQuestion(questionNumber, newOptions, Integer.valueOf(correct));
+            JOptionPane.showMessageDialog(null, "Question modified!", "Quiz Portal",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         return true;
@@ -387,120 +443,13 @@ public class TheQuizFunction {
 
     }
 
-    /**
-     * Start a quiz by listing all the questions, options, and accepting student answers
-     *
-     * @param scanner     = gets the input.
-     * @param title       = the title of the quiz you would like to run.
-     * @param quizArchive = search for a particular quiz in the quizArchive.
-     * @return a string arrayList containing the answers of a particular student, or
-     * returns a message containing a description of the error.
-     */
-    public static void startAQuiz(Scanner scanner, String title, QuizArchive quizArchive) {
-
-        var quizzes = quizArchive.getQuizzes();
-        boolean check = false;
-        ArrayList<Integer> studentAnswers = new ArrayList<>();
-        Quiz quiz = null;
-        String answer;
-
-        for (int i = 0; i < quizzes.size(); i++) {
-
-            if (quizzes.get(i).getName().equals(title)) {
-
-                if (!quizzes.get(i).isQuizIsReady()) {
-                    System.out.println("Don't forget to launch the quiz");
-
-                }
-
-                check = true;
-
-                quiz = quizzes.get(i);
-
-                var questions = quiz.getQuestions();
-                var correctAnswer = quiz.getCorrectAnswers();
-
-
-                int questionNum = 1;
-
-                for (int j = 0; j < questions.size(); j++) {
-
-                    String wholeQuestion = questions.get(j);
-
-                    String question = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
-                    wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
-
-                    String option1 = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
-                    wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
-
-                    String option2 = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
-                    wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
-
-                    String option3 = wholeQuestion.substring(0, wholeQuestion.indexOf("^_^"));
-                    wholeQuestion = wholeQuestion.substring(wholeQuestion.indexOf("^_^") + 3);
-
-                    String option4 = wholeQuestion;
-
-                    System.out.println((questionNum++) + question.substring(1) + ":");
-                    System.out.print("1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1));
-
-                    System.out.print("Your answer: ");
-                    String[] options = {"1", "2", "3", "4"};
-                    answer = inputChecker(scanner, options, "Your answer: ", "Answer should be from 1 to 4.");
-
-                    studentAnswers.add(Integer.valueOf(answer));
-
-
-                }
-
-                SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds =
-                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                System.out.println("Quiz completed: " + yearMonthDaySpaceHoursMinutesSeconds.format(timestamp));
-                //Anish's code that prints a timestamp only when a student has COMPLETED a quiz which a student sees and which the teacher can access if needed.
-
-            }
-
-            if (check)
-                break;
-
-        }
-
-        if (!check) {
-            System.out.println("Couldn't start the quiz.");
-
-        }
-
-        if (quiz != null)
-            quiz.setStudentAnswers(studentAnswers);
-
-    }
-
-
 
     //Anushka's method
-    public static void viewStudentSubmission(Scanner scanner, QuizArchive quizArchive) throws FileNotFoundException {
-        String answer;
-        System.out.println("Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)");
-        String temp = "Do you want to view the submissions according to 1- the quiz name or 2- the student name? (1/2)";
-        String[] options = {"1", "2"};
-        answer = inputChecker(scanner, options, temp, "Invalid input.");
-        if (answer.equals("2")) {
-            System.out.println("What is the first name of the student? ");
-            String firstName = scanner.nextLine();
-            System.out.println("What is the last name of the student? ");
-            String lastName = scanner.nextLine();
-            readQuizByStudentName(firstName, lastName);
-        } else if (answer.equals("1")) {
-            System.out.println("What is the name of the quiz? ");
-            String quizName = scanner.nextLine();
-            readQuizByQuizName(quizName);
-        }
 
-    }
 
     //Zuhair's version
-    public static void viewStudentSubmissions(Scanner scanner, QuizArchive quizArchive, String course) throws FileNotFoundException {
+    public static void viewStudentSubmissions(QuizArchive quizArchive, String course) throws
+            FileNotFoundException {
 
         boolean check = true;
 
@@ -510,7 +459,10 @@ public class TheQuizFunction {
             if (quiz.getCourse().equals(course)) {
 
                 if (quiz.isTaken()) {
-                    System.out.println("Quiz name: " + quiz.getName());
+                    String everything = "";
+                    String allQuizzes = "Quiz name: " + quiz.getName();
+                    everything += allQuizzes + "\n";
+
                     check = false;
 
                     int counter = 0;
@@ -518,19 +470,24 @@ public class TheQuizFunction {
                     for (int j = 0; j < quiz.getStudentAnswers().size(); j++) {
 
                         int ans = quiz.getStudentAnswers().get(j);
-                        System.out.println("Question " + (++counter) + " answer: " + ans);
+                        String studentAnswers = "Question " + (++counter) + " answer: " + ans;
+
+                        everything += studentAnswers + "\n";
 
                     }
-                    System.out.println("Raw Score: " + quiz.getRawScore());
-                    System.out.println("Modified Score: " + quiz.getModifiedScore());
-                    System.out.println("Timestamp: " + quiz.getTimeStamp());
+                    String questionsCorrect = "Questions correct: " + quiz.getRawScore() + "\n";
+                    String score = "Score: " + quiz.getModifiedScore() + "\n";
+                    String timestamp = "Timestamp: " + quiz.getTimeStamp();
+                    JOptionPane.showMessageDialog(null, everything + questionsCorrect + score +
+                            timestamp, "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             }
 
         }
         if (check)
-            System.out.println("No submissions.");
+            JOptionPane.showMessageDialog(null, "No student submissions yet!", "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
 
 
     }
@@ -606,47 +563,50 @@ public class TheQuizFunction {
     /**
      * Creates a new quiz
      *
-     * @param scanner     = accepts input from the user
      * @param quizArchive = extract a single Quiz from the QuizArchive
      * @throws InvalidQuizException = throws an exception whenever a quiz with the given information
      *                              can't possibly be created.
      */
-    public static void creatingAQuiz(Scanner scanner, QuizArchive quizArchive, String courseTitle)
-                                     throws InvalidQuizException {
+    public static void creatingAQuiz(QuizArchive quizArchive, String courseTitle)
+            throws InvalidQuizException {
 
         String answer;
 
         Quiz temp = null;
         do {
 
-            System.out.println("Do you want to add a quiz? (yes/no)");
-            String[] standardChoices = {"Yes", "yes", "No", "no"};
-            answer = inputChecker(scanner, standardChoices, "Do you want to add a quiz?", "Invalid input.");
+            String addQuiz = "Do you want to add a quiz? (yes/no)";
 
-            if (answer.equals("No") || answer.equals("no"))
+            int yesOrNo = JOptionPane.showConfirmDialog(null, addQuiz, "Quiz Portal",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (yesOrNo == JOptionPane.NO_OPTION) {
                 break;
-            else {
+            } else {
 
-                System.out.println("How many numbers of questions?");
+                String numberOfQuestions = "How many numbers of questions?";
                 String[] questionNumberChoices = new String[120];
                 for (int i = 0; i < questionNumberChoices.length; i++) {
                     questionNumberChoices[i] = "" + (i + 1);
                 }
-                answer = inputChecker(scanner, questionNumberChoices, "How many numbers of questions?",
+                answer = inputChecker(questionNumberChoices, "How many numbers of questions?",
                         "Number of questions should be no more than 120 or less than 1.");
 
                 if (Integer.valueOf(answer) == 0) {
 
                     do {
-
-                        System.out.println("What's the quiz's title?");
-                        answer = scanner.nextLine();
+                        answer = JOptionPane.showInputDialog(null, "What's the quiz's title?",
+                                "Quiz Portal",
+                                JOptionPane.QUESTION_MESSAGE);
                         var allQuizzes = quizArchive.getQuizzes();
 
                         for (Quiz quiz : allQuizzes) {
                             if (quiz.getName().equals(answer)) {
                                 answer = "";
-                                System.out.println("The quiz title already exists.");
+                                JOptionPane.showMessageDialog(null, "The quiz title already " +
+                                                "exists!",
+                                        "Quiz Portal",
+                                        JOptionPane.ERROR_MESSAGE);
 
                             }
                         }
@@ -655,57 +615,67 @@ public class TheQuizFunction {
 
                     Quiz q1 = new Quiz(answer);
                     temp = q1;
-                    quizArchive.addQuizzes(q1);
+                    synchronized (sync) {
+                        quizArchive.addQuizzes(q1);
+                    }
 
-                    System.out.println("Do you want to add questions? (yes/no)");
-                    answer = inputChecker(scanner, new String[]{"Yes", "yes", "No", "no"}, "Do you want to add questions?", "Invalid input.");
-                    if (answer.equals("No") || answer.equals("no")) {
-                        System.out.println("An empty quiz was created.");
-                        break;
+                    String addQuestions = "Do you want to add questions? (yes/no)";
+                    int addNewQuestions = JOptionPane.showConfirmDialog(null, addQuestions,
+                            "Quiz Portal", JOptionPane.YES_NO_OPTION);
+                    if (addNewQuestions == JOptionPane.CLOSED_OPTION) {
+                        return;
+                    } else if (addNewQuestions == JOptionPane.NO_OPTION) {
+                        JOptionPane.showMessageDialog(null, "An empty quiz was created!",
+                                "Quiz Portal",
+                                JOptionPane.INFORMATION_MESSAGE);
                     } else {
 
-                        System.out.println("Type STOP to stop adding questions.");
+                        JOptionPane.showInputDialog(null, "Type STOP to stop adding questions!",
+                                "Quiz Portal",
+                                JOptionPane.INFORMATION_MESSAGE);
 
                         int numOfQuestions = 0;
 
                         while (true) {
-
-                            System.out.println("Question " + (++numOfQuestions) + ":");
-
                             do {
-                                answer = scanner.nextLine();
+
+                                answer = JOptionPane.showInputDialog(null, "Question " +
+                                                (++numOfQuestions) + ":",
+                                        "Quiz Portal",
+                                        JOptionPane.QUESTION_MESSAGE);
+
                                 if (answer.isBlank() || answer.isEmpty()) {
-                                    System.out.println("Type the question again:");
+                                    JOptionPane.showMessageDialog(null, "Type the question " +
+                                            "again!", "Quiz Portal", JOptionPane.ERROR_MESSAGE);
                                 } else {
                                     break;
                                 }
                             } while (true);
 
 
-                            if (answer.equals("STOP") || answer.equals("Stop") || answer.equals("stop"))
+                            if (answer.equalsIgnoreCase("STOP")) {
                                 break;
+                            }
 
                             String question = answer;
 
                             String[] options = new String[4];
                             for (int i = 0; i < options.length; i++) {
 
-                                System.out.println("Option " + (i + 1) + ":");
-                                String oneOption = "";
-                                do {
-                                    oneOption = scanner.nextLine();
-                                    if (!oneOption.isBlank() && !oneOption.isEmpty())
-                                        break;
-                                    System.out.println("The option is empty.");
-                                } while (true);
+                                String oneOption = JOptionPane.showInputDialog(null,
+                                        "Option " + (i + 1) + ":",
+                                        "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
+                                while (oneOption.isBlank() || oneOption.isEmpty()) {
+                                    JOptionPane.showMessageDialog(null, "The option is" +
+                                            "empty!", "Quiz Portal", JOptionPane.ERROR_MESSAGE);
+                                }
 
                                 options[i] = (i + 1) + ". " + oneOption + "\n";
                             }
 
                             String[] correctAnswerOptions = {"1", "2", "3", "4"};
 
-                            System.out.println("What's the correct answer?");
-                            String correct = inputChecker(scanner, correctAnswerOptions, "What's the correct answer?",
+                            String correct = inputChecker(correctAnswerOptions, "What's the correct answer?",
                                     "Correct answers should be from 1 to 4.");
 
                             q1.addOneQuestion(question, options, Integer.valueOf(correct));
@@ -719,13 +689,20 @@ public class TheQuizFunction {
 
                     do {
 
-                        System.out.println("What's the quiz's title?");
-                        answer = scanner.nextLine();
+                        String quizTitle = "What's the quiz's title?";
+                        answer = JOptionPane.showInputDialog(null, quizTitle, "Quiz Portal"
+                                , JOptionPane.QUESTION_MESSAGE);
+                        if (answer == null) {
+                            return;
+                        }
                         var allQuizzes = quizArchive.getQuizzes();
                         for (Quiz quiz : allQuizzes) {
                             if (quiz.getName().equals(answer)) {
                                 answer = "";
-                                System.out.println("The quiz title already exists.");
+                                JOptionPane.showMessageDialog(null, "The quiz title already " +
+                                                "exists!",
+                                        "Quiz Portal",
+                                        JOptionPane.ERROR_MESSAGE);
 
                             }
                         }
@@ -735,20 +712,28 @@ public class TheQuizFunction {
 
                     Quiz q1 = new Quiz(answer, numOfQuestions);
                     temp = q1;
-                    quizArchive.addQuizzes(q1);
+                    synchronized (sync) {
+                        quizArchive.addQuizzes(q1);
+                    }
 
 
                     for (int i = 0; i < numOfQuestions; i++) {
 
                         String[] options = new String[4];
 
-                        System.out.println("Question " + (i + 1) + ":");
+                        String questionNumber = "Question " + (i + 1) + ":";
 
                         String question = "";
                         do {
-                            question = scanner.nextLine();
+                            question = JOptionPane.showInputDialog(null, questionNumber, "Quiz Portal",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            if (question == null) {
+                                return;
+
+                            }
                             if (question.isBlank() || question.isEmpty()) {
-                                System.out.println("Type the question again:");
+                                JOptionPane.showMessageDialog(null, "Question cannot be blank!",
+                                        "Quiz Portal", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 break;
                             }
@@ -756,24 +741,35 @@ public class TheQuizFunction {
 
                         for (int j = 0; j < options.length; j++) {
 
-                            System.out.println("Option " + (j + 1) + ":");
-
+                            String optionNumber = "Option " + (j + 1) + ":";
                             String oneOption = "";
                             do {
-                                oneOption = scanner.nextLine();
+                                oneOption = JOptionPane.showInputDialog(null, optionNumber,
+                                        "Quiz Portal",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                if (oneOption == null) {
+                                    return;
+
+                                }
                                 if (!oneOption.isBlank() && !oneOption.isEmpty())
                                     break;
-                                System.out.println("The option is empty.");
+                                JOptionPane.showMessageDialog(null, "The option is empty!",
+                                        "Quiz Portal",
+                                        JOptionPane.ERROR_MESSAGE);
                             } while (true);
 
                             options[j] = (j + 1) + ". " + oneOption + "\n";
 
                         }
 
-                        System.out.println("What's the correct answer?");
+                        String correctAnswer = "What's the correct answer?";
                         String[] correctAnswerOptions = {"1", "2", "3", "4"};
-                        answer = inputChecker(scanner, correctAnswerOptions, "What's the correct answer?",
-                                "Correct answers should be from 1 to 4.");
+                        answer = (String) JOptionPane.showInputDialog(null, correctAnswer, "Quiz Portal",
+                                JOptionPane.QUESTION_MESSAGE, null, correctAnswerOptions, correctAnswerOptions[0]);
+                        if (answer == null) {
+                            return;
+
+                        }
                         q1.addOneQuestion(question, options, Integer.valueOf(answer));
 
                     }
@@ -787,12 +783,11 @@ public class TheQuizFunction {
 
                     }
 
-                    q1.initializePointValues(StudentAnish.assignPointValues(temp, scanner));
-                                            // Anish's method that asks a teacher the specific
-                                            // value for each question when they create a quiz
+                    q1.initializePointValues(StudentAnish.assignPointValues(temp));
+                    // Anish's method that asks a teacher the specific
+                    // value for each question when they create a quiz
 
                 }
-
 
 
             }
@@ -806,17 +801,17 @@ public class TheQuizFunction {
     /**
      * Checks for user input and make sure it's valid.
      *
-     * @param scanner      = accepts user input
      * @param choices      = the valid choices
      * @param question     = reprints the question again in case the input was invalid.
      * @param errorMessage = prints the given error message if the input was invalid.
      * @return a String that includes a valid option chosen by the user.
      */
-    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
+    public static String inputChecker(String[] choices, String question, String errorMessage) {
 
         do {
 
-            String input = scanner.nextLine();
+            String input = JOptionPane.showInputDialog(null, question, "Quiz Portal",
+                    JOptionPane.QUESTION_MESSAGE);
 
             if (input != null) {
                 for (int i = 0; i < choices.length; i++) {
@@ -824,8 +819,8 @@ public class TheQuizFunction {
                         return input;
                 }
             }
-            System.out.println(errorMessage);
-            System.out.println(question);
+            JOptionPane.showMessageDialog(null, errorMessage, "Quiz Portal",
+                    JOptionPane.ERROR_MESSAGE);
 
         } while (true);
 
