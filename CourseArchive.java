@@ -3,13 +3,11 @@ import java.util.ArrayList;
 
 /**
  * CourseArchive
- *
+ * <p>
  * saves all courses
  *
  * @author Anushka, Anish Ketha, Zuhair
- *
- * @version November 15, 2021
- *
+ * @version December 11, 2021
  */
 
 public class CourseArchive {
@@ -27,7 +25,13 @@ public class CourseArchive {
     public static ArrayList<Course> allCourses = new ArrayList<>();
 
     /**
+     * sync threads
+     */
+    private static Object sync = new Object();
+
+    /**
      * contructs courses
+     *
      * @throws InvalidCourseException = thrown when appropriate
      */
     public CourseArchive() throws InvalidCourseException {
@@ -40,8 +44,10 @@ public class CourseArchive {
             courses = new ArrayList<>();
         }
     }
+
     /**
      * contructs courses
+     *
      * @param course = to be added
      * @throws InvalidCourseException = thrown when appropriate
      */
@@ -53,6 +59,7 @@ public class CourseArchive {
 
 
     }
+
     //adds a course to the courseArchive
     public void addCourses(Course course) throws FileNotFoundException {
         allCourses.add(course);
@@ -60,14 +67,17 @@ public class CourseArchive {
     }
 
     public static void addStaticCourses(Course course) throws FileNotFoundException {
-        allCourses.add(course);
-        Teacher.writeCourses(allCourses);
+        synchronized (sync) {
+            allCourses.add(course);
+            Teacher.writeCourses(allCourses);
+        }
     }
 
     //method that allows teacher to see all the courses
     public ArrayList<Course> getCourses() {
         return allCourses;
     }
+
     //method which allows a teacher to delete an unwanted course
     public void deleteACourse(String titleOfTheCourse) throws FileNotFoundException {
 
