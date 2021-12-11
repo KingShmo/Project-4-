@@ -426,8 +426,8 @@ public class TheCourseFunction {
 
     //method for a person that is logged in as a teacher to create their own course to store quizzes
     // in which students access
-    public static void creatingACourse(String answer, Teacher teacher,
-                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+    public static void creatingACourse(String answer, Teacher teacher, int enrollmentCapacity)
+            throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         CourseArchive courseArchive = new CourseArchive();
         Course course = new Course(answer, teacher, enrollmentCapacity);
         synchronized (sync) {

@@ -204,14 +204,16 @@ public class StudentAnish {
                                     int length = chosenQuiz.getQuestions().size();
                                     String fileInstruction = "The file should have " + length + " answers, " +
                                             "following this format:\n" +
-                                            "[answerForQuestion1], [answerForQuestion2], 3, 4\n" + "What is the file path?\n";
+                                            "[answerForQuestion1], [answerForQuestion2], 3, 4\n" +
+                                            "What is the file path?\n";
 
                                     fileName = JOptionPane.showInputDialog(null, fileInstruction,
                                             quizName,
                                             JOptionPane.QUESTION_MESSAGE);
                                     if (fileName == null) {
-                                        JOptionPane.showMessageDialog(null, "Thank you for using " +
-                                                "the Quiz Portal!", "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(null,
+                                                "Thank you for using " + "the Quiz Portal!", "Quiz Portal",
+                                                JOptionPane.INFORMATION_MESSAGE);
                                         return;
                                     }
 
@@ -366,7 +368,8 @@ public class StudentAnish {
                         quiz.setRawScore(rawScore);
                         quiz.setModifiedScore(modifiedScore);
 
-                        pw.println(quiz.getName() + ";" + getScore(quiz) + ";" + getModifiedScore(quiz.getPointValues(), quiz)
+                        pw.println(quiz.getName() + ";" + getScore(quiz) + ";" +
+                                getModifiedScore(quiz.getPointValues(), quiz)
                                 + "," + quiz.getTimeStamp());
 
                         for (int i = 0; i < quiz.getQuestions().size(); i++) {
@@ -578,8 +581,8 @@ public class StudentAnish {
             do {
                 check = false;
                 try {
-                    points = Integer.parseInt(JOptionPane.showInputDialog(null, howMany, "Quiz Portal",
-                            JOptionPane.QUESTION_MESSAGE));
+                    points = Integer.parseInt(JOptionPane.showInputDialog(null, howMany,
+                            "Quiz Portal", JOptionPane.QUESTION_MESSAGE));
 
                 } catch (NumberFormatException e) {
                     String enterNumber = "Enter a number.";

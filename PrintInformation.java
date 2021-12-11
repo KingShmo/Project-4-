@@ -255,7 +255,8 @@ public class PrintInformation {
 
             for (int i = 0; i < allQuizQuestions.size(); i++) {
 
-                quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1), allQuizOptions.get(i), allCorrectAnswers.get(i));
+                quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1),
+                        allQuizOptions.get(i), allCorrectAnswers.get(i));
 
             }
 

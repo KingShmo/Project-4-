@@ -132,7 +132,8 @@ public class Student {
             for (int i = 0; i < fileContents.length(); i++) {
                 //if there is a username that is found that is the same, change username to delete account
                 if (fileContents.contains(username)) {
-                    fileContents = fileContents.replace("Username: " + username, "Username: deleteAccount");
+                    fileContents = fileContents.replace("Username: " + username,
+                            "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -262,7 +263,8 @@ public class Student {
         return "Your username has been changed!";
     }
 
-    public static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
+    public static String changePassword(String username, String oldPassword, String newPassword)
+            throws FileNotFoundException {
         //will be updated to show if username exists
         int usernameExist = 0;
         //updated to show if old password is correct
@@ -289,7 +291,8 @@ public class Student {
                     usernameExist = 1;
                     if (fileContents.contains("Password: " + oldPassword)) {
                         //now, if the old password exists, replace it with the new password
-                        fileContents = fileContents.replace("Password: " + oldPassword, "Password: " + newPassword);
+                        fileContents = fileContents.replace("Password: " + oldPassword,
+                                "Password: " + newPassword);
                         //show that the old password exists
                         oldPasswordExist = 1;
                     }
@@ -545,7 +548,8 @@ public class Student {
 
         for (int i = 0; i < allQuizQuestions.size(); i++) {
 
-            quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1), allQuizOptions.get(i), allCorrectAnswers.get(i));
+            quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1),
+                    allQuizOptions.get(i), allCorrectAnswers.get(i));
 
         }
 
@@ -607,7 +611,8 @@ public class Student {
      * @param quizArchive = retrieve the quizzes
      * @throws FileNotFoundException = thrown when the file is not found
      */
-    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course, QuizArchive quizArchive)
+    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course,
+                                                      QuizArchive quizArchive)
             throws FileNotFoundException {
 
 

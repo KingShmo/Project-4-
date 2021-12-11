@@ -83,7 +83,8 @@ public class Course {
      * @param teacher            = teacher to be assigned
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException, FileNotFoundException {
+    public Course(String name, Teacher teacher, int enrollmentCapacity) throws InvalidCourseException,
+            FileNotFoundException {
         this.name = name;
         this.courseTeacher = teacher;
         this.enrollmentCapacity = enrollmentCapacity;
@@ -102,7 +103,8 @@ public class Course {
      * @param studentsInThisCourse = students to be added for the course
      * @throws InvalidCourseException = throws an exception when there is 0 enrollment capacity for the course.
      */
-    public Course(String name, Teacher teacher, int enrollmentCapacity, ArrayList<Student> studentsInThisCourse) throws InvalidCourseException, FileNotFoundException {
+    public Course(String name, Teacher teacher, int enrollmentCapacity, ArrayList<Student> studentsInThisCourse)
+            throws InvalidCourseException, FileNotFoundException {
         this(name, teacher, enrollmentCapacity);
         this.studentsInThisCourse = studentsInThisCourse;
         if (enrollmentCapacity < 1)

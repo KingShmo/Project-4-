@@ -225,7 +225,8 @@ public class TheQuizFunction {
                         "The file should have the following format:\n Quiz Name\n1. Question:\n" +
                                 "1. Option1\n2. Option2\n3. Option3\n4. Option4\n" +
                                 "Correct Answers:\nQuestion 1:[numOfCorrectAnswer] Question 2:4\n" +
-                                "[pointValue1],[pointValue2]\nFile path?", "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
+                                "[pointValue1],[pointValue2]\nFile path?", "Quiz Portal",
+                        JOptionPane.QUESTION_MESSAGE);
                 if (fileAnswer == null) {
                     return;
                 }
@@ -309,7 +310,8 @@ public class TheQuizFunction {
      * @return true if the modification was done successfully. Otherwise, false.
      * @throws InvalidQuizException if the quiz is not found, or the newOptions/newQuestion to be modified is not valid.
      */
-    public static boolean modifyAQuiz(String title, QuizArchive quizArchive, String courseTitle) throws InvalidQuizException {
+    public static boolean modifyAQuiz(String title, QuizArchive quizArchive, String courseTitle)
+            throws InvalidQuizException {
 
         String answer; // user answers
         var quizzes = quizArchive.getQuizzes(); //all quizzes
@@ -528,7 +530,8 @@ public class TheQuizFunction {
 
     //Troy's method
     //Create method to find all quizzes taken by a student by searching and using their name
-    public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
+    public static ArrayList<String> readQuizByStudentName(String firstName, String lastName)
+            throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
@@ -725,8 +728,8 @@ public class TheQuizFunction {
 
                         String question = "";
                         do {
-                            question = JOptionPane.showInputDialog(null, questionNumber, "Quiz Portal",
-                                    JOptionPane.QUESTION_MESSAGE);
+                            question = JOptionPane.showInputDialog(null, questionNumber,
+                                    "Quiz Portal", JOptionPane.QUESTION_MESSAGE);
                             if (question == null) {
                                 return;
 
@@ -764,8 +767,9 @@ public class TheQuizFunction {
 
                         String correctAnswer = "What's the correct answer?";
                         String[] correctAnswerOptions = {"1", "2", "3", "4"};
-                        answer = (String) JOptionPane.showInputDialog(null, correctAnswer, "Quiz Portal",
-                                JOptionPane.QUESTION_MESSAGE, null, correctAnswerOptions, correctAnswerOptions[0]);
+                        answer = (String) JOptionPane.showInputDialog(null, correctAnswer,
+                                "Quiz Portal", JOptionPane.QUESTION_MESSAGE, null, correctAnswerOptions,
+                                correctAnswerOptions[0]);
                         if (answer == null) {
                             return;
 

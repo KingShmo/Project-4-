@@ -24,7 +24,8 @@ public class Application extends Thread {
     private static String enterUsername = "Enter your username.";
     private static String enterPassword = "Enter your password.";
     private static String takenUsername = "Sorry, this username is already taken. Please enter a different username";
-    private static String usernameDoesntExist = "Sorry, there is no user with this username. Please try again or Register.";
+    private static String usernameDoesntExist = "Sorry, there is no user with this username. " +
+            "Please try again or Register.";
     private static String passwordDoesntMatch = "Sorry, the password you entered doesn't match the username";
     private static String enterNewPassword = "Please enter the new password";
     private static String signInAgain = "Please Sign In again to confirm your password change";

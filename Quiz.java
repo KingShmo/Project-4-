@@ -322,7 +322,8 @@ public class Quiz {
      * @return a new question with modified options
      * @throws InvalidQuizException = thrown when appropriate
      */
-    public String modifyOptionsOfAQuestion(int questionNumber, String[] newOptions, int correctAnswer) throws InvalidQuizException {
+    public String modifyOptionsOfAQuestion(int questionNumber, String[] newOptions, int correctAnswer)
+            throws InvalidQuizException {
 
         if (questionNumber < 1)
             throw new InvalidQuizException("Question numbers should be greater than 1.");
@@ -725,7 +726,8 @@ public class Quiz {
 
 
             toBePrinted += (questionNum++) + question.substring(1) + ":\n";
-            toBePrinted += "1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1);
+            toBePrinted += "1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1)
+                    + "4" + option4.substring(1);
 
 
         }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Teacher class
- *
+ * <p>
  * Creates a representation for teacher. It assigns courses, name of the teacher
  * , and writes and reads from/to notepad files.
  *
@@ -317,7 +317,8 @@ public class Teacher {
      * }
      */
 
-    //find the account in the file by using the username and then delete the contents of that account and rewrite the file
+    //find the account in the file by using the username and then delete the contents
+    // of that account and rewrite the file
     public static String deleteAccount(String username) throws FileNotFoundException {
         int deleteAcc = 0;
         StringBuffer buffer = new StringBuffer();
@@ -335,7 +336,8 @@ public class Teacher {
         } else {
             for (int i = 0; i < fileContents.length(); i++) {
                 if (fileContents.contains(username)) {
-                    fileContents = fileContents.replace("Username: " + username, "Username: deleteAccount");
+                    fileContents = fileContents.replace("Username: " + username,
+                            "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -447,7 +449,8 @@ public class Teacher {
     }
 
     //change the password in a textfile by finding the username and old password, and then rewriting the whole file
-    public static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
+    public static String changePassword(String username, String oldPassword, String newPassword)
+            throws FileNotFoundException {
         int usernameExist = 0;
         int oldPasswordExist = 0;
         StringBuffer buffer = new StringBuffer();
@@ -491,7 +494,8 @@ public class Teacher {
     }
 
     //return quizzes by inputting a students name
-    public static ArrayList<String> readQuizByStudentName(String firstName, String lastName) throws FileNotFoundException {
+    public static ArrayList<String> readQuizByStudentName(String firstName, String lastName)
+            throws FileNotFoundException {
         ArrayList<String> allQuizInfo = new ArrayList<>();
         ArrayList<String> specificQuiz = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
