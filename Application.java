@@ -14,7 +14,7 @@ import java.util.*;
  * @version December 11, 2021
  */
 
-public class Application extends Thread {
+public class Application implements Runnable {
 
     private static String welcomeMessage = "Welcome to ClassroomClient!";
     private static String signInOrRegister = "Do you want to Sign-in or Register?";
@@ -152,7 +152,7 @@ public class Application extends Thread {
 
             Socket socket = serverSocket.accept();
             Application server = new Application(socket);
-            server.start();
+            new Thread(server).start();
 
 
         }
