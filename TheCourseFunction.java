@@ -95,6 +95,9 @@ public class TheCourseFunction {
                     }
                     try {
                         enrollmentCapacity = Integer.parseInt(enrollmentCapacityString);
+                        if (enrollmentCapacity < 1) {
+                            throw new NumberFormatException();
+                        }
                         break;
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "Invalid Input",
