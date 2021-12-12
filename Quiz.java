@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Scanner;
+
 
 /**
  * Quiz class
@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @author Zuhair Almansouri, lab sec L16
  * All code is done by Zuhair except for specific lines that
  * has a comment on them stating the author who wrote them.
- * @version November 15, 2021
+ * @version December 11, 2021
  */
 public class Quiz {
 
@@ -99,6 +99,7 @@ public class Quiz {
      * True if the questions should be randomized in each attempt, otherwise false.
      */
     private boolean randomize;
+
     /**
      * Allocates a new quiz object with its title.
      * Used in-case the teacher doesn't have questions to put, or
@@ -196,7 +197,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @return rawScore
      */
     public String getRawScore() {
@@ -204,7 +204,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @param r = new raw score
      */
     public void setRawScore(String r) {
@@ -212,7 +211,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @param t = new timestamp
      */
     public void setTimeStamp(String t) {
@@ -220,7 +218,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @param m = new modified score
      */
     public void setModifiedScore(String m) {
@@ -228,7 +225,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @return modifiedScore
      */
     public String getModifiedScore() {
@@ -236,7 +232,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @return timestamp
      */
     public String getTimeStamp() {
@@ -256,19 +251,23 @@ public class Quiz {
      * changes taken status
      */
     public void toggleTaken() {
-        taken = !taken;
+
+        taken = true;
+    }
+
+    public void removeTaken() {
+        taken = false;
     }
 
     /**
-     *
      * @return taken
      */
     public boolean isTaken() {
+
         return taken;
     }
 
     /**
-     *
      * @return courses
      */
     public String getCourse() {
@@ -276,7 +275,6 @@ public class Quiz {
     }
 
     /**
-     *
      * @param c = course to be added
      */
     public void assignCourse(String c) {
@@ -324,7 +322,8 @@ public class Quiz {
      * @return a new question with modified options
      * @throws InvalidQuizException = thrown when appropriate
      */
-    public String modifyOptionsOfAQuestion(int questionNumber, String[] newOptions, int correctAnswer) throws InvalidQuizException {
+    public String modifyOptionsOfAQuestion(int questionNumber, String[] newOptions, int correctAnswer)
+            throws InvalidQuizException {
 
         if (questionNumber < 1)
             throw new InvalidQuizException("Question numbers should be greater than 1.");
@@ -487,7 +486,6 @@ public class Quiz {
         ArrayList<String> newQuestions = new ArrayList<>();
 
 
-
         for (int i = 1; i < questionsNumbers.length; i++) {
 
             String oneQuestion = oldQuestions.get(questionsNumbers[i] - 1);
@@ -639,14 +637,15 @@ public class Quiz {
     }
 
     /**
-     *
      * @return randomize
      */
     public boolean getRandomize() {
         return randomize;
     }
+
     /**
      * get point values for the questions
+     *
      * @return pointValues
      */
     public int[] getPointValues() {
@@ -655,8 +654,9 @@ public class Quiz {
 
     /**
      * add scores
-     * @param username = student who has the score
-     * @param score = raw score
+     *
+     * @param username      = student who has the score
+     * @param score         = raw score
      * @param modifiedscore = modified score
      */
     public void addScore(String username, String score, String modifiedscore) {
@@ -671,14 +671,15 @@ public class Quiz {
     }
 
     /**
-     *
      * @return scores
      */
     public ArrayList<String> getScores() {
         return scores;
     }
+
     /**
      * initialize point values instance variable
+     *
      * @param p = point values that are copied
      */
     public void initializePointValues(int[] p) {
@@ -725,14 +726,14 @@ public class Quiz {
 
 
             toBePrinted += (questionNum++) + question.substring(1) + ":\n";
-            toBePrinted += "1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1) + "4" + option4.substring(1);
+            toBePrinted += "1" + option1.substring(1) + "2" + option2.substring(1) + "3" + option3.substring(1)
+                    + "4" + option4.substring(1);
 
 
         }
 
         return toBePrinted;
     }
-
 
 
     //Anish's method

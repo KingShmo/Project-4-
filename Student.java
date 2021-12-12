@@ -3,17 +3,19 @@ import java.util.ArrayList;
 
 /**
  * Student class
- *
+ * <p>
  * Represents a student. Assigns name and account information.
  * Writes and reads from/to txt files.
  *
  * @author Troy, Artemii, Anushka
- *
- *
- * @version November 15, 2021
- *
+ * @version December 11, 2021
  */
 public class Student {
+
+    /**
+     * sync threads
+     */
+    private static Object sync = new Object();
 
     private String firstName;
     private String lastName;
@@ -22,10 +24,16 @@ public class Student {
     static ArrayList<Student> students = new ArrayList<>();
     private ArrayList<String> scores;
 
+
     public Student(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         scores = new ArrayList<>();
+    }
+
+    public Student(String firstName, String lastName, String username) {
+        this(firstName, lastName);
+        this.username = username;
     }
 
     public Student(String firstName, String lastName, String username, String password) {
@@ -49,7 +57,9 @@ public class Student {
 
 
     public void addAStudent(Student student) {
-        students.add(student);
+        synchronized (sync) {
+            students.add(student);
+        }
     }
 
 
@@ -77,27 +87,30 @@ public class Student {
         this.password = password;
     }
 
+    //creates a student account by writing it
     public static void createAccount()
             throws FileNotFoundException {
-        //write to StudentAccounts.txt
-        FileOutputStream fos = new FileOutputStream("StudentAccounts.txt");
-        //create new print writer
-        PrintWriter pw = new PrintWriter(fos);
-        //write the name, username, and password of each account
+        synchronized (sync) {
+            //write to StudentAccounts.txt
+            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt");
+            //create new print writer
+            PrintWriter pw = new PrintWriter(fos);
+            //write the name, username, and password of each account
 
-        for (int i = 0; i < students.size(); i++) {
+            for (int i = 0; i < students.size(); i++) {
 
-            String firstName = students.get(i).getFirstName();
-            String lastName = students.get(i).getLastName();
-            String username = students.get(i).getUsername();
-            String password = students.get(i).getPassword();
+                String firstName = students.get(i).getFirstName();
+                String lastName = students.get(i).getLastName();
+                String username = students.get(i).getUsername();
+                String password = students.get(i).getPassword();
 
-            pw.println("Name: " + firstName + " " + lastName);
-            pw.println("Username: " + username);
-            pw.println("Password: " + password);
+                pw.println("Name: " + firstName + " " + lastName);
+                pw.println("Username: " + username);
+                pw.println("Password: " + password);
+            }
+            pw.flush();
+            pw.close();
         }
-        pw.flush();
-        pw.close();
     }
 
     public static String deleteAccount(String username) throws FileNotFoundException {
@@ -124,7 +137,8 @@ public class Student {
             for (int i = 0; i < fileContents.length(); i++) {
                 //if there is a username that is found that is the same, change username to delete account
                 if (fileContents.contains(username)) {
-                    fileContents = fileContents.replace("Username: " + username, "Username: deleteAccount");
+                    fileContents = fileContents.replace("Username: " + username,
+                            "Username: deleteAccount");
                     deleteAcc = 1;
                 }
             }
@@ -159,6 +173,7 @@ public class Student {
         return "Your account has been deleted!";
     }
 
+    //reads usernames and passwords
     public static ArrayList<String> getAllUsernamesAndPasswords() {
         ArrayList<String> fileContents = new ArrayList<>();
         ArrayList<String> allUsernames = new ArrayList<>();
@@ -253,7 +268,8 @@ public class Student {
         return "Your username has been changed!";
     }
 
-    public static String changePassword(String username, String oldPassword, String newPassword) throws FileNotFoundException {
+    public static String changePassword(String username, String oldPassword, String newPassword)
+            throws FileNotFoundException {
         //will be updated to show if username exists
         int usernameExist = 0;
         //updated to show if old password is correct
@@ -280,7 +296,8 @@ public class Student {
                     usernameExist = 1;
                     if (fileContents.contains("Password: " + oldPassword)) {
                         //now, if the old password exists, replace it with the new password
-                        fileContents = fileContents.replace("Password: " + oldPassword, "Password: " + newPassword);
+                        fileContents = fileContents.replace("Password: " + oldPassword,
+                                "Password: " + newPassword);
                         //show that the old password exists
                         oldPasswordExist = 1;
                     }
@@ -350,6 +367,7 @@ public class Student {
 
     /**
      * reads students from a file
+     *
      * @throws IOException = when an error occurs while reading
      */
     public static void readStudents() throws IOException {
@@ -391,7 +409,7 @@ public class Student {
      */
     public static void readStudentsScores() {
 
-        try(BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("StudentQuizzes.txt"))) {
 
             String line = br.readLine();
 
@@ -415,12 +433,10 @@ public class Student {
 
             for (int i = 0; i < allCourses.size(); i++) {
 
-                var allQuizzes =allCourses.get(i).getQuizzes();
-
+                var allQuizzes = allCourses.get(i).getQuizzes();
 
 
             }
-
 
 
         } catch (IOException e) {
@@ -428,12 +444,12 @@ public class Student {
         }
 
 
-
     }
 
 
     /**
      * read teachers from a file
+     *
      * @param teachers = store the teachers
      * @throws IOException = when an error occurs while reading
      */
@@ -467,7 +483,6 @@ public class Student {
             Teacher.addATeacher(teacher);
 
 
-
             line = br.readLine();
 
         }
@@ -478,8 +493,9 @@ public class Student {
 
     /**
      * Reads the quizzes from a file
+     *
      * @param quizArchive = store the quizzes in quizeArchive
-     * @throws IOException = When an error occurs while reading
+     * @throws IOException          = When an error occurs while reading
      * @throws InvalidQuizException = if the quiz is invalid
      */
     public static void readQuizQuestions(QuizArchive quizArchive) throws IOException, InvalidQuizException {
@@ -537,16 +553,20 @@ public class Student {
 
         for (int i = 0; i < allQuizQuestions.size(); i++) {
 
-            quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1), allQuizOptions.get(i), allCorrectAnswers.get(i));
+            quiz.addOneQuestion(allQuizQuestions.get(i).substring(3, allQuizQuestions.get(i).length() - 1),
+                    allQuizOptions.get(i), allCorrectAnswers.get(i));
 
         }
 
-        quizArchive.addQuizzes(quiz);
+        synchronized (sync) {
+            quizArchive.addQuizzes(quiz);
+        }
 
     }
 
     /**
      * Write questions and correct answers to a file
+     *
      * @param quizArchive = retrieve quizzes
      * @throws IOException = when an error occurs while writing or reading
      */
@@ -589,13 +609,15 @@ public class Student {
 
     /**
      * Write finished answers to a file
-     * @param firstName = student first name
-     * @param lastName = student last name
-     * @param course = their assigned course
+     *
+     * @param firstName   = student first name
+     * @param lastName    = student last name
+     * @param course      = their assigned course
      * @param quizArchive = retrieve the quizzes
      * @throws FileNotFoundException = thrown when the file is not found
      */
-    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course, QuizArchive quizArchive)
+    public static void writeFinishedQuizAnswersToFile(String firstName, String lastName, String course,
+                                                      QuizArchive quizArchive)
             throws FileNotFoundException {
 
 
@@ -625,9 +647,10 @@ public class Student {
 
     /**
      * Writes student answers to a file
-     * @param firstName = student first name
-     * @param lastName = student last name
-     * @param course = their assigned course
+     *
+     * @param firstName   = student first name
+     * @param lastName    = student last name
+     * @param course      = their assigned course
      * @param quizArchive = retrieve the quizzes
      * @throws FileNotFoundException = if the file is not found
      */
@@ -669,6 +692,7 @@ public class Student {
 
     }
 
+    //Check equals student objects
     public boolean equals(Object o) {
 
         if (this == o)
@@ -684,13 +708,13 @@ public class Student {
 
     public static void main(String[] args) {
         ArrayList<String> usersAndPass = getAllUsernamesAndPasswords();
-        for (int i = 0; i < usersAndPass.size(); i++) {
-            System.out.println(usersAndPass.get(i));
-        }
+
     }
+
+    //Finds a specific student from the arraylist
     public static Student findStudent(String username) {
-       return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse
-               (null);
+        return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse
+                (null);
     }
 
 }

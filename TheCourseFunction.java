@@ -1,62 +1,68 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.Scanner;
+
 
 /**
  * TheCourseFunction
  * <p>
  * Runs a course feature in a learning management system.
  *
- * @author Anushka Nilangekar
- * @version November 15, 2021
+ * @author Anushka Nilangekar, Zuhair, and Anish
+ * @version December 11, 2021
  */
-
 
 public class TheCourseFunction {
 
+    /**
+     * sync threads
+     */
+    private static Object sync = new Object();
+
     public static void main() throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
-        Scanner scanner = new Scanner(System.in);
 
 
     }
 
-
-
     //menu that only the teacher sees.
-    public static boolean courseFunctionMenu(String username, Scanner scanner) throws InvalidCourseException, InvalidQuizException,
-            IOException {
+    public static boolean courseFunctionMenu(String username, int[] quitProgram) throws Exception {
         String answer;
         String answer2;
+        String error;
+        String info;
+        String question;
+        ArrayList<String> allStudentsArrayList = new ArrayList<>();
         CourseArchive courseArchive = new CourseArchive();
 
         do {
-            System.out.println("Available Courses:");
             int x = 0;
+            String availableCourses = "";
             for (Course course : CourseArchive.allCourses) {
-                System.out.println((++x) + ". " + course.getName());
+                availableCourses += (++x) + ". " + course.getName() + "\n";
             }
 
             if (x == 0)
-                System.out.println("None.");
-
-            System.out.println("Select the action you want:");
-            System.out.println("1. Create a course");
-            System.out.println("2. Use quiz options for a course");
-            System.out.println("3. Add students to a course");
-            System.out.println("4. Modify course attributes-Course teacher/Course enrollment/Course name");
-            System.out.println("5. Delete a course");
-            System.out.println("6. Exit");
-            String temp = "Select the action you want:\n1. Create a course\n2. Use quiz options for the course\n3. " +
+                availableCourses = "None.";
+            String teacherCourseMenu = "\nSelect the action you want:\n1. Create a course\n2. " +
+                    "Use quiz options for the course\n3. " +
                     "Add students to a course\n4. Modify course attributes-Course teacher/Course enrollment/" +
                     "Course name\n5. Delete a course\n6. Exit";
             String[] options = {"1", "2", "3", "4", "5", "6"};
-            answer = inputChecker(scanner, options, temp, "Invalid input.");
+            answer = inputChecker(availableCourses, teacherCourseMenu, quitProgram);
+            if (answer == null) {
+                JOptionPane.showMessageDialog(null, "Thank you for using the Teacher Portal!",
+                        "Teacher Portal", JOptionPane.INFORMATION_MESSAGE);
+                quitProgram[0] = 1;
+                return false;
+            }
 
             if (answer.equals("1")) {
-                System.out.println("What's the course's title?");
-                answer = scanner.nextLine();
-
+                question = "What's the course's title?";
+                answer = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                if (quitProgram[0] == 1) {
+                    return false;
+                }
                 ArrayList<Course> courses = courseArchive.getCourses();
                 boolean courseExists = false;
                 for (int i = 0; i < courses.size(); i++) {
@@ -66,7 +72,8 @@ public class TheCourseFunction {
                     }
                 }
                 if (courseExists) {
-                    System.out.println("This course already exists!\n");
+                    JOptionPane.showMessageDialog(null, "This course already exists!",
+                            "Courses", JOptionPane.ERROR_MESSAGE);
                     break;
                 }
 
@@ -81,31 +88,39 @@ public class TheCourseFunction {
 
                 int enrollmentCapacity = 0;
                 do {
-
-                    System.out.println("What's the course's enrollment capacity?");
+                    question = "What's the course's enrollment capacity?";
+                    String enrollmentCapacityString = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                    if (quitProgram[0] == 1) {
+                        return false;
+                    }
                     try {
-                        enrollmentCapacity = scanner.nextInt();
-                        scanner.nextLine();
+                        enrollmentCapacity = Integer.parseInt(enrollmentCapacityString);
                         break;
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input!");
-                        scanner.nextLine();
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Invalid Input",
+                                "Courses", JOptionPane.ERROR_MESSAGE);
                     }
                 } while (true);
 
-                System.out.println("Course created!");
+                JOptionPane.showMessageDialog(null, "Course created!",
+                        "Courses", JOptionPane.INFORMATION_MESSAGE);
 
                 Course course = new Course(answer, assignedTeacher, enrollmentCapacity);
                 CourseArchive courseArchive1 = new CourseArchive();
-                courseArchive1.addCourses(course);
+                synchronized (sync) {
+                    courseArchive1.addCourses(course);
+                }
 
                 Teacher.writeCourses(CourseArchive.allCourses);
 
 
             } else if (answer.equals("2")) {
                 boolean courseExists = false;
-                System.out.println("What's the course's title?");
-                answer = scanner.nextLine();
+                question = "What's the course's title?";
+                answer = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                if (quitProgram[0] == 1) {
+                    return false;
+                }
 
                 ArrayList<Course> courses = courseArchive.getCourses();
 
@@ -114,21 +129,26 @@ public class TheCourseFunction {
                         courseExists = true;
                         Course course = courses.get(i);
                         if (!(courses.get(i).getCourseTeacher().getUsername().equals(username)))
-                            System.out.println("This course belongs to another teacher.");
+                            JOptionPane.showMessageDialog(null, "This course belongs to " +
+                                    "another teacher.", "Courses", JOptionPane.ERROR_MESSAGE);
                         else
                             course.callTheQuizFunction(answer);
                         break;
                     }
                 }
                 if (!courseExists) {
-                    System.out.println("This course does not exist!\n");
+                    error = "This course does not exist!";
+                    errorMessage(error);
                     break;
                 }
 
 
             } else if (answer.equals("3")) {
-                System.out.println("What's the title of the course to which you want to add the student?");
-                answer = scanner.nextLine();
+                question = "What's the title of the course to which you want to add the student?";
+                answer = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                if (quitProgram[0] == 1) {
+                    return false;
+                }
                 Course course = null;
                 ArrayList<Course> courses = courseArchive.getCourses();
                 boolean courseExists = false;
@@ -152,39 +172,55 @@ public class TheCourseFunction {
                         }
                     }
                 }
-                if (notAssignedTeacher) {
-                    System.out.println("You're not the assigned teacher for this course!");
+
+                if (!courseExists) {
+                    error = "This course does not exist!";
+                    errorMessage(error);
                     break;
                 }
-                if (!courseExists) {
-                    System.out.println("This course does not exist!\n");
+                if (notAssignedTeacher) {
+                    error = "You're not the assigned teacher for this course!";
+                    errorMessage(error);
                     break;
                 }
 
 
                 var allStudents = Student.getStudents();
                 if (allStudents.size() == 0) {
-                    System.out.println("No students available to be added to course! Please make sure students are " +
-                            "available and then try again.\n");
+                    error = "No students available to be added to course! Please make sure students are " +
+                            "available and then try again";
+                    errorMessage(error);
                     break;
                 }
-                System.out.println("Select the student:");
 
                 for (int i = 0; i < allStudents.size(); i++) {
-                    System.out.println((i + 1) + ". " + allStudents.get(i).getName());
+                    allStudentsArrayList.add((i + 1) + ". " + allStudents.get(i).getName() + "\n");
                 }
 
                 String studentNumber;
                 boolean check = false;
                 do {
                     check = false;
-                    studentNumber = scanner.nextLine();
+                    studentNumber = selectStudent(allStudentsArrayList, quitProgram);
+                    if (studentNumber == null) {
+                        JOptionPane.showMessageDialog(null, "Thank you for " +
+                                        "using the Teacher Portal!",
+                                "Teacher Portal", JOptionPane.INFORMATION_MESSAGE);
+                        quitProgram[0] = 1;
+                    }
+                    if (quitProgram[0] == 1) {
+                        return false;
+                    }
                     try {
-                        int num = Integer.parseInt(studentNumber);
+                        int num = 0;
+                        if (studentNumber != null) {
+                            num = Integer.parseInt(studentNumber);
+                        }
                         if (!(num >= 1 && num <= allStudents.size()))
                             check = true;
                     } catch (NumberFormatException e) {
                         check = true;
+
                     }
                 } while (check);
 
@@ -200,8 +236,8 @@ public class TheCourseFunction {
 
                         for (int j = 0; j < students.size(); j++) {
                             if (students.get(j).equals(student)) {
-
-                                System.out.println("This student is already added to the course!");
+                                error = "This student is already added to the course!";
+                                errorMessage(error);
                                 checkDuplicateStudents = false;
                                 break;
                             }
@@ -212,13 +248,17 @@ public class TheCourseFunction {
                 if (checkDuplicateStudents) {
                     course.addAStudentToTheCourse(student);
                     Teacher.writeCourses(CourseArchive.allCourses);
-                    System.out.println("Student added!");
+                    info = "Student added!";
+                    informationMessage(info);
                 }
 
             } else if (answer.equals("4")) {
                 boolean courseExists = false;
-                System.out.println("What's the title of the course whose details you want to modify?");
-                answer = scanner.nextLine();
+                question = "What's the title of the course whose details you want to modify?";
+                answer = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                if (quitProgram[0] == 1) {
+                    return false;
+                }
                 Course course = null;
                 ArrayList<Course> courses = courseArchive.getCourses();
 
@@ -231,37 +271,44 @@ public class TheCourseFunction {
                     }
                 }
                 if (!courseExists) {
-                    System.out.println("This course does not exist!\n");
+                    error = "This course does not exist!";
+                    errorMessage(error);
                     break;
                 }
 
                 do {
 
-
-                    System.out.println("Select the action you want:");
-                    System.out.println("1. Modify course name");
-                    System.out.println("2. Change course teacher");
-                    System.out.println("3. Modify course enrollment capacity");
-                    System.out.println("4. Exit");
-                    temp = "Select the action you want:\n1. Modify course name\n2. Change course teacher\n3. " +
-                            "Modify course enrollment capacity\n4. Exit";
-                    String[] options2 = {"1", "2", "3", "4"};
+                    String courseModificationMenu = "Select the action you want:\n1. Modify course name\n2. Change " +
+                            "course teacher\n3. Modify course enrollment capacity\n4. Exit";
                     String teacherAssignedCourse = answer;
-                    answer = inputChecker(scanner, options2, temp, "Invalid input.");
-
+                    answer = courseModification(courseModificationMenu, quitProgram);
+                    if (answer == null) {
+                        JOptionPane.showMessageDialog(null, "Thank you for using the " +
+                                        "Teacher Portal!",
+                                "Teacher Portal", JOptionPane.INFORMATION_MESSAGE);
+                        quitProgram[0] = 1;
+                        return false;
+                    }
 
                     if (answer.equals("1")) {
                         boolean checkAssignedTeacher = assignedTeacherChecker(courses, course.getName(), username);
                         if (checkAssignedTeacher) {
-                            System.out.println("What's the new course title?");
-                            answer2 = scanner.nextLine();
+                            question = "What's the new course title?";
+                            answer2 = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                            if (quitProgram[0] == 1) {
+                                return false;
+                            }
                             course.setName(answer2);
-                            System.out.println("Course name modified!");
+                            info = "Course name modified!";
+                            informationMessage(info);
                             Teacher.writeCourses(CourseArchive.allCourses);
                         }
                     } else if (answer.equals("2")) {
-                        System.out.println("What's the new course teacher's full name?");
-                        String teacherName = scanner.nextLine();
+                        question = "What's the new course teacher's full name?";
+                        String teacherName = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                        if (quitProgram[0] == 1) {
+                            return false;
+                        }
                         var allTeachers = Teacher.getTeachers();
                         Teacher teacher = null;
                         boolean found = false;
@@ -273,20 +320,35 @@ public class TheCourseFunction {
                             }
                         }
                         if (!found) {
-                            System.out.println("The teacher entered does not exist in the database!\n");
+                            error = "The teacher entered does not exist in the database!";
+                            errorMessage(error);
                             break;
                         }
                         course.setCourseTeacher(teacher);
-                        System.out.println("Course teacher changed!");
+                        info = "Course teacher changed!";
+                        informationMessage(info);
                         Teacher.writeCourses(CourseArchive.allCourses);
                     } else if (answer.equals("3")) {
                         boolean checkAssignedTeacher = assignedTeacherChecker(courses, course.getName(), username);
                         if (checkAssignedTeacher) {
-
-                            System.out.println("What's the new course enrollment capacity?");
-                            answer2 = scanner.nextLine();
-                            course.setEnrollmentCapacity(Integer.parseInt(answer2));
-                            System.out.println("Course enrollment capacity modified!");
+                            int loop = 0;
+                            do {
+                                loop = 0;
+                                question = "What's the new course enrollment capacity?";
+                                answer2 = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                                if (quitProgram[0] == 1) {
+                                    return false;
+                                }
+                                try {
+                                    course.setEnrollmentCapacity(Integer.parseInt(answer2));
+                                } catch (NumberFormatException e) {
+                                    JOptionPane.showMessageDialog(null, "Invalid Input",
+                                            "Courses", JOptionPane.ERROR_MESSAGE);
+                                    loop = 1;
+                                }
+                            } while (loop == 1);
+                            info = "Course enrollment capacity modified!";
+                            informationMessage(info);
                             Teacher.writeCourses(CourseArchive.allCourses);
                         }
                     } else if (answer.equals("4")) {
@@ -298,11 +360,14 @@ public class TheCourseFunction {
 
             } else if (answer.equals("5")) {
                 boolean courseExists = false;
-                System.out.println("What's the course's title?");
-                answer = scanner.nextLine();
+                question = "What's the course's title?";
+                answer = enterAnswerForCourseFunctionDialog(question, quitProgram);
+                if (answer == null) {
+                    quitProgram[0] = 1;
+                    return false;
+                }
 
                 ArrayList<Course> courses = courseArchive.getCourses();
-
 
 
                 for (int i = 0; i < courses.size(); i++) {
@@ -322,35 +387,33 @@ public class TheCourseFunction {
                             }
                         }
 
-                        courseArchive.deleteACourse(answer);
+                        synchronized (sync) {
+                            courseArchive.deleteACourse(answer);
+                        }
                         PrintInformation.writeQuizQuestions(new QuizArchive());
 
                         try {
                             PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
                             pw.print("");
                         } catch (IOException e) {
-                            System.out.println("Couldn't modify the quiz.");
+                            error = "Couldn't modify the quiz.";
+                            errorMessage(error);
                         }
 
                         var allQuizzes = new QuizArchive().getQuizzes();
 
-                        for (int j = 0; j < allQuizzes.size(); j++) {
-
-                            if (!(allQuizzes.get(j).getRawScore().equals("NONE"))) {
-
-                                StudentAnish.writeScores(allQuizzes.get(j),allQuizzes.get(j).getTimeStamp());
-                            }
-
-                        }
+                        StudentAnish.writeScores(new QuizArchive());
 
 
-                        System.out.println("Course deleted!");
+                        info = "Course deleted!";
+                        informationMessage(info);
                         Teacher.writeCourses(CourseArchive.allCourses);
                         break;
                     }
                 }
                 if (!courseExists) {
-                    System.out.println("The course to be deleted does not exist!\n");
+                    error = "The course to be deleted does not exist!";
+                    errorMessage(error);
                     break;
                 }
 
@@ -360,19 +423,24 @@ public class TheCourseFunction {
         } while (true);
         return true;
     }
+
     //method for a person that is logged in as a teacher to create their own course to store quizzes
     // in which students access
-    public static void creatingACourse(String answer, Teacher teacher,
-                                       int enrollmentCapacity) throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
+    public static void creatingACourse(String answer, Teacher teacher, int enrollmentCapacity)
+            throws InvalidCourseException, InvalidQuizException, FileNotFoundException {
         CourseArchive courseArchive = new CourseArchive();
         Course course = new Course(answer, teacher, enrollmentCapacity);
-        courseArchive.addCourses(course);
+        synchronized (sync) {
+            courseArchive.addCourses(course);
+        }
 
     }
 
+    //assigns teacher
     public static boolean assignedTeacherChecker(ArrayList<Course> courses, String answer, String username) {
 
         Teacher tempTeacher = null;
+        String error;
         boolean notAssignedTeacher = true;
         for (int i = 0; i < courses.size(); i++) {
             if (courses.get(i).getName().equals(answer)) {
@@ -384,7 +452,8 @@ public class TheCourseFunction {
             }
         }
         if (notAssignedTeacher) {
-            System.out.println("You're not the assigned teacher for this course!");
+            error = "You're not the assigned teacher for this course!";
+            errorMessage(error);
             return false;
         }
 
@@ -392,24 +461,91 @@ public class TheCourseFunction {
 
     }
 
-    public static String inputChecker(Scanner scanner, String[] choices, String question, String errorMessage) {
-
+    //checks for input
+    public static String inputChecker(String courses, String prompt, int[] quitProgram) {
         do {
-
-            String input = scanner.nextLine();
-
-            if (input != null) {
-                for (int i = 0; i < choices.length; i++) {
-                    if (input.equals(choices[i]))
-                        return input;
-                }
+            String option;
+            String[] optionList = {"1", "2", "3", "4", "5", "6"};
+            option = (String) JOptionPane.showInputDialog(null, "Available Courses:\n"
+                            + courses + prompt, "Teacher Portal", JOptionPane.QUESTION_MESSAGE, null,
+                    optionList,
+                    optionList[0]);
+            if (option == null) {
+                quitProgram[0] = 1;
+                return null;
+            } else {
+                return option;
             }
-            System.out.println(errorMessage);
-            System.out.println(question);
-
-
         } while (true);
+    }
 
+    //prompts for courses modification
+    public static String courseModification(String prompt, int[] quitProgram) {
+        do {
+            String option;
+            String[] optionList = {"1", "2", "3", "4"};
+            option = (String) JOptionPane.showInputDialog(null, prompt,
+                    "Courses", JOptionPane.QUESTION_MESSAGE, null, optionList, optionList[0]);
+            if (option == null) {
+                quitProgram[0] = 1;
+                return null;
+            } else {
+                return option;
+            }
+        } while (true);
+    }
+
+    //select a specific student from the arraylist
+    public static String selectStudent(ArrayList<String> students, int[] quitProgram) {
+        do {
+            String option;
+            String optionNumber;
+            String[] optionList = new String[students.size()];
+            for (int i = 0; i < students.size(); i++) {
+                optionList[i] = students.get(i);
+            }
+            option = (String) JOptionPane.showInputDialog(null, "Select the student:",
+                    "Courses", JOptionPane.QUESTION_MESSAGE, null, optionList, optionList[0]);
+            if (option == null) {
+                quitProgram[0] = 1;
+                return null;
+            } else {
+                optionNumber = option.substring(0, 1);
+                return optionNumber;
+            }
+        } while (true);
+    }
+
+    //prompts error message
+    public static void errorMessage(String error) {
+        JOptionPane.showMessageDialog(null, error, "Courses", JOptionPane.ERROR_MESSAGE);
+    }
+
+    //prompts info message
+    public static void informationMessage(String info) {
+        JOptionPane.showMessageDialog(null, info, "Courses", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    //prompts course answers
+    public static String enterAnswerForCourseFunctionDialog(String question, int[] quitProgram) {
+        String answer;
+        int loop = 0;
+        do {
+            loop = 0;
+            answer = JOptionPane.showInputDialog(null, question,
+                    "Courses", JOptionPane.QUESTION_MESSAGE);
+            //if user wants to exit the program
+            if (answer == null) {
+                JOptionPane.showMessageDialog(null, "Thank you for using the Teacher Portal!",
+                        "Teacher Portal", JOptionPane.INFORMATION_MESSAGE);
+                quitProgram[0] = 1;
+            } else if (answer.isBlank()) {
+                JOptionPane.showMessageDialog(null, "Answer cannot be empty!",
+                        "Courses", JOptionPane.ERROR_MESSAGE);
+                loop = 1;
+            }
+        } while (loop == 1);
+        return answer;
     }
 
 
