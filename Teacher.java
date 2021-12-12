@@ -201,7 +201,6 @@ public class Teacher {
                     course = new Course(courseName, teacher, enrollment, students);
 
                 }
-                System.out.println(course.getStudentsInThisCourse());
 
                 course.assignStudentUsernames();
                 QuizArchive quizArchive = new QuizArchive();
