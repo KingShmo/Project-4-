@@ -193,15 +193,16 @@ public class TheCourseFunction {
                     break;
                 }
 
+                var stuList = new ArrayList<String>();
                 for (int i = 0; i < allStudents.size(); i++) {
-                    allStudentsArrayList.add((i + 1) + ". " + allStudents.get(i).getName() + "\n");
+                    stuList.add((i + 1) + ". " + allStudents.get(i).getName() + "\n");
                 }
 
                 String studentNumber;
                 boolean check = false;
                 do {
                     check = false;
-                    studentNumber = selectStudent(allStudentsArrayList, quitProgram);
+                    studentNumber = selectStudent(stuList, quitProgram);
                     if (studentNumber == null) {
                         JOptionPane.showMessageDialog(null, "Thank you for " +
                                         "using the Teacher Portal!",
