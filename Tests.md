@@ -118,3 +118,4 @@ Steps:
 Expected result: Application successfully deletes the selected course and takes the teacher back to the Teacher Portal menu automatically.
 
 Test Status: Passed. 
+
