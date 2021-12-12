@@ -269,10 +269,8 @@ public class Teacher {
     public static void createAccount() throws IOException {
 
         synchronized (sync) {
+
             FileOutputStream fos = new FileOutputStream("TeacherAccounts.txt");
-            StringBuilder courses = new StringBuilder();
-            BufferedReader br = new BufferedReader(new FileReader("TeacherAccounts.txt"));
-            String line = br.readLine();
             PrintWriter pw = new PrintWriter(fos);
 
 
@@ -286,9 +284,9 @@ public class Teacher {
                 pw.println("Name: " + firstName + " " + lastName);
                 pw.println("Username: " + username);
                 pw.println("Password: " + password);
+                pw.flush();
 
             }
-            pw.flush();
             pw.close();
         }
 

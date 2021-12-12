@@ -452,26 +452,24 @@ public class Application implements Runnable {
      * @param quitProgram to check if the user quits
      * @throws Exception
      */
-    public static void changePasswordTeacher(int[] quitProgram) throws Exception {
+    public static void changePasswordTeacher(int[] quitProgram, String username) throws Exception {
+
         for (Teacher item : teachers) {
-            String newPassword = enterNewPasswordDialog(quitProgram);
-            if (newPassword == null) {
-                quitProgram[0] = 1;
-                return;
+            if (item.getUsername().equals(username)) {
+                String newPassword = enterNewPasswordDialog(quitProgram);
+                if (newPassword == null) {
+                    quitProgram[0] = 1;
+                    return;
+                }
+
+                item.setPassword(newPassword);
+                Teacher.createAccount();
+
+                JOptionPane.showMessageDialog(null, "Success!",
+                        "Change Password", JOptionPane.INFORMATION_MESSAGE);
+                signIn(quitProgram);
+                break;
             }
-            String oldPassword = item.getPassword();
-            //Teacher teacher = new Teacher(null, null, username, oldPassword);
-            //teacher.changePassword(username, oldPassword, newPassword);
-            item.setPassword(newPassword);
-            Teacher.createAccount();
-            //Teacher teacher = new Teacher(null, null, username, oldPassword);
-            //teacher.changePassword(username, oldPassword, newPassword);
-            item.setPassword(newPassword);
-            Teacher.createAccount();
-            JOptionPane.showMessageDialog(null, "Success!",
-                    "Change Password", JOptionPane.INFORMATION_MESSAGE);
-            signIn(quitProgram);
-            break;
         }
     }
 
@@ -621,7 +619,7 @@ public class Application implements Runnable {
                     quitProgram[0] = 1;
                     return;
                 } else if (choice.equals("1")) {
-                    changePasswordTeacher(quitProgram);
+                    changePasswordTeacher(quitProgram, username);
                     break;
                 } else if (choice.equals("2")) {
                     deleteAccountTeacher(username, quitProgram);
