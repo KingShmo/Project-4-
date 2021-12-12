@@ -31,6 +31,11 @@ public class Student {
         scores = new ArrayList<>();
     }
 
+    public Student(String firstName, String lastName, String username) {
+        this(firstName, lastName);
+        this.username = username;
+    }
+
     public Student(String firstName, String lastName, String username, String password) {
         this(firstName, lastName);
         this.username = username;

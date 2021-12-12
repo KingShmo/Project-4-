@@ -112,7 +112,8 @@ public class Teacher {
                     //String studentFirstName = courses.get(i).getStudentsInThisCourse().get(j).getFirstName();
                     //String studentLastName = courses.get(i).getStudentsInThisCourse().get(j).getLastName();
                     String name = courses.get(i).getStudentsInThisCourse().get(j).getName();
-                    listStudents.add(name);
+                    String username = courses.get(i).getStudentsInThisCourse().get(j).getUsername();
+                    listStudents.add(name + " " + username);
                 }
                 String allStudents = "";
                 for (int j = 0; j < listStudents.size(); j++) {
@@ -185,8 +186,10 @@ public class Teacher {
 
                         String name = line.substring(0, temp);
                         String fname = name.substring(0, name.indexOf(" "));
-                        String lname = name.substring(name.indexOf(" ") + 1);
-                        students.add(new Student(fname, lname));
+                        name = name.substring(name.indexOf(" ") + 1);
+                        String lname = name.substring(0, name.indexOf(" "));
+                        String studentUsername = name.substring(name.indexOf(" ") + 1);
+                        students.add(new Student(fname, lname, studentUsername));
 
                         if (line.indexOf(",") == -1)
                             check = false;
@@ -198,6 +201,7 @@ public class Teacher {
                     course = new Course(courseName, teacher, enrollment, students);
 
                 }
+                System.out.println(course.getStudentsInThisCourse());
 
                 course.assignStudentUsernames();
                 QuizArchive quizArchive = new QuizArchive();
