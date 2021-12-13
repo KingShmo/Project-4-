@@ -559,8 +559,7 @@ public class Student {
 
     //Finds a specific student from the arraylist
     public static Student findStudent(String username) {
-        return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse
-                (null);
+        return students.stream().filter(student -> student.getUsername().equals(username)).findFirst().orElse(null);
     }
 
 }
