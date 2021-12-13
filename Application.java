@@ -607,6 +607,7 @@ public class Application implements Runnable {
      * @throws Exception
      */
     public static void menuTeacher(String username, int[] quitProgram) throws Exception {
+
         try {
             while (true) {
                 quitProgram[0] = 0;

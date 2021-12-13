@@ -52,6 +52,11 @@ public class Quiz {
      * if the quiz is taken or not
      */
     private boolean taken;
+    /**
+     * student who took the quiz
+     */
+    private String student;
+
     private ArrayList<Student> students;
     /**
      * Students answers
@@ -208,6 +213,22 @@ public class Quiz {
      */
     public void setRawScore(String r) {
         this.rawScore = r;
+    }
+
+    /**
+     *
+     * @param s = new student
+     */
+    public void setStudent(String s) {
+        student = s;
+    }
+
+    /**
+     *
+     * @return student's username
+     */
+    public String getStudent() {
+        return student;
     }
 
     /**

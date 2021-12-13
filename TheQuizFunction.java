@@ -146,12 +146,15 @@ public class TheQuizFunction {
 
                 }
 
-                JOptionPane.showMessageDialog(null, allQuizzes,
-                        "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
-
-                if (x == 0)
+                if (x == 0) {
                     JOptionPane.showMessageDialog(null, "There are no quizzes available!",
                             "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, allQuizzes,
+                            "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+
             } else if (answer.equals("6")) {
                 String quizDelete = "Which quiz do you want to delete?\n";
                 int x = 0;
@@ -165,59 +168,64 @@ public class TheQuizFunction {
                     }
                 }
 
+                if (quizzesToBeDeleted.size() == 0) {
+                    JOptionPane.showMessageDialog(null, "There are no quizzes.",
+                            "Quiz Portal", JOptionPane.INFORMATION_MESSAGE);
+                } else {
 
-                String[] choices = new String[quizzesToBeDeleted.size()];
-                for (int i = 0; i < choices.length; i++) {
-                    choices[i] = "" + (i + 1);
-                }
+                    String[] choices = new String[quizzesToBeDeleted.size()];
+                    for (int i = 0; i < choices.length; i++) {
+                        choices[i] = "" + (i + 1);
+                    }
 
-                String quizDeleted = (String) JOptionPane.showInputDialog(null, quizDelete,
-                        "Quiz Portal",
-                        JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
-                if (quizDeleted == null) {
-                    return;
+                    String quizDeleted = (String) JOptionPane.showInputDialog(null, quizDelete,
+                            "Quiz Portal",
+                            JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+                    if (quizDeleted == null) {
+                        return;
 
-                }
+                    }
 
-                Quiz quiz = quizzesToBeDeleted.get(Integer.valueOf(quizDeleted) - 1);
+                    Quiz quiz = quizzesToBeDeleted.get(Integer.valueOf(quizDeleted) - 1);
 
-                for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
-                    Course course = CourseArchive.allCourses.get(i);
-                    var courseQuizzes = course.getQuizzes();
-                    for (int j = 0; j < courseQuizzes.size(); j++) {
-                        if (courseQuizzes.get(j).getName().equals(quiz.getName())) {
-                            courseQuizzes.remove(j);
-                            i = CourseArchive.allCourses.size();
+                    for (int i = 0; i < CourseArchive.allCourses.size(); i++) {
+                        Course course = CourseArchive.allCourses.get(i);
+                        var courseQuizzes = course.getQuizzes();
+                        for (int j = 0; j < courseQuizzes.size(); j++) {
+                            if (courseQuizzes.get(j).getName().equals(quiz.getName())) {
+                                courseQuizzes.remove(j);
+                                i = CourseArchive.allCourses.size();
+                                break;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
+                        Quiz q = quizArchive.getQuizzes().get(i);
+                        if (q.getName().equals(quiz.getName())) {
+                            quizArchive.getQuizzes().remove(i);
                             break;
                         }
                     }
-                }
 
-                for (int i = 0; i < quizArchive.getQuizzes().size(); i++) {
-                    Quiz q = quizArchive.getQuizzes().get(i);
-                    if (q.getName().equals(quiz.getName())) {
-                        quizArchive.getQuizzes().remove(i);
-                        break;
+                    try {
+                        PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
+                        pw.print("");
+                    } catch (IOException e) {
+                        String noModify = "Couldn't modify the quiz.";
+                        JOptionPane.showMessageDialog(null, noModify, "Quiz Portal",
+                                JOptionPane.ERROR_MESSAGE);
                     }
+
+                    var allQuizzes = quizArchive.getQuizzes();
+
+                    StudentAnish.writeScores(quizArchive);
+
+                    String quizRemoved = "Quiz removed!";
+                    JOptionPane.showMessageDialog(null, quizRemoved, "Quiz Portal",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    PrintInformation.writeQuizQuestions(quizArchive);
                 }
-
-                try {
-                    PrintWriter pw = new PrintWriter(new FileWriter("StudentQuizzes.txt"));
-                    pw.print("");
-                } catch (IOException e) {
-                    String noModify = "Couldn't modify the quiz.";
-                    JOptionPane.showMessageDialog(null, noModify, "Quiz Portal",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-                var allQuizzes = quizArchive.getQuizzes();
-
-                StudentAnish.writeScores(quizArchive);
-
-                String quizRemoved = "Quiz removed!";
-                JOptionPane.showMessageDialog(null, quizRemoved, "Quiz Portal",
-                        JOptionPane.INFORMATION_MESSAGE);
-                PrintInformation.writeQuizQuestions(quizArchive);
 
             } else if (answer.equals("7")) {
 
