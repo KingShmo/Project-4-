@@ -114,7 +114,6 @@ public class Student {
     }
 
 
-
     //reads usernames and passwords
     public static ArrayList<String> getAllUsernamesAndPasswords() {
         ArrayList<String> fileContents = new ArrayList<>();
@@ -168,9 +167,6 @@ public class Student {
         }
         return null;
     }
-
-
-
 
 
     //if program has error, run function to save answers

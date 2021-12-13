@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 public class TimeStamp {
 
     //Simulates the date of quiz completion
-    private static final SimpleDateFormat yearMonthDaySpaceHoursMinutesSeconds = new SimpleDateFormat(
+    private static final SimpleDateFormat DATE = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss");
 
 

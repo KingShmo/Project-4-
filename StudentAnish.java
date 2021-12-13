@@ -92,13 +92,13 @@ public class StudentAnish {
             courseList[z] = (z + 1) + ". Exit";
 
             if (z == 0) {
-                courseChoice = (String) JOptionPane.showInputDialog(null, noCourses, Student.
-                                findStudent(username).getFirstName() + "'s Courses",
+                courseChoice = (String) JOptionPane.showInputDialog(null, noCourses,
+                        Student.findStudent(username).getFirstName() + "'s Courses",
                         JOptionPane.INFORMATION_MESSAGE, null, courseList, courseList[0]);
 
             } else {
-                courseChoice = (String) JOptionPane.showInputDialog(null, welcomeMenu, Student.
-                                findStudent(username).getFirstName() + "'s Courses", JOptionPane.QUESTION_MESSAGE,
+                courseChoice = (String) JOptionPane.showInputDialog(null, welcomeMenu,
+                        Student.findStudent(username).getFirstName() + "'s Courses", JOptionPane.QUESTION_MESSAGE,
                         null, courseList, courseList[0]);
             }
 
@@ -277,8 +277,8 @@ public class StudentAnish {
                                 String score = "Score: " + quizzes.get(j).getModifiedScore() + "\n";
                                 String timeStamp = "Timestamp: " + quizzes.get(j).getTimeStamp() + "\n";
                                 JOptionPane.showMessageDialog(null, nameOfQuiz +
-                                                questionsCorrect + score + timeStamp, Student.
-                                                findStudent(username).getFirstName() + "'s Quiz Grades",
+                                                questionsCorrect + score + timeStamp,
+                                        Student.findStudent(username).getFirstName() + "'s Quiz Grades",
                                         JOptionPane.INFORMATION_MESSAGE);
 
                             }
