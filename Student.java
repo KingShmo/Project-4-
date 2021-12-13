@@ -113,65 +113,7 @@ public class Student {
         }
     }
 
-    public static String deleteAccount(String username) throws FileNotFoundException {
-        //
-        int deleteAcc = 0;
-        //create string buffer
-        StringBuffer buffer = new StringBuffer();
-        //read the lines within the file
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                //add the lines to a String Buffer
-                buffer.append(line + " \n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //convert the String buffer to a String
-        String fileContents = buffer.toString();
-        //if file empty, return
-        if (buffer.isEmpty()) {
-            return "No student accounts have been created.";
-        } else {
-            for (int i = 0; i < fileContents.length(); i++) {
-                //if there is a username that is found that is the same, change username to delete account
-                if (fileContents.contains(username)) {
-                    fileContents = fileContents.replace("Username: " + username,
-                            "Username: deleteAccount");
-                    deleteAcc = 1;
-                }
-            }
-            //if no username found when trying to delete account, then username that was input was wrong
-            if (deleteAcc != 1) {
-                return "Please input correct username";
-            }
-            //split the fileContents string into an array by the "\n" which separateds different accounts
-            String[] splitContents = fileContents.split("\n");
-            ArrayList<String> stringArrayList = new ArrayList<>();
-            for (int i = 0; i < splitContents.length; i++) {
-                //add contents of array to new arraylist so the arraylist size can be changed
-                stringArrayList.add(splitContents[i]);
-            }
-            for (int i = 0; i < stringArrayList.size(); i++) {
-                if (stringArrayList.get(i).contains("Username: deleteAccount")) {
-                    //delete the information from that account
-                    stringArrayList.remove(i + 2);
-                    stringArrayList.remove(i + 1);
-                    stringArrayList.remove(i);
-                    stringArrayList.remove(i - 1);
-                }
-            }
-            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
-            PrintWriter pw = new PrintWriter(fos);
-            for (int i = 0; i < stringArrayList.size(); i++) {
-                //write the new array list to the file
-                pw.println(stringArrayList.get(i));
-            }
-            pw.flush();
-        }
-        return "Your account has been deleted!";
-    }
+
 
     //reads usernames and passwords
     public static ArrayList<String> getAllUsernamesAndPasswords() {
@@ -227,101 +169,9 @@ public class Student {
         return null;
     }
 
-    public static String changeUsername(String oldUsername, String newUsername) throws FileNotFoundException {
-        int usernameExist = 0;
-        //create string buffer to add lines from file
-        StringBuffer buffer = new StringBuffer();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                //add lines to the buffer
-                buffer.append(line + " \n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //set the string buffer to a string
-        String fileContents = buffer.toString();
-        if (buffer.isEmpty()) {
-            return "No student accounts have been created.";
-        } else {
-            for (int i = 0; i < fileContents.length(); i++) {
-                if (fileContents.contains(oldUsername)) {
-                    //replace the old username with the new username in the file
-                    fileContents = fileContents.replace(oldUsername, newUsername);
-                    usernameExist = 1;
-                }
-            }
-            if (usernameExist != 1) {
-                return "Your current username does not exist.";
-            }
-            //split the contents by the "\n" that separates different accounts
-            String[] splitContents = fileContents.split("\n");
-            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
-            PrintWriter pw = new PrintWriter(fos);
-            for (int i = 0; i < splitContents.length; i++) {
-                //rewrite all the new accounts
-                pw.println(splitContents[i]);
-            }
-            pw.flush();
-        }
-        return "Your username has been changed!";
-    }
 
-    public static String changePassword(String username, String oldPassword, String newPassword)
-            throws FileNotFoundException {
-        //will be updated to show if username exists
-        int usernameExist = 0;
-        //updated to show if old password is correct
-        int oldPasswordExist = 0;
-        //create string buffer
-        StringBuffer buffer = new StringBuffer();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("StudentAccounts.txt"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                //add line to string buffer
-                buffer.append(line + " \n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String fileContents = buffer.toString();
-        //if the txt file was empty
-        if (buffer.isEmpty()) {
-            return "No student accounts have been created.";
-        } else {
-            for (int i = 0; i < fileContents.length(); i++) {
-                if (fileContents.contains(username)) {
-                    //show that username exists and if it exists try look for old password
-                    usernameExist = 1;
-                    if (fileContents.contains("Password: " + oldPassword)) {
-                        //now, if the old password exists, replace it with the new password
-                        fileContents = fileContents.replace("Password: " + oldPassword,
-                                "Password: " + newPassword);
-                        //show that the old password exists
-                        oldPasswordExist = 1;
-                    }
-                }
-            }
-            //if old password not found
-            if (oldPasswordExist != 1) {
-                return "This is not your current password. Please enter your current password correctly.";
-            }
-            //if username is not found
-            if (usernameExist != 1) {
-                return "Your current username does not exist.";
-            }
-            String[] splitContents = fileContents.split("\n");
-            FileOutputStream fos = new FileOutputStream("StudentAccounts.txt", false);
-            PrintWriter pw = new PrintWriter(fos);
-            for (int i = 0; i < splitContents.length; i++) {
-                //write the updated contents into a txt file
-                pw.println(splitContents[i]);
-            }
-            pw.flush();
-        }
-        return "Your password has been changed!";
-    }
+
+
 
     //if program has error, run function to save answers
     public static void writeUnfinishedQuizAnswersToFile(String firstName, String lastName, String course,
