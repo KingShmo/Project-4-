@@ -1,4 +1,4 @@
-Test 1: User(Teacher/Student) register
+#### Test 1: User(Teacher/Student) register
 
 Steps:
 
@@ -14,7 +14,7 @@ Expected result: Application successfully registers the new user's information a
 
 Test Status: Passed.
 
-Test 2: User(Teacher/Student) sign in
+#### Test 2: User(Teacher/Student) sign in
 
 Steps:
 
@@ -28,7 +28,7 @@ Expected result: Application verifies the user's username and password and displ
 
 Test Status: Passed.
 
-Test 3: User(Teacher/Student) password change
+#### Test 3: User(Teacher/Student) password change
 
 Steps:
 
@@ -40,7 +40,7 @@ Expected result: Application changes the user's password in the directory and pr
 
 Test Status: Passed.
 
-Test 4: User(Teacher/Student) account deletion
+#### Test 4: User(Teacher/Student) account deletion
 
 Steps:
 
@@ -52,7 +52,7 @@ Expected result: Application deletes the user's account from the directory and d
 
 Test Status: Passed.
 
-Test 5: User(Teacher/Student) sign out
+#### Test 5: User(Teacher/Student) sign out
 
 Steps:
 
@@ -63,7 +63,7 @@ Expected result: The user is signed out and the application displays the sign-in
 
 Test Status: Passed.
 
-Test 6: Teacher- Creating a course
+#### Test 6: Teacher- Creating a course
 
 Steps:
 
@@ -77,7 +77,7 @@ Expected result: Application successfully creates this course and takes the teac
 
 Test Status: Passed.
 
-Test 7: Teacher- Adding students to a course
+#### Test 7: Teacher- Adding students to a course
 
 Steps:
 
@@ -91,7 +91,7 @@ Expected result: Application successfully adds the selected student to this cour
 
 Test Status: Passed.
 
-Test 8: Teacher- Modifying course attributes
+#### Test 8: Teacher- Modifying course attributes
 
 Steps:
 
@@ -106,7 +106,7 @@ Expected result: Application successfully changes the selected course's specific
 
 Test Status: Passed.
 
-Test 9: Teacher- Course deletion
+#### Test 9: Teacher- Course deletion
 
 Steps:
 
@@ -119,7 +119,7 @@ Expected result: Application successfully deletes the selected course and takes 
 
 Test Status: Passed.
 
-Test 10: Teacher- Quiz creation for a course
+#### Test 10: Teacher- Quiz creation for a course
 
 Steps:
 
@@ -139,9 +139,9 @@ Steps:
 
 Expected result: Application successfully creates the quiz and takes the teacher back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 11: Teacher- Quiz modification
+#### Test 11: Teacher- Quiz modification
 
 Steps:
 
@@ -159,9 +159,9 @@ Steps:
 
 Expected result: Application successfully modifies the quiz attributes required and takes the teacher back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 12: Teacher- Quiz randomization
+#### Test 12: Teacher- Quiz randomization
 
 Steps:
 
@@ -173,9 +173,9 @@ Steps:
 
 Expected result: Application successfully turns on randomization for the particular quiz whenever a student takes it. The teacher is taken back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 13: Teacher- View student quiz submissions
+#### Test 13: Teacher- View student quiz submissions
 
 Steps:
 
@@ -184,11 +184,11 @@ Steps:
 3. User selects the 'Use quiz options for a course' option (labelled 2) from the drop-down menu.
 4. User selects the 'View Student Quiz Submissions' option (labelled 4) from the drop-down menu.
 
-Expected result: Application successfully displays all student attempt details for the quizzes of that course. The teacher is taken back to the Quiz Portal menu automatically.
+Expected result: Application successfully displays all student attempt and grade details for the quizzes of that course. The teacher is taken back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 14: Teacher- Listing available quizzes
+#### Test 14: Teacher- Listing available quizzes
 
 Steps:
 
@@ -199,9 +199,9 @@ Steps:
 
 Expected result: Application successfully displays a list of the available quizzes to the user and then takes them back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 15: Teacher- Quiz deletion
+#### Test 15: Teacher- Quiz deletion
 
 Steps:
 
@@ -213,9 +213,9 @@ Steps:
 
 Expected result: Application successfully deletes the particular quiz and the user is taken back to the Quiz Portal menu automatically.
 
-Test Status: Passed. 
+Test Status: Passed.
 
-Test 16: Teacher- Importing a Quiz
+#### Test 16: Teacher- Importing a Quiz
 
 Steps:
 
@@ -226,5 +226,47 @@ Steps:
 5. The required file format is shown to the user. The user then enters the file path for the file containing a quiz.
 
 Expected result: Application runs successfully and a specific output is shown to the user depending on whether the file path and the file format is valid or not. If the file path and format are valid, the quiz is imported into the quiz database. The user is taken back to the Quiz Portal menu automatically.
+
+Test Status: Passed.
+
+#### Test 17: Student- Taking a Quiz
+
+Steps:
+
+1. User launches application and signs in to their account.
+2. User selects the 'View Courses' option (labelled 4) from the drop-down menu in the Student Portal.
+3. User selects the course from the drop-down menu whose options they want to access. 
+4. User selects the 'Take a quiz' option (labelled 1) from the drop-down menu.
+5. User selects the quiz that they want to take from the drop-down menu.
+6. User selects one from the 'Yes' or 'No' option buttons based on whether they want to attach a file for this quiz or not. If 'Yes' is selected, then the required file format is shown to the user. The user then enters the file path for the file containing the quiz answers.
+7. If the answer for the previous step was 'No', the user is shown each quiz question one by one and the user selects their answer from the options (labelled 1/2/3/4) in the drop-down menu.
+8. Once the quiz has been completed, a submission confirmation and completion timestamp is displayed for the user.
+
+Expected result: Application runs successfully and a student is able to take a quiz either by uploading a file with answers or by answering the questions in real time. A specific output is shown to the user depending on whether the file path and the file format is valid or not. If the file path and format are valid, the answers are graded and attempt details along with submission timestamp are stored into the quiz database. Same process takes place if quiz is taken in real time. The user is taken back to the course menu automatically.
+
+Test Status: Passed.
+
+#### Test 18: Student- Viewing Grades
+
+Steps:
+
+1. User launches application and signs in to their account.
+2. User selects the 'View Courses' option (labelled 4) from the drop-down menu in the Student Portal.
+3. User selects the course from the drop-down menu whose options they want to access.
+4. User selects the 'View Grades' option (labelled 2) from the drop-down menu.
+
+Expected result: Application successfully displays all student attempt and grade details for the quizzes of that course. The user is taken back to the course menu automatically.
+
+Test Status: Passed.
+
+#### Test 19: User(Teacher/Student)- Sign Out
+
+Steps:
+
+1. User launches application and signs in to their account.
+2. User selects the 'Sign Out' option (labelled 3) from the drop-down menu in the respective Portal.
+3. If user is already in another menu in the application, selecting the 'Exit' option (last option) from the respective drop-down menu will take them to the previous menus, lastly taking them to the main menu. Selecting the 'Cancel' button can also directly take them to the main menu. Once the user reaches the main menu, step 2 follows.
+
+Expected result: Application successfully sign out the user and displays a thank-you message.
 
 Test Status: Passed. 
